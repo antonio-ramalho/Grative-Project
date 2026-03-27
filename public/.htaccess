@@ -1,0 +1,16 @@
+# public/.htaccess — redireciona tudo para index.php
+Options -Indexes
+RewriteEngine On
+
+# Se o arquivo ou pasta existir fisicamente, serve direto
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Caso contrário, envia para index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Bloquear acesso a arquivos sensíveis
+<FilesMatch '\.(env|log|git|htpasswd)$'>
+    Order allow,deny
+    Deny from all
+</FilesMatch>
