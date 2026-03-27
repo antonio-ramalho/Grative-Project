@@ -1,0 +1,21 @@
+# Dependências do Composer (Pasta pesada que você já viu)
+vendor/
+node_modules/
+
+# Variáveis de ambiente (SEGURANÇA CRÍTICA: NUNCA versione!)
+.env
+.env.local
+.env.production
+
+# Logs e Cache da aplicação
+*.log
+storage/logs/
+storage/cache/
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Configurações da sua IDE (VS Code / PHPStorm)
+.idea/
+.vscode/settings.json
