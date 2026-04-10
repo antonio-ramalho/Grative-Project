@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/cadastro_osc.css">
+    <title>Cadastrar OSC</title>
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center align-items-center bg-light min-vh-100 py-3">
+        <div style="max-width: 700px;" class="bg-white rounded-4 shadow-lg w-100 p-4">
+            <div class="text-center mb-4">
+                <h1>Logo da Grative</h1>
+                <h2>Cadastrar OSC</h2>
+            </div>
+
+            <form id="formCadastroOsc" novalidate>
+                <div class="d-none alert alert-danger" id="divAlertas"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-field-group nome_osc mb-3">
+                            <label class="form-label text-muted small" for="nome_osc">Nome da Instituição</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-building"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o nome da instituição" name="nome_osc" id="nome_osc" required>
+                            </div>
+                        </div>
+                        <div class="form-field-group cnpj_osc mb-3">
+                            <label class="form-label text-muted small" for="cnpj_osc">CNPJ da Instituição</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-file-earmark-person-fill"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o CNPJ" name="cnpj_osc" id="cnpj_osc" required>
+                            </div>
+                        </div>
+                        <div class="form-field-group email_osc mb-3">
+                            <label class="form-label text-muted small" for="email_osc">Email da Instituição</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control border-start-0" placeholder="Digite o email" name="email_osc" id="email_osc" required>
+                            </div>
+                        </div>
+                        <div class="form-field-group telefone_osc mb-3">
+                            <label class="form-label text-muted small" for="telefone_osc">Telefone da Instituição</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <input type="tel" class="form-control border-start-0" placeholder="Digite o telefone" name="telefone_osc" id="telefone_osc" required>
+                            </div>
+                        </div>
+                        <div class="form-field-group senha_osc mb-3">
+                            <label class="form-label text-muted small" for="senha_osc">Senha</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input type="password" class="form-control border-start-0" placeholder="Digite a senha" name="senha_osc" id="senha_osc" required>
+                                <button class="input-group-text bg-white" type="button" id="btnMostrarSenha">
+                                    <i class="bi bi-eye-fill" id="iconeOlho"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-field-group cep_osc mb-3">
+                            <label class="form-label text-muted small" for="cep_osc">CEP</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o CEP" name="cep_osc" id="cep_osc" required>
+                            </div>
+                        </div>
+                        <div class="form-field-group logradouro_osc mb-3">
+                            <label class="form-label text-muted small" for="logradouro_osc">Logradouro</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-house-door"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o logradouro" name="logradouro_osc" id="logradouro_osc" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-md-6">
+        
+                        <div class="form-field-group num_ende_osc mb-3">
+                            <label class="form-label text-muted small" for="num_ende_osc">Número</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-hash"></i>
+                                </span>
+                                <input type="number" class="form-control border-start-0" placeholder="Digite o número" name="num_ende_osc" id="num_ende_osc" required>
+                            </div>
+                        </div>
+        
+                        <div class="form-field-group bairro_osc mb-3">
+                            <label class="form-label text-muted small" for="bairro_osc">Bairro</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-geo-alt-fill"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o bairro" name="bairro_osc" id="bairro_osc" required>
+                            </div>
+                        </div>
+        
+                        <div class="form-field-group cidade_osc mb-3">
+                            <label class="form-label text-muted small" for="cidade_osc">Cidade</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-building"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite a cidade" name="cidade_osc" id="cidade_osc" required>
+                            </div>
+                        </div>
+        
+                        <div class="form-field-group estado_osc mb-3">
+                            <label class="form-label text-muted small" for="estado_osc">Estado</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-flag"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite o estado" name="estado_osc" id="estado_osc" required>
+                            </div>
+                        </div>
+        
+                        <div class="form-field-group descricao_osc mb-3">
+                            <label class="form-label text-muted small" for="descricao_osc">Descrição</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-chat-left-text"></i>
+                                </span>
+                                <textarea style="height: 125px;" class="form-control border-start-0" placeholder="Digite a descrição" name="descricao_osc" id="descricao_osc" rows="4" required></textarea>
+                            </div>
+                        </div>
+        
+                        <div class="form-field-group pix_osc mb-3">
+                            <label class="form-label text-muted small" for="pix_osc">Chave PIX</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-white">
+                                    <i class="bi bi-x-diamond-fill"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" placeholder="Digite a chave PIX" name="pix_osc" id="pix_osc">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" id="submitCadastrarOsc" class="btn w-100 btn-grative">Cadastrar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script src="/js/cadastroOsc.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
+
+<!--php -S localhost:8000 -t public - Comando para abrir o servidor-->

@@ -10,13 +10,14 @@ $dbName = $_ENV['DB_DATABASE'];
 $apiKey = getenv('GEMINI_API_KEY');
 
 // Ou via arquivo config/database.php
-return [
+/* return [
     'host' => $_ENV['DB_HOST'],
     'database' => $_ENV['DB_DATABASE'],
     'username' => $_ENV['DB_USERNAME'],
     'password' => $_ENV['DB_PASSWORD'],
-];
+]; */
 
+require_once '../src/Core/Router.php';
 $router = new Router();
 require '../src/Routes/web.php';
 $method = $_SERVER['REQUEST_METHOD'];
