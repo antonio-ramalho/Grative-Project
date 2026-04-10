@@ -3,44 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <title>Relatório de Doações</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
-        .filtro { background: #f4f4f4; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .resultado { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
-        .valor { font-size: 1.5em; color: #2c3e50; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="css\geral.css">
+    <link rel="stylesheet" href="css\gerar_relatorio.css">
+    <link rel="stylesheet" href="css\componentes.css">
 </head>
 <body>
+    <section id="cabecalho" class="interface">
+        <button class="botao_cancelar">Voltar</button>
+        <img src="/img/icons/person-circle.svg" alt="icone-usuario" class="icone">
+    </section>
 
-    <h1>Relatório de Doações</h1>
+    <section id="filtro_gerar" class="interface">
+         <div>
+            <h1>Defina um intervalo de tempo</h1>
+        </div>
 
-    <div class="filtro">
-        <form method="GET" action="/relatorio-doacoes">
-            <label>Data Início:</label>
-            <input type="date" name="inicio" value="<?= e($dataInicio) ?>">
+        <div class="filtro">
+            <form method="GET" action="/relatorio-doacoes" class="formulario">
+                <div>
+                    <label>Data Início:</label>
+                    <input class="input_padrao" type="date" name="inicio" value="<?= e($dataInicio) ?>">
+                    <label>Data Fim:</label>
+                    <input class="input_padrao" type="date" name="fim" value="<?= e($dataFim) ?>">
+                </div>
             
-            <label>Data Fim:</label>
-            <input type="date" name="fim" value="<?= e($dataFim) ?>">
-            
-            <button type="submit">Gerar Relatório</button>
-        </form>
-    </div>
+                <button type="submit" class="botao_acao">Gerar Dados</button>
+            </form>
+        </div>
+    </section>
 
-    <div class="resultado">
-        <h3>Resumo das Doações</h3>
-        
-        <?php if ($dados['quantidade'] > 0): ?>
-            <p>Período selecionado: <strong><?= e($dataInicio) ?></strong> até <strong><?= e($dataFim) ?></strong></p>
-            <hr>
-            <p>Quantidade de Doações: <strong><?= e($dados['quantidade']) ?></strong></p>
-            <p>Total Arrecadado:</p>
-            <div class="valor">
-                R$ <?= number_format($dados['total'] ?? 0, 2, ',', '.') ?>
+    <section id="resultado_cards" class="interface">
+        <div class="card interface card_categoria">
+            <h2>Defina as categorias</h2>
+
+            <div id="categorias_inserir_js">
+
             </div>
-        <?php else: ?>
-            <p>Nenhuma doação encontrada para o período selecionado.</p>
-        <?php endif; ?>
-    </div>
+        </div>
 
+        <div class="card interface card_resumo">
+            <h2>Resumo das Doações</h2>
+        
+            <?php if ($dados['quantidade'] > 0): ?>
+                <div class="resumo">
+                    <p>Período selecionado: <strong><?= e($dataInicio) ?></strong> - <strong><?= e($dataFim) ?></strong></p>
+                    <p>Quantidade de Doações: <strong><?= e($dados['quantidade']) ?></strong></p>
+                    <div class="total">
+                        <p>Total Arrecadado:</p>
+                        <div class="valor">
+                            R$ <?= number_format($dados['total'] ?? 0, 2, ',', '.') ?>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            <?php else: ?>
+                <p>Nenhuma doação encontrada para o período selecionado.</p>
+            <?php endif; ?>
+
+            <div id="#js_publicar_relatorio">
+                <h2>Saldo</h2>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

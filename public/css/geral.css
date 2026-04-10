@@ -1,0 +1,13 @@
+@import "cores.css";
+
+.interface {
+  padding: 20px 5%;
+}
+
+p {
+  margin: 0px;
+}
+
+hr {
+  color: var(--borda-card-input);
+}

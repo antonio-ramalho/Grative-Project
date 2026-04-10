@@ -1,0 +1,68 @@
+@import "cores.css";
+
+body {
+  font-family: sans-serif;
+  margin: 40px;
+  line-height: 1.6;
+  background-color: var(--fundo-principal);
+  color: var(--txt);
+}
+
+#cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--borda-card-input);
+}
+
+.filtro {
+  background: var(--fundo-card-botao);
+  padding: 30px;
+  border-radius: 10px;
+  width: auto;
+  height: auto;
+  box-shadow: 2px 4px 4px rgb(0, 0, 0, 0.1);
+}
+
+.formulario {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#resultado_cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid var(--borda-card-input);
+  background-color: var(--fundo-card-botao);
+  box-shadow: 2px 4px 4px rgb(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.card_resumo {
+  min-width: 30%;
+}
+
+.card_categoria {
+  width: stretch;
+}
+
+.resumo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.valor {
+  font-weight: bold;
+}
