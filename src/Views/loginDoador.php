@@ -3,55 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cadastro de Doador</title>
+    <title>Grative - Login</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
         body { font-family: Arial, sans-serif; background:#ffffff; margin:0; padding:20px; }
-        
         header { display: flex; justify-content: center; padding: 40px 0; }
-        
         main { max-width:400px; margin: 0 auto; background:#fff; padding:24px; }
-
         .form-row { margin-bottom: 20px; }
-        
         label { display:block; font-size:0.9rem; margin-bottom:8px; color: #555; }
+        
+        .input-group { position: relative; display: flex; align-items: center; }
+        .input-group input { width: 100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .input-group .material-symbols-outlined { position: absolute; left: 12px; color: #888; user-select: none; }
 
-        /* CONTÊINER DO INPUT + ÍCONE */
-        .input-group {
-            position: relative; /* Agora os ícones se baseiam neste quadrado */
-            display: flex;
-            align-items: center;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 12px 12px 40px; /* Padding extra na esquerda para o ícone */
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        .input-group .material-symbols-outlined {
-            position: absolute;
-            left: 12px; /* Fixa o ícone no início do input */
-            color: #888;
-            user-select: none;
-        }
-
-        /* Botões */
         .btn-container { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        .button1 { width: 100%; padding:14px; border:none; background:#3e7c41; color:#fff; border-radius:8px; cursor:pointer; font-weight: lighter; font-size: 1rem; }
-        .button2 { width: 100%; padding:14px; border:none; background:#eee; color:#666; border-radius:8px; cursor:pointer; font-weight: lighter; font-size: 1rem; }
+        .button1 { width: 100%; padding:14px; border:none; background:#3e7c41; color:#fff; border-radius:8px; cursor:pointer; font-size: 1rem; }
+        .button1:hover { background: #326535; }
+        .button2 { width: 100%; padding:14px; border:none; background:#eee; color:#666; border-radius:8px; cursor:pointer; font-size: 1rem; }
+        .button2:hover { background: #e0e0e0; }
 
-        /* Logo Split */
         .text-split { position: relative; font-size: 55px; font-weight: bold; letter-spacing: -3px; margin: 0; }
         .text-split .bottom-layer { color: #111; font-weight: 300; }
-        .text-split .top-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            color: #3e7c41;
-            clip-path: polygon(0% 0%, 36% 0%, 36% 100%, 0% 100%);
-        }
+        .text-split .top-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: #3e7c41; clip-path: polygon(0% 0%, 36% 0%, 36% 100%, 0% 100%); }
     </style>
 </head>
 <body>
@@ -64,8 +37,7 @@
     </header>
 
     <main>
-        <form id="cadastroDoadorForm" method="post" action="/register">
-            
+        <form id="loginForm" method="post" action="/login">
             <div class="form-row">
                 <label for="name">Usuário</label>
                 <div class="input-group">
@@ -84,11 +56,11 @@
 
             <div class="btn-container">
                 <button class="button1" type="submit">Realizar Login</button>
-                <button class="button2" type="button" onclick="alert('Ir para cadastro')">Realizar Cadastro</button>
+                <button class="button2" type="button" id="btnGoToRegister">Realizar Cadastro</button>
             </div>
-
         </form>
     </main>
 
+    <script src="public/js/navegacao.js"></script>
 </body>
 </html>
