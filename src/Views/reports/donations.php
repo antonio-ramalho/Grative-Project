@@ -27,18 +27,34 @@
                     <input class="input_padrao" type="date" name="fim" value="<?= e($dataFim) ?>">
                 </div>
             
-                <button type="submit" class="botao_acao">Gerar Dados</button>
+                <button type="submit" class="botao_acao">Consultar Dados</button>
             </form>
         </div>
     </section>
 
     <section id="resultado_cards" class="interface">
-        <div class="card interface card_categoria">
+        <div id="container-app" class="card interface card_categoria" data-saldo-inicial="<?= (float)$dados['total'] ?>">
             <h2>Defina as categorias</h2>
-
-            <div id="categorias_inserir_js">
-
-            </div>
+            <form id="form-categoria">
+                <div class="inputs-form">
+                    <div class="box-form">
+                        <label for="categoria">Categoria</label>
+                        <select class="input_padrao input-categoria" id="selecionar-categoria" name="categoria">
+                            <option value="">Selecionar</option>
+                            <option value="Roupas">Roupas</option>
+                            <option value="Salários">Salários</option>
+                            <option value="Operacionais">Despesas Operacionais</option>
+                        </select>
+                    </div>
+                    <div class="box-form">
+                        <label for="categoria-nome">Valor</label>
+                        <input data-valor="" class="input_padrao input-categoria" type="text" id="categoria-valor" name="categoria-valor" placeholder="Digire o valor">
+                    </div>
+                </div>
+                <button type="submit" id="btn-salvar-categoria" class="botao_acao">Nova Categoria</button>
+            </form>
+            <hr>
+            <div id="lista_categorias"></div>
         </div>
 
         <div class="card interface card_resumo">
@@ -60,10 +76,14 @@
                 <p>Nenhuma doação encontrada para o período selecionado.</p>
             <?php endif; ?>
 
-            <div id="#js_publicar_relatorio">
-                <h2>Saldo</h2>
+            <div id="js_publicar_relatorio">
+                <div id="resumo-financeiro" data-total="<?= (float)$dados['total'] ?>">
+                    <h2>Saldo Restante: <span id="saldo-dinamico">R$ <?= number_format($dados['total'], 2, ',', '.') ?></span></h2>
+                </div>
+                <div class="div-btn-pub"><button type="submit" class="botao_acao" id="btn-publicar">Públicar Relatório</button></div>
             </div>
         </div>
     </section>
+    <script src="js/donations.js"></script>
 </body>
 </html>
