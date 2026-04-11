@@ -10,6 +10,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 $dotenv->required(['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD']);
 
+require_once '../src/Core/Router.php';
 $router = new Router();
 require '../src/Routes/web.php';
 $method = $_SERVER['REQUEST_METHOD'];
