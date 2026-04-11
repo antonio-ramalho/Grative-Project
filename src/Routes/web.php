@@ -1,6 +1,10 @@
 <?php
-// 1. Apresentamos o arquivo do Controller para a aplicação
+//OSC rotas
 require_once __DIR__ . '/../Controllers/OscController.php';
-
-// 2. Agora o router sabe quem ele é!
 $router->get('/cadastro', 'OscController@mostrarFormulario');
+
+// src/Routes/web.php — definição de rotas
+$router->get('/', 'HomeController@index');
+$router->get('/relatorio-doacoes', 'DonationReportController@index');
+
+// Rotas com middleware de autenticação

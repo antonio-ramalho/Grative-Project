@@ -1,0 +1,11 @@
+:root {
+  --borda-card-input: #e2e8f0;
+  --botao-acao: #ff8c42;
+  --txt: #081c15;
+  --fundo-card-botao: #ffffff;
+  --fundo-principal: #f8f9fa;
+  --borda-erro: #e53935;
+  --borda-sucesso: #2e7d32;
+  --fundo-erro: #ffebee;
+  --fundo-sucesso: #e8f5e9;
+}

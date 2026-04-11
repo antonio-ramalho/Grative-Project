@@ -1,0 +1,5 @@
+<?php
+
+function e(mixed $value): string {
+    return htmlspecialchars((string)$value, ENT_QUOTES | ENT_HTML5, "UTF-8");
+}
