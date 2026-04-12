@@ -24,6 +24,10 @@ const iconeOlho = document.getElementById("iconeOlho");
 const formCadastroOsc = document.getElementById("formCadastroOsc");
 const divAlertas = document.getElementById("divAlertas");
 
+function getInputValue(idDoElemento){
+    return document.getElementById(idDoElemento).value;
+}
+
 // Exibe mensagem de erro dentro do container de alertas.
 function showAlert(message) {
     divAlertas.classList.remove("d-none");
@@ -140,7 +144,7 @@ function collectFormData(userUid) {
 
 // Envia os dados para o backend via fetch.
 function submitOscData(data) {
-    return fetch("/api/sua-rota-aqui", {
+    return fetch("/api/osc/cadastrar", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
