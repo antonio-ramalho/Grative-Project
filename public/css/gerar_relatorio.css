@@ -1,0 +1,164 @@
+@import "cores.css";
+
+body {
+  font-family: sans-serif;
+  margin: 40px;
+  line-height: 1.6;
+  background-color: var(--fundo-principal);
+  color: var(--txt);
+}
+
+#cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--borda-card-input);
+}
+
+.filtro {
+  background: var(--fundo-card-botao);
+  padding: 30px;
+  border-radius: 10px;
+  width: auto;
+  height: auto;
+  box-shadow: 2px 4px 4px rgb(0, 0, 0, 0.1);
+}
+
+.formulario {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#resultado_cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid var(--borda-card-input);
+  background-color: var(--fundo-card-botao);
+  box-shadow: 2px 4px 4px rgb(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.card_resumo {
+  min-width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+#js_publicar_relatorio {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.div-btn-pub {
+  margin-left: auto;
+}
+
+.card_categoria {
+  width: stretch;
+}
+
+.resumo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.valor {
+  font-weight: bold;
+}
+
+.box-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%;
+}
+
+#form-categoria {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.inputs-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.input-categoria {
+  min-width: 200px;
+}
+
+#categorias_inserir_js {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+table {
+  border-collapse: separate;
+  border: none;
+  padding: 15px;
+  color: #081c15;
+  width: stretch;
+}
+
+#corpo-tabela tr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--borda-card-input);
+  border-radius: 10px;
+
+  margin-bottom: 5px;
+  padding: 5px 5px;
+}
+
+#corpo-tabela td {
+  border: none;
+  padding: 10px;
+}
+
+#corpo-tabela td:first-child {
+  margin-right: auto;
+}
+
+.td_div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.botao_item {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: 0.2s;
+}
+
+.botao_item:hover {
+  transform: scale(1.05);
+}
+
+.img_icon {
+  width: 24px;
+  height: 24px;
+}

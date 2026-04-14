@@ -1,0 +1,39 @@
+@import "cores.css";
+
+.botao_acao {
+  background-color: var(--botao-acao);
+  border: 1px solid var(--botao-acao);
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  box-shadow: 1px 2px 4px rgb(255, 140, 66, 0.3);
+  cursor: pointer;
+}
+
+.input_padrao {
+  border: 1px solid var(--borda-card-input);
+  background-color: var(--fundo-card-botao);
+  border-radius: 10px;
+  padding: 15px;
+  color: #081c15;
+  min-width: 150px;
+}
+
+.botao_cancelar {
+  border: 1px solid var(--borda-card-input);
+  background-color: var(--fundo-card-botao);
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 80px;
+  cursor: pointer;
+  color: #081c15;
+}
+
+.icone {
+  width: 30px;
+  height: 30px;
+}
+
+#btn-salvar-categoria {
+  max-width: 150px;
+}
