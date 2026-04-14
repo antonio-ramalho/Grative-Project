@@ -6,6 +6,7 @@ $router->get('/cadastro', 'OscController@mostrarFormulario');
 // src/Routes/web.php — definição de rotas
 $router->get('/', 'HomeController@index');
 $router->get('/relatorio-doacoes', 'DonationReportController@index');
+$router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 
 $router->post('/api/osc/cadastrar', 'OscController@cadastrar');
 

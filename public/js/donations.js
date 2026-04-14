@@ -10,7 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   ver_categorias();
   atualizarSaldo();
-  publicarRelatorio();
+
+  document.getElementById("btn-publicar").addEventListener("click", () => {
+    publicarRelatorio();
+  });
 });
 
 function cadastrar_categoria() {
@@ -107,10 +110,10 @@ function prepararEdicao(id) {
 }
 
 function atualizarSaldo() {
-  const saldoInicial = parseFloat(document.getElementById("container-app").dataset.saldoInicial).toFixed(0);
+  const saldoInicial = parseFloat(document.getElementById("container-app").dataset.saldoInicial);
   const categorias = JSON.parse(localStorage.getItem("categorias_dict")) || {};
   const totalGastos = Object.values(categorias).reduce((acc, item) => acc + Number(item.valor), 0);
-  const saldoRestante = Number((saldoInicial - totalGastos).toFixed(0));
+  const saldoRestante = parseFloat(saldoInicial - totalGastos);
 
   document.getElementById("saldo-dinamico").innerText = saldoRestante.toLocaleString("pt-BR", {
     style: "currency",
@@ -150,26 +153,37 @@ function verificarIntegridadeFinanceira(saldo) {
 }
 
 async function publicarRelatorio() {
-  const categorias = JSON.parse(localStorage.getItem("categorias_dict"));
-  const saldoInicial = document.getElementById("container-app").dataset.saldoInicial;
+  const btn = document.getElementById("btn-publicar");
+  const categorias = JSON.parse(localStorage.getItem("categorias_dict")) || {};
+  const saldoInicial = parseFloat(document.getElementById("container-app").dataset.saldoInicial);
 
-  const payload = {
-    saldo_total: saldoInicial,
-    itens: categorias,
-  };
+  btn.disabled = true;
+  btn.innerText = "Publicando...";
 
-  const response = await fetch("/relatorio/publicar", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-TOKEN": document.querySelector('input[name="csrf_token"]').value,
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const response = await fetch("/relatorio/publicar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        saldo_total: saldoInicial,
+        itens: Object.values(categorias),
+      }),
+    });
 
-  if (response.ok) {
-    localStorage.removeItem("categorias_dict");
-    alert("Relatório publicado com sucesso!");
-    window.location.href = "/meus-relatorios";
+    const resultado = await response.json();
+
+    if (resultado.success) {
+      alert("Relatório publicado com sucesso!");
+      localStorage.removeItem("categorias_dict");
+      window.location.href = "/dashboard";
+    } else {
+      throw new Error(resultado.message || "Erro desconhecido");
+    }
+  } catch (error) {
+    alert("Erro ao publicar: " + error.message);
+    btn.disabled = false;
+    btn.innerText = "Publicar Relatório";
   }
 }

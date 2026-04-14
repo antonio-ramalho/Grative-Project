@@ -48,7 +48,8 @@
                     </div>
                     <div class="box-form">
                         <label for="categoria-nome">Valor</label>
-                        <input data-valor="" class="input_padrao input-categoria" type="text" id="categoria-valor" name="categoria-valor" placeholder="Digire o valor">
+                        <input data-valor="" class="input_padrao input-categoria" type="number" step="0.01" 
+                            min="0.01"id="categoria-valor" name="categoria-valor" placeholder="Digire o valor">
                     </div>
                 </div>
                 <button type="submit" id="btn-salvar-categoria" class="botao_acao">Nova Categoria</button>
