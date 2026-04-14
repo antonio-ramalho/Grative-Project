@@ -24,14 +24,14 @@ const iconeOlho = document.getElementById("iconeOlho");
 const formCadastroOsc = document.getElementById("formCadastroOsc");
 const divAlertas = document.getElementById("divAlertas");
 
-function getInputValue(idDoElemento){
-    return document.getElementById(idDoElemento).value;
-}
-
 // Exibe mensagem de erro dentro do container de alertas.
 function showAlert(message) {
     divAlertas.classList.remove("d-none");
     divAlertas.innerHTML = `<p class='text-danger fw-bold'>${message}</p>`;
+}
+
+function getInputValue(idDoElemento){
+    return document.getElementById(idDoElemento).value;
 }
 
 // Esconde o container de alertas.
