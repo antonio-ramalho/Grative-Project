@@ -30,6 +30,10 @@ function showAlert(message) {
     divAlertas.innerHTML = `<p class='text-danger fw-bold'>${message}</p>`;
 }
 
+function getInputValue(idDoElemento){
+    return document.getElementById(idDoElemento).value;
+}
+
 // Esconde o container de alertas.
 function hideAlert() {
     divAlertas.classList.add("d-none");
@@ -140,7 +144,7 @@ function collectFormData(userUid) {
 
 // Envia os dados para o backend via fetch.
 function submitOscData(data) {
-    return fetch("/api/sua-rota-aqui", {
+    return fetch("/api/osc/cadastrar", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

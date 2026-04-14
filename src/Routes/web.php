@@ -7,4 +7,6 @@ $router->get('/cadastro', 'OscController@mostrarFormulario');
 $router->get('/', 'HomeController@index');
 $router->get('/relatorio-doacoes', 'DonationReportController@index');
 
+$router->post('/api/osc/cadastrar', 'OscController@cadastrar');
+
 // Rotas com middleware de autenticação
