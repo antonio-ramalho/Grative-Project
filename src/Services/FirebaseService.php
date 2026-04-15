@@ -1,29 +1,50 @@
 <?php
 
-namespace App\Services; // Ajuste o namespace conforme o seu composer.json
+namespace App\Services;
 
 use Kreait\Firebase\Factory;
+use Kreait\Firebase\Exception\Auth\InvalidPassword;
+use Kreait\Firebase\Exception\Auth\UserNotFound;
 
 class FirebaseService {
     private $auth;
 
     public function __construct() {
-        // Pega o caminho do arquivo .env (como configuramos antes)
-        $caminhoCredenciais = $_ENV['FIREBASE_CREDENTIALS']; 
-
-        // Inicializa o Firebase
-        $factory = (new Factory)->withServiceAccount(__DIR__ . '/../../' . $caminhoCredenciais);
-
+        $caminhoCredenciais = $_ENV['FIREBASE_CREDENTIALS'];
+        
+        $factory = (new Factory)
+            ->withServiceAccount(__DIR__ . '/../../' . $caminhoCredenciais);
+        
         $this->auth = $factory->createAuth();
     }
 
-    // Função que você vai chamar depois para validar o token que vier do front-end
     public function verificarToken($idToken) {
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($idToken);
-            return $verifiedIdToken->claims()->get('sub'); // Retorna o UID do usuário
+            return $verifiedIdToken->claims()->get('sub');
         } catch (\Exception $e) {
-            return false; // Token inválido
+            return false;
+        }
+    }
+
+    public function loginWithEmail($email, $password) {
+        try {
+            $signInResult = $this->auth->signInWithEmailAndPassword($email, $password);
+            
+            return $signInResult->idToken(); 
+        } catch (UserNotFound | InvalidPassword $e) {
+            return false; 
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deletarUsuario($uid) {
+        try {
+            $this->auth->deleteUser($uid);
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 }
