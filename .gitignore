@@ -1,11 +1,11 @@
 # Dependências do Composer (Pasta pesada que você já viu)
-vendor/
-node_modules/
+#vendor/
+#node_modules/
 
 # Variáveis de ambiente (SEGURANÇA CRÍTICA: NUNCA versione!)
-.env
-.env.local
-.env.production
+#.env
+#.env.local
+#.env.production
 
 #Chave de acesso do Firebase
 config/firebase_credentials.json
