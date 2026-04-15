@@ -16,13 +16,12 @@ public function salvar($dados) {
 
             $stmt = $this->conn->prepare($sql);
 
-            // 3. Fazer a "Tradução" (Ligando o SQL ao seu JavaScript)
             $stmt->bindValue(':nome', $dados['nome_osc']);
             $stmt->bindValue(':cnpj', $dados['cnpj_osc']);
             $stmt->bindValue(':cep', $dados['cep_osc']);
             $stmt->bindValue(':telefone', $dados['telefone_osc']);
             $stmt->bindValue(':email', $dados['email_osc']);
-            $stmt->bindValue(':uid', $dados['id_firebase']); // Esse é o ID que vem da autenticação!
+            $stmt->bindValue(':uid', $dados['id_firebase']); 
             $stmt->bindValue(':pix', $dados['pix_osc']);
             $stmt->bindValue(':logradouro', $dados['logradouro_osc']);
             $stmt->bindValue(':numero', $dados['num_ende_osc']);
