@@ -204,3 +204,37 @@ input[readonly] {
 .btn:active {
     transform: scale(0.98);
 }
+/* Estilo do card de pagamento */
+.payment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.card-content i {
+    color: #32BCAD;
+    font-size: 24px;
+}
+
+.payment-card:has(input:checked) {
+    border-color: #4CAF50;
+    background-color: #f1f8e9;
+}
+
+input[type="radio"] {
+    accent-color: #4CAF50;
+    width: 20px;
+    height: 20px;
+}

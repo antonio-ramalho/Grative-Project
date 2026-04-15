@@ -10,4 +10,10 @@ $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@public
 
 $router->post('/api/osc/cadastrar', 'OscController@cadastrar');
 
-// Rotas com middleware de autenticação
+// Rotas doação
+require_once __DIR__ . '/../Controllers/DonationController.php';
+$router->post('/api/doacao/registrar', 'DonationController@registrarDoacao');
+$router->get('/fazer-doacao', 'DonationController@mostrarFormulario');
+$router->get('/pagamento', 'DonationController@mostrarPagamento');
+$router->post('/api/doacao/confirmar', 'DonationController@confirmarDoacao');
+$router->get('/obrigado', 'DonationController@mostrarSucesso');
