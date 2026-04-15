@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Fazer Doação - Grative</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="../../public/css/style.css">
+    <link rel="stylesheet" href="/css/style.css">">   
 </head>
 <body>
     <div class="app-container">
@@ -23,36 +23,39 @@
             </div>
 
             <div class="input-group">
-                <label>Digite o valor</label>
+                <label for="valor_doacao">Digite o valor</label>
                 <div class="input-wrapper">
                     <i class="ph ph-currency-dollar"></i>
-                    <input type="number" placeholder="Valor">
+                    <input type="number" id="valor_doacao" name="valor" placeholder="Valor" required>
                 </div>
             </div>
 
             <div class="input-group">
-                <label>Mensagem (opcional)</label>
+                <label for="mensagem_doacao">Mensagem (opcional)</label>
                 <div class="input-wrapper">
                     <i class="ph ph-chat-centered-text"></i>
-                    <input type="text" placeholder="Escreva uma mensagem">
+                    <input type="text" id="mensagem_doacao" name="mensagem" placeholder="Escreva uma mensagem">
                 </div>
             </div>
 
-            <p style="font-size: 14px; font-weight: 600; margin-top: 20px;">Escolher método de pagamento</p>
-            
-            <div class="method-card">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="ph ph-currency-dollar"></i>
-                    <span>Pix - Escolher</span>
-                </div>
-                <div class="radio-circle"></div>
+        <div class="input-group">
+        <label>Selecione o método de pagamento</label>
+        <label class="payment-card">
+            <div class="card-content">
+                <i class="ph ph-pix-logo"></i>
+                <span>Pix</span>
             </div>
+            <input type="radio" name="metodo" value="pix" checked>
+        </label>
         </div>
-
+        
+        </div>
         <div class="footer">
             <a href="ConfirmarInformacoes.php" class="btn btn-cancel">Voltar</a>
-            <a href="ConfirmarDoacao.php" class="btn btn-next">Avançar</a>
+            <a href="#" class="btn btn-next">Avançar</a>
         </div>
     </div>
+
+    <script src="/js/fazerDoacao.js"></script>
 </body>
 </html>

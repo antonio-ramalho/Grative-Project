@@ -19,4 +19,10 @@ $router->get('/login', 'App\Controllers\LoginController@index');
 $router->post('/login', 'App\Controllers\LoginController@authenticate');
 $router->get('/logout', 'App\Controllers\LoginController@logout');
 
-// Rotas com middleware de autenticação
+// Rotas doação
+require_once __DIR__ . '/../Controllers/DonationController.php';
+$router->post('/api/doacao/registrar', 'DonationController@registrarDoacao');
+$router->get('/fazer-doacao', 'DonationController@mostrarFormulario');
+$router->get('/pagamento', 'DonationController@mostrarPagamento');
+$router->post('/api/doacao/confirmar', 'DonationController@confirmarDoacao');
+$router->get('/obrigado', 'DonationController@mostrarSucesso');
