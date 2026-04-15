@@ -9,14 +9,18 @@ class OscController {
         require_once __DIR__ . '/../views/cadastro_osc.html';
     }
 
-    // O nosso receptor de dados!
+    public function mostrarHomeOsc() {
+        // Aqui dentro chamamos a view!
+        require_once __DIR__ . '/../views/home_osc.html';
+    }
+
     public function cadastrar() {
         $jsonRecebido = file_get_contents('php://input');
 
         $dados = json_decode($jsonRecebido, true);
 
         if (!$dados) {
-            http_response_code(400); // Bad Request
+            http_response_code(400);
             echo json_encode(["erro" => "Nenhum dado válido recebido."]);
             return;
         }
