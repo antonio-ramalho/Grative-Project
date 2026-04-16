@@ -24,10 +24,11 @@ const iconeOlho = document.getElementById("iconeOlho");
 const formCadastroOsc = document.getElementById("formCadastroOsc");
 const divAlertas = document.getElementById("divAlertas");
 
-// Exibe mensagem de erro dentro do container de alertas.
-function showAlert(message) {
-    divAlertas.classList.remove("d-none");
-    divAlertas.innerHTML = `<p class='text-danger fw-bold'>${message}</p>`;
+// Exibe mensagem dentro do container de alertas.
+function showAlert(message, tipo = "danger") {
+    divAlertas.classList.remove("d-none", "alert-danger", "alert-success");
+    divAlertas.classList.add(`alert-${tipo}`);
+    divAlertas.innerHTML = `<p class='text-${tipo} fw-bold mb-0'>${message}</p>`;
 }
 
 function getInputValue(idDoElemento){
@@ -155,7 +156,7 @@ function submitOscData(data) {
         if (!response.ok) {
             throw new Error("Falha ao enviar os dados para o servidor.");
         }
-        return response.json();
+        return response.json(); // Isso retorna o JSON com o ID que colocamos no PHP
     })
     .catch((error) => {
         console.error("Erro ao enviar dados ao servidor:", error);
@@ -211,9 +212,15 @@ formCadastroOsc.addEventListener("submit", async (event) => {
     try {
         const userUid = await registrarNovoUsuario(emailOsc, senhaOsc);
         const dadosOsc = collectFormData(userUid);
-        await submitOscData(dadosOsc);
+        
+        const resposta = await submitOscData(dadosOsc);
+        
+        if (resposta && resposta.id) {
+            showAlert("Instituição cadastrada com sucesso! Redirecionando...", "success");
+            window.location.href = `/home_osc?id=${resposta.id}`;
+        }
     } catch (error) {
-        // O erro já foi tratado dentro de registrarNovoUsuario ou submitOscData.
+
     }
 });
 
