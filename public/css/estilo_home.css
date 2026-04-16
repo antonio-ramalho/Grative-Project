@@ -1,0 +1,115 @@
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    min-height: 100vh;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding-bottom: 70px; 
+}
+
+.header-home {
+    padding: 20px;
+}
+
+.search-container {
+    background: #f1f3f4;
+    border-radius: 25px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    border: none;
+    background: transparent;
+    margin-left: 10px;
+    outline: none;
+    width: 100%;
+}
+
+
+.osc-card {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.osc-main-info {
+    display: flex;
+    gap: 15px;
+}
+
+
+.profile-image {
+    width: 60px;
+    height: 60px;
+    background: #0d1b1a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
+    flex-shrink: 0;
+}
+
+.osc-details {
+    flex: 1;
+}
+
+.osc-details h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #000;
+}
+
+
+.score-label {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+
+.description-lines p {
+    font-size: 0.85rem;
+    color: #444;
+    margin: 10px 0;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-doar {
+    background-color: #FF8A4C;
+    color: white;
+    padding: 8px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+
+.btn-doar:hover {
+    opacity: 0.8;
+}
+
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 500px; 
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-top: 1px solid #ddd;
+}

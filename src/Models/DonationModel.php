@@ -1,4 +1,5 @@
 <?php
+
 class DonationModel {
     private $pdo;
     
@@ -6,10 +7,8 @@ class DonationModel {
         $this->pdo = $pdo; 
     }
 
-
     public function salvar($dados) {
         try {
-            // Comando SQL para inserir a doação como "pendente"
             $sql = "INSERT INTO doacao 
                     (fk_id_instituicao, fk_id_usuario, quantia, data_doacao, status, mensagem, forma_pagamento, metodo_pagamento) 
                     VALUES 
@@ -22,8 +21,6 @@ class DonationModel {
             $stmt->bindValue(':mensagem', $dados['mensagem']);
             
             $stmt->execute();
-
-            // Retorna o número (ID) da doação que acabou de ser criada
             return $this->pdo->lastInsertId(); 
 
         } catch (PDOException $e) {
@@ -31,7 +28,6 @@ class DonationModel {
         }
     }
 
-    // Atualiza o status da doação para "pago"
     public function confirmarPagamento($id) {
         try {
             $sql = "UPDATE doacao SET status = 'pagamento efetuado' WHERE id_doacao = :id";
@@ -41,5 +37,23 @@ class DonationModel {
         } catch (PDOException $e) {
             throw new Exception("Erro no SQL ao confirmar: " . $e->getMessage());
         }
+    }
+
+    public function listarOscs() {
+        $sql = "SELECT id_instituicao, nome_instituicao, descricao FROM instituicao"; 
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscarDadosPagamento($id_doacao) {
+        $sql = "SELECT i.nome_instituicao, i.chave_pix, d.quantia 
+                FROM doacao d 
+                JOIN instituicao i ON d.fk_id_instituicao = i.id_instituicao 
+                WHERE d.id_doacao = :id";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id_doacao);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
