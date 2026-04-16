@@ -35,10 +35,14 @@ class OscController {
 
         if ($idrecebido) {
             session_start();
-            $_SESSION['id_osc_logada'] = $idrecebido;
+            $_SESSION['id_instituicao'] = $idrecebido; 
+            $_SESSION['logged_in'] = true;
 
             http_response_code(201);
-            echo json_encode(["mensagem" => "Instituição cadastrada com sucesso!"]);
+            echo json_encode([
+                "mensagem" => "Instituição cadastrada com sucesso!",
+                "id" => $idrecebido
+            ]);
         } else {
             http_response_code(500);
             echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);

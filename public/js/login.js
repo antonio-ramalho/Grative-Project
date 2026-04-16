@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(btnRegister) {
         btnRegister.addEventListener('click', () => {
             // Redireciona para a sua rota de cadastro
-            window.location.href = '/cadastrar'; 
+            window.location.href = '/cadastro_osc'; 
         });
     }
 });
