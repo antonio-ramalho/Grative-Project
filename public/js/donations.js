@@ -43,6 +43,11 @@ function cadastrar_categoria() {
   document.getElementById("form-categoria").reset();
 }
 
+function voltarParaHome() {
+  localStorage.removeItem("categorias_dict");
+  window.location.href = "/home_osc";
+}
+
 function inserir_tabela_categoria() {
   var html = `
     <table id="tabela-categorias">
@@ -176,8 +181,7 @@ async function publicarRelatorio() {
 
     if (resultado.success) {
       alert("Relatório publicado com sucesso!");
-      localStorage.removeItem("categorias_dict");
-      window.location.href = "/dashboard";
+      voltarParaHome();
     } else {
       throw new Error(resultado.message || "Erro desconhecido");
     }

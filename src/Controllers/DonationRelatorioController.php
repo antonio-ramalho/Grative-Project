@@ -1,7 +1,14 @@
 <?php
-class DonationReportController {
+
+class DonationRelatorioController {
     public function index() {
 
+        if (!isset($_SESSION['id_instituicao'])) {
+            echo json_encode(['error' => 'Usuário não autenticado']);
+            return;
+        }
+
+        $idLogado = $_SESSION['id_instituicao'];
         $dataInicio = $_GET['inicio'] ?? date('Y-m-d', strtotime('-30 days'));
         $dataFim = $_GET['fim'] ?? date('Y-m-d');
 
@@ -19,8 +26,8 @@ class DonationReportController {
                 $options
             );
 
-            $model = new DonationModel($pdo);
-            $dados = $model->getDonationsSum($dataInicio, $dataFim);
+            $model = new getDonationModel($pdo);
+            $dados = $model->getDonationsSum($dataInicio, $dataFim, $idLogado);
 
             require '../src/Views/reports/donations.php';
         }

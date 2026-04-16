@@ -1,11 +1,14 @@
 <?php
 error_reporting(E_ALL & ~E_DEPRECATED);
+session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Helpers/functions.php';
 require_once __DIR__ . '/../src/Core/Router.php';
 
+require_once __DIR__ . '/../src/Controllers/DonationRelatorioController.php';
+require_once __DIR__ . '/../src/Models/GetDonationModel.php';
+
 require_once __DIR__ . '/../src/Controllers/DonationController.php';
-require_once __DIR__ . '/../src/Controllers/DonationReportController.php';
 require_once __DIR__ . '/../src/Models/DonationModel.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');

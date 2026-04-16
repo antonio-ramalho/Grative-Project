@@ -10,8 +10,8 @@ $router->post('/api/osc/editar', 'App\Controllers\OscController@atualizar');
 $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
 
 // Rotas Gerais
-$router->get('/', 'App\Controllers\HomeController@index'); 
-$router->get('/relatorio-doacoes', 'App\Controllers\DonationReportController@index');
+$router->get('/', 'App\Controllers\LoginController@index'); 
+$router->get('/relatorio-doacoes', 'DonationRelatorioController@index');
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 
 // Rotas de Autenticação

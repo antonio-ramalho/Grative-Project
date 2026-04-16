@@ -12,7 +12,6 @@ class Router {
     }
 
     private function addRoute(string $method, string $path, string $action): void {
-        // Converte {id} em padrão regex
         $pattern = preg_replace('/\{[a-z]+\}/', '([^/]+)', $path);
         $this->routes[$method][] = ['pattern' => $pattern, 'action' => $action];
     }

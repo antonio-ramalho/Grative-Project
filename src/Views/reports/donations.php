@@ -9,7 +9,7 @@
 </head>
 <body>
     <section id="cabecalho" class="interface">
-        <button class="botao_cancelar">Voltar</button>
+        <button class="botao_cancelar" onclick="voltarParaHome()">Voltar</button>
         <img src="/img/icons/person-circle.svg" alt="icone-usuario" class="icone">
     </section>
 
