@@ -14,7 +14,7 @@
     </section>
 
     <section id="filtro_gerar" class="interface">
-         <div>
+        <div>
             <h1>Defina um intervalo de tempo</h1>
         </div>
 
