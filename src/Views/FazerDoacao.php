@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Fazer Doação - Grative</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="/css/style.css">">   
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="ConfirmarInformacoes.php" class="close-btn"><i class="ph ph-x"></i></a>
+            <a href="/home" class="close-btn"><i class="ph ph-x"></i></a>
         </div>
         
         <div class="content">
@@ -38,20 +38,20 @@
                 </div>
             </div>
 
-        <div class="input-group">
-        <label>Selecione o método de pagamento</label>
-        <label class="payment-card">
-            <div class="card-content">
-                <i class="ph ph-pix-logo"></i>
-                <span>Pix</span>
+            <div class="input-group">
+                <label>Selecione o método de pagamento</label>
+                <label class="payment-card">
+                    <div class="card-content">
+                        <i class="ph ph-pix-logo"></i>
+                        <span>Pix</span>
+                    </div>
+                    <input type="radio" name="metodo" value="pix" checked>
+                </label>
             </div>
-            <input type="radio" name="metodo" value="pix" checked>
-        </label>
         </div>
-        
-        </div>
+
         <div class="footer">
-            <a href="ConfirmarInformacoes.php" class="btn btn-cancel">Voltar</a>
+            <a href="/home" class="btn btn-cancel">Voltar</a>
             <a href="#" class="btn btn-next">Avançar</a>
         </div>
     </div>

@@ -26,3 +26,7 @@ $router->get('/fazer-doacao', 'DonationController@mostrarFormulario');
 $router->get('/pagamento', 'DonationController@mostrarPagamento');
 $router->post('/api/doacao/confirmar', 'DonationController@confirmarDoacao');
 $router->get('/obrigado', 'DonationController@mostrarSucesso');
+$router->get('/home', 'DonationController@mostrarHome');
+
+$router->get('/api/oscs', 'DonationController@listarOscsApi');
+$router->get('/api/pagamento/detalhes', 'DonationController@apiDetalhesPagamento');

@@ -1,25 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const urlParams = new URLSearchParams(window.location.search);
-    
-    // Procura especificamente pelo número (ID) da doação
     const idDoacao = urlParams.get('id');
-    console.log("ID da Doação identificado:", idDoacao);
+    
+    if (!idDoacao) {
+        alert("Erro: ID da doação não encontrado.");
+        window.location.href = '/home';
+        return;
+    }
 
-    // Procura o botão de finalizar na tela
+    fetch(`/api/pagamento/detalhes?id=${idDoacao}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.erro) {
+                console.error("Erro da API:", data.erro);
+                return;
+            }
+
+            document.getElementById('nome-osc').innerText = data.nome_instituicao;
+            document.getElementById('pix-key').value = data.chave_pix;
+            
+            const valorFormatado = parseFloat(data.quantia).toLocaleString('pt-br', {
+                style: 'currency',
+                currency: 'BRL'
+            });
+            document.getElementById('valor-display').innerHTML = `Valor da doação: <strong>${valorFormatado}</strong>`;
+
+            const qrImg = document.getElementById('qr-code-pix');
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.chave_pix)}`;
+            qrImg.style.display = 'inline-block'; 
+        })
+        .catch(err => console.error("Erro ao carregar detalhes:", err));
+
+
     const btnFinalizar = document.querySelector('.btn-next');
 
     if (btnFinalizar) {
         btnFinalizar.addEventListener('click', async (e) => {
             e.preventDefault();
 
-            if (!idDoacao) {
-                alert("Erro: ID da doação não encontrado na URL. Tente refazer o processo.");
-                return;
-            }
-
             try {
-                // Envia para o sistema a ordem de confirmar o pagamento desse ID
                 const response = await fetch('/api/doacao/confirmar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
