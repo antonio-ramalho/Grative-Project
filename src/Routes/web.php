@@ -16,7 +16,7 @@ $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@public
 
 // Rotas de Autenticação
 $router->get('/login', 'App\Controllers\LoginController@index');
-$router->post('/login', 'App\Controllers\LoginController@authenticate');
+$router->post('/api/login', 'App\Controllers\LoginController@authenticateApi');
 $router->get('/logout', 'App\Controllers\LoginController@logout');
 
 // Rotas doação
@@ -30,3 +30,12 @@ $router->get('/home', 'DonationController@mostrarHome');
 
 $router->get('/api/oscs', 'DonationController@listarOscsApi');
 $router->get('/api/pagamento/detalhes', 'DonationController@apiDetalhesPagamento');
+
+// Rotas Doador
+require_once __DIR__ . '/../Controllers/DoadorController.php';
+$router->get('/cadastro_doador', 'App\Controllers\DoadorController@mostrarFormulario');
+$router->post('/api/doador/cadastrar', 'App\Controllers\DoadorController@cadastrar');
+$router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador');
+$router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
+$router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
+$router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
