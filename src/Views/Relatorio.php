@@ -85,6 +85,6 @@
             </div>
         </div>
     </section>
-    <script src="js/donations.js"></script>
+    <script src="js/Relatorio.js"></script>
 </body>
 </html>
