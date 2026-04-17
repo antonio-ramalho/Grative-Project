@@ -20,7 +20,33 @@ const formCadastroDoador = document.getElementById("formCadastroDoador");
 const divAlertas = document.getElementById("divAlertas");
 const senhaInput = document.getElementById("senha_doador");
 const confirmaSenhaInput = document.getElementById("confirma_senha_doador");
+const cpfInput = document.getElementById("cpf_doador");
+const telefoneInput = document.getElementById("telefone_doador");
 
+// --- Adicionado: Máscaras de CPF e Telefone ---
+function formatCpfMask(rawValue) {
+    const digits = rawValue.replace(/\D/g, "").slice(0, 11);
+    let formatted = digits;
+    formatted = formatted.replace(/^(\d{3})(\d)/, "$1.$2");
+    formatted = formatted.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+    formatted = formatted.replace(/\.(\d{3})(\d)/, ".$1-$2");
+    return formatted;
+}
+
+function formatPhoneMask(rawValue) {
+    const digits = rawValue.replace(/\D/g, "").slice(0, 11);
+    let formatted = digits;
+    formatted = formatted.replace(/^(\d{2})(\d)/g, "($1) $2");
+    formatted = formatted.replace(/(\d)(\d{4})$/, "$1-$2");
+    return formatted;
+}
+
+if (cpfInput) {
+    cpfInput.addEventListener("input", (e) => { e.target.value = formatCpfMask(e.target.value); });
+}
+if (telefoneInput) {
+    telefoneInput.addEventListener("input", (e) => { e.target.value = formatPhoneMask(e.target.value); });
+}
 // Elementos da Foto de Perfil
 const fileInput = document.getElementById('profile-pic-input');
 const imgPreview = document.getElementById('pic-preview');
@@ -85,6 +111,8 @@ function collectFormData(userUid) {
     return {
         nome_doador: getInputValue("nome_doador"),
         usuario_doador: getInputValue("usuario_doador"),
+        cpf_doador: getInputValue("cpf_doador").replace(/\D/g, ""), // Limpa a formatação
+        telefone_doador: getInputValue("telefone_doador").replace(/\D/g, ""), // Limpa a formatação
         email_doador: getInputValue("email_doador"),
         data_nasc_doador: getInputValue("data_nasc_doador"),
         id_firebase: userUid
@@ -139,21 +167,18 @@ formCadastroDoador.addEventListener("submit", async (event) => {
     const emailDoador = getInputValue("email_doador");
 
     try {
-        // 1. Cria usuário no Firebase
         const userUid = await registrarNovoUsuario(emailDoador, senha);
-        
-        // 2. Coleta os dados + UID gerado
         const dadosDoador = collectFormData(userUid);
-        
-        // 3. Manda pro PHP salvar no MySQL
-        await submitDoadorData(dadosDoador);
+        const resposta = await submitDoadorData(dadosDoador);
 
-        // Se tudo deu certo:
-        alert("Cadastro realizado com sucesso!");
-        window.location.href = "/login"; // Redireciona para a página de login
+        // Se tudo deu certo e o PHP devolveu o ID:
+        if (resposta && resposta.id) {
+            alert("Cadastro realizado com sucesso! Redirecionando...");
+            // Redireciona mandando o ID pela URL (igual você fez na OSC)
+            window.location.href = `/home_doador?id=${resposta.id}`; 
+        }
         
     } catch (error) {
-        // O erro visual já foi tratado dentro de registrarNovoUsuario ou submitDoadorData e jogado no innerHTML.
-        console.log("Fluxo de cadastro interrompido por erro.");
+        console.log("Fluxo de cadastro interrompido por erro.", error);
     }
 });

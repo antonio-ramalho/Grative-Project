@@ -1,9 +1,8 @@
 <?php
 namespace App\Controllers;
 
-use App\Services\FirebaseService;
-// IMPORTANTE: Adicione o Model aqui
 use App\Models\OscModel; 
+use App\Models\DoadorModel;
 
 class LoginController {
     
@@ -11,61 +10,56 @@ class LoginController {
         require_once __DIR__ . '/../views/login.html';
     }
 
-    public function authenticate() {
+    // Agora recebemos a requisição via JSON (API) do JavaScript
+    public function authenticateApi() {
+        $jsonRecebido = file_get_contents('php://input');
+        $dados = json_decode($jsonRecebido, true);
 
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+        $firebaseUid = $dados['uid'] ?? null;
 
-        if (empty($email) || empty($password)) {
-            header("Location: /login?error=empty_fields");
-            exit;
+        if (!$firebaseUid) {
+            http_response_code(400);
+            echo json_encode(["erro" => "Falha na comunicação. UID não recebido."]);
+            return;
         }
 
-        $firebaseService = new FirebaseService();
-        $token = $firebaseService->loginWithEmail($email, $password);
+        $conn = require __DIR__ . '/../../config/database.php';
+        
+        $oscModel = new OscModel($conn); 
+        $doadorModel = new DoadorModel($conn);
 
-        if ($token) {
-            $firebaseUid = $firebaseService->verificarToken($token);
+        // 1. Procura na tabela de Instituição
+        $idInstituicao = $oscModel->buscarIdPorFirebaseUid($firebaseUid);
+        
+        if ($idInstituicao) {
+            if (session_status() === PHP_SESSION_NONE) { session_start(); }
+            $_SESSION['logged_in'] = true;
+            $_SESSION['id_instituicao'] = $idInstituicao;
 
-            if ($firebaseUid) {
-                
-                $conn = require __DIR__ . '/../../config/database.php';
-                
-                $oscModel = new OscModel($conn); 
-
-                $idInstituicao = $oscModel->buscarIdPorFirebaseUid($firebaseUid);
-                
-                if ($idInstituicao) {
-                    session_start();
-                    $_SESSION['user_token'] = $token;
-                    $_SESSION['logged_in'] = true;
-                    
-                    $_SESSION['id_instituicao'] = $idInstituicao;
-
-                    header("Location: /home_osc?id=" . $idInstituicao);
-                    
-                    exit;
-
-                } else {
-                    header("Location: /login?error=instituicao_nao_encontrada");
-                    exit;
-                }
-            } else {
-                header("Location: /login?error=token_invalido");
-                exit;
-            }
-
-        } else {
-            header("Location: /login?error=invalid_credentials");
-            exit;
+            echo json_encode(["sucesso" => true, "redirect" => "/home_osc?id=" . $idInstituicao]);
+            return;
         }
+
+        // 2. Se não achou, procura na tabela de Doador
+        $idDoador = $doadorModel->buscarIdPorFirebaseUid($firebaseUid);
+
+        if ($idDoador) {
+            if (session_status() === PHP_SESSION_NONE) { session_start(); }
+            $_SESSION['logged_in'] = true;
+            $_SESSION['id_usuario'] = $idDoador;
+
+            echo json_encode(["sucesso" => true, "redirect" => "/home_doador?id=" . $idDoador]);
+            return;
+        }
+
+        // 3. Se não achou em nenhum, retorna erro
+        http_response_code(404);
+        echo json_encode(["erro" => "Usuário não encontrado no banco de dados da Grative."]);
     }
 
     public function logout() {
         session_start();
-
         $_SESSION = array();
-
         session_destroy();
         header("Location: /login?msg=logout_success");
         exit;
