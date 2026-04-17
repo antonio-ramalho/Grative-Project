@@ -1,17 +1,31 @@
 <?php
 
 class DonationController {
-    // Abre a página de pagamento (QR Code de teste)
-    public function mostrarPagamento() {
-        require_once __DIR__ . '/../Views/Pagamento.php';
+
+    // 1. Carrega a casca da Home
+    public function mostrarHome() {
+        require_once __DIR__ . '/../Views/Home.php';
     }
 
-    // Abre o formulário inicial de doação
+    // 2. API para a Home (usada pelo home.js)
+    public function listarOscsApi() {
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/DonationModel.php';
+        
+        $model = new DonationModel($conn);
+        $oscs = $model->listarOscs(); 
+    
+        header('Content-Type: application/json');
+        echo json_encode($oscs);
+        exit;
+    }
+
+    // 3. Abre o formulário de valor da doação
     public function mostrarFormulario() {
         require_once __DIR__ . '/../Views/FazerDoacao.php';
     }
 
-    // Recebe os dados da primeira tela e salva no banco como "pendente"
+    // 4. Salva a doação no banco e retorna o ID gerado
     public function registrarDoacao() {
         $json = file_get_contents('php://input');
         $dados = json_decode($json, true);
@@ -48,7 +62,27 @@ class DonationController {
         }
     }
 
-    // Recebe o ID e muda o status para "pagamento efetuado"
+    // 5. Carrega a casca da página de Pagamento (sem PHP no HTML)
+    public function mostrarPagamento() {
+        require_once __DIR__ . '/../Views/Pagamento.php';
+    }
+
+    // 6. API para a página de Pagamento (usada pelo pagamento.js)
+    public function apiDetalhesPagamento() {
+        $id_doacao = $_GET['id'] ?? null;
+        
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/DonationModel.php';
+        
+        $model = new DonationModel($conn);
+        $dados = $model->buscarDadosPagamento($id_doacao);
+    
+        header('Content-Type: application/json');
+        echo json_encode($dados);
+        exit;
+    }
+
+    // 7. Confirma que o usuário pagou
     public function confirmarDoacao() {
         $json = file_get_contents('php://input');
         $dados = json_decode($json, true);
@@ -71,7 +105,7 @@ class DonationController {
         }        
     }
 
-    // Abre a tela final de agradecimento
+    // 8. Tela final de sucesso
     public function mostrarSucesso() {
         require_once __DIR__ . '/../Views/Obrigado.php';
     }
