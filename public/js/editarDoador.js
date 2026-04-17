@@ -1,4 +1,4 @@
-// Funções de Máscara
+
 function formatCpfMask(rawValue) {
     const digits = rawValue.replace(/\D/g, "").slice(0, 11);
     let formatted = digits;
@@ -16,12 +16,12 @@ function formatPhoneMask(rawValue) {
     return formatted;
 }
 
-// Elementos
+
 const cpfInput = document.getElementById("cpf_doador");
 const telefoneInput = document.getElementById("telefone_doador");
 const formEditar = document.getElementById("formEditarDoador");
 
-// Formata ao carregar a página (pega o dado cru do PHP e deixa bonito)
+
 document.addEventListener("DOMContentLoaded", () => {
     if(cpfInput && cpfInput.value) {
         cpfInput.value = formatCpfMask(cpfInput.value);
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Formata enquanto digita
+
 if (cpfInput) {
     cpfInput.addEventListener("input", (event) => {
         event.target.value = formatCpfMask(event.target.value);
@@ -44,7 +44,7 @@ if (telefoneInput) {
     });
 }
 
-// Limpa as máscaras antes de enviar para o PHP (opcional, pois o PHP já limpa, mas evita bugs)
+
 if (formEditar) {
     formEditar.addEventListener("submit", () => {
         cpfInput.value = cpfInput.value.replace(/\D/g, "");

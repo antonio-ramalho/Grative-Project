@@ -67,7 +67,7 @@ public function atualizar() {
         exit;
     }
 
-    // No seu OscController.php
+    
     
     public function excluir() {
         session_start();

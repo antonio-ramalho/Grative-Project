@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, deleteUser} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-// Configuração do Firebase usada para autenticação.
+
 const firebaseConfig = {
     apiKey: "AIzaSyD2-P4gqUf3jrBAV-Nz5LFAvT5lom5_rMI",
     authDomain: "grative-f0ac9.firebaseapp.com",
@@ -24,10 +24,10 @@ const auth = getAuth(app);
 
             if (user) {
                 try {
-                    // 1. Tenta deletar do Firebase primeiro
+                 
                     await deleteUser(user);
                     
-                    // 2. Se deletou do Firebase, manda o PHP deletar do MySQL
+                  
                     const response = await fetch('/api/doador/excluir', {
                         method: 'POST'
                     });
@@ -39,7 +39,7 @@ const auth = getAuth(app);
                         alert('Erro ao excluir do banco de dados.');
                     }
                 } catch (error) {
-                    // Se o usuário estiver logado há muito tempo, o Firebase pede reautenticação
+                    
                     if (error.code === 'auth/requires-recent-login') {
                         alert('Por motivos de segurança, você precisa fazer login novamente antes de excluir a conta.');
                         window.location.href = '/login';
@@ -48,7 +48,7 @@ const auth = getAuth(app);
                     }
                 }
             } else {
-                // Se por algum motivo o currentUser estiver null, a gente força a exclusão no banco mesmo assim
+                
                 const response = await fetch('/api/doador/excluir', { method: 'POST' });
                 if (response.ok) {
                     window.location.href = '/login';

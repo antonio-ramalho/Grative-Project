@@ -19,7 +19,7 @@ $router->get('/login', 'App\Controllers\LoginController@index');
 $router->post('/api/login', 'App\Controllers\LoginController@authenticateApi');
 $router->get('/logout', 'App\Controllers\LoginController@logout');
 
-// Rotas doação
+// Rotas Doação
 require_once __DIR__ . '/../Controllers/DonationController.php';
 $router->post('/api/doacao/registrar', 'DonationController@registrarDoacao');
 $router->get('/fazer-doacao', 'DonationController@mostrarFormulario');

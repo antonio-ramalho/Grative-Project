@@ -15,24 +15,24 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Pegando os elementos do HTML (ajuste os IDs conforme o seu login.html)
-    const formLogin = document.querySelector('form'); // Pega o formulário da página
+    
+    const formLogin = document.querySelector('form'); 
     const emailInput = document.querySelector('input[type="email"]');
     const passwordInput = document.querySelector('input[type="password"]');
 
     if (formLogin) {
         formLogin.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Impede o envio tradicional do formulário
+            event.preventDefault(); 
 
             const email = emailInput.value;
             const password = passwordInput.value;
 
             try {
-                // 1. Faz login no Firebase
+                
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const uid = userCredential.user.uid;
 
-                // 2. Manda o UID pro PHP descobrir de quem é essa conta
+                
                 const response = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (response.ok && data.redirect) {
-                    // 3. Deu certo! Vai pra home da OSC ou do Doador
+                    
                     window.location.href = data.redirect;
                 } else {
                     alert(data.erro || "Erro ao localizar o usuário no sistema.");
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Seus botões de redirecionamento de cadastro continuam normais
+    
     const btnRegisterOsc = document.getElementById('btnGoToRegisterOsc');
     if(btnRegisterOsc) {
         btnRegisterOsc.addEventListener('click', () => { window.location.href = '/cadastro_osc'; });

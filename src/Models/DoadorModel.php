@@ -13,8 +13,7 @@ class DoadorModel {
 
     public function salvar($dados) {
         try {
-            // Nota: Se a tabela no banco se chamar 'usuario' em vez de 'doador', 
-            // altere o "INSERT INTO doador" para "INSERT INTO usuario"
+           
             $sql = "INSERT INTO usuario 
                     (usuario, firebase_uid, nome_completo, cpf, data_nasc, telefone, email, data_cadastro, status_ativo) 
                     VALUES 
@@ -22,7 +21,7 @@ class DoadorModel {
 
             $stmt = $this->conn->prepare($sql);
 
-            // Linkando os dados que vieram do JavaScript com as variáveis do banco
+            
             $stmt->bindValue(':usuario', $dados['usuario_doador']);
             $stmt->bindValue(':uid', $dados['id_firebase']); 
             $stmt->bindValue(':nome', $dados['nome_doador']);
@@ -68,10 +67,10 @@ class DoadorModel {
 
             $stmt = $this->conn->prepare($sql);
 
-            // Ajuste os nomes de acordo com os inputs (name="") do seu editar_doador.php
+            
             $stmt->bindValue(':nome', $dados['nome_doador']);
             $stmt->bindValue(':usuario', $dados['usuario_doador']);
-            $stmt->bindValue(':cpf', preg_replace('/\D/', '', $dados['cpf_doador'])); // Limpa a máscara
+            $stmt->bindValue(':cpf', preg_replace('/\D/', '', $dados['cpf_doador'])); 
             $stmt->bindValue(':telefone', preg_replace('/\D/', '', $dados['telefone_doador']));
             $stmt->bindValue(':id', $id);
 

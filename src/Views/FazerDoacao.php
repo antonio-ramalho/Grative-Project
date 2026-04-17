@@ -16,19 +16,27 @@
             <h2>Fazer Doação</h2>
             
             <div class="progress-bar">
-                <div class="step">1</div>
-                <div class="step active">2</div>
+                <div class="step active">1</div>
+                <div class="step">2</div>
                 <div class="step">3</div>
-                <div class="step">4</div>
             </div>
 
             <div class="input-group">
                 <label for="valor_doacao">Digite o valor</label>
                 <div class="input-wrapper">
                     <i class="ph ph-currency-dollar"></i>
-                    <input type="number" id="valor_doacao" name="valor" placeholder="Valor" required>
+                    <input 
+                        type="number" 
+                        id="quantia" 
+                        name="quantia" 
+                        placeholder="0,00" 
+                        min="0.01" 
+                        step="0.01" 
+                        required
+                    >
                 </div>
-            </div>
+</div>
+            
 
             <div class="input-group">
                 <label for="mensagem_doacao">Mensagem (opcional)</label>

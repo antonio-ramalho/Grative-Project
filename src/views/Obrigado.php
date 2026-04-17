@@ -14,18 +14,34 @@
             <div class="icon-check">
                 <i class="ph-fill ph-check-circle"></i>
             </div>
-            
+            <div class="progress-bar">
+                <div class="step">1</div>
+                <div class="step">2</div>
+                <div class="step active">3</div>
+            </div>
             <h2>Muito obrigado!</h2>
             <p>Sua doação foi confirmada e o status atualizado. Sua ajuda faz toda a diferença!</p>
             
-            <a href="/home" class="btn-voltar">
+            <a href="/home_doador" class="btn-voltar">
                 Voltar para o Início
             </a>
 
-            <p class="timer-text">Redirecionando em <span id="timer">5</span>s...</p>
+            Você será redirecionado para o feed em <span id="contador" class="fw-bold text-success">5</span> segundos...
         </div>
     </div>
+        <script>
+        let tempo = 5; 
+        const display = document.getElementById('contador');
+        const contagem = setInterval(function() {
+            tempo--; 
+            display.innerText = tempo;
 
+            if (tempo <= 0) {
+                clearInterval(contagem); 
+                window.location.href = "/home_doador"; 
+            }
+        }, 1000);
+        </script>
     <script src="/js/sucesso.js"></script>
 </body>
 </html>

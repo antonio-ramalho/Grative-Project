@@ -17,9 +17,8 @@
             
             <div class="progress-bar">
                 <div class="step">1</div>
-                <div class="step">2</div>
+                <div class="step active">2</div>
                 <div class="step">3</div>
-                <div class="step active">4</div>
             </div>
 
             <div class="qr-container" style="text-align: center; margin: 20px 0;">
