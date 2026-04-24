@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarSaldo();
     form.reset();
   });
+
   ver_categorias();
   atualizarSaldo();
 
@@ -20,9 +21,7 @@ function cadastrar_categoria() {
   let categorias_storage = JSON.parse(localStorage.getItem("categorias_dict")) || {};
 
   const id = window.idEmEdicao || Date.now();
-
   const categoria = document.getElementById("selecionar-categoria").value;
-
   const valor = parseFloat(document.getElementById("categoria-valor").value);
 
   if (valor < 0 || valor === 0) {
