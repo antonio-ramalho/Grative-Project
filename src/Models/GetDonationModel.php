@@ -1,5 +1,10 @@
 <?php
-class getDonationModel {
+namespace App\Models;
+
+use PDO;
+use PDOException;
+
+class GetDonationModel {
     private $pdo;
 
     public function __construct($pdo) {

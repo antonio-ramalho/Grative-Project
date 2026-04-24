@@ -11,7 +11,7 @@ $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
 
 // Rotas Gerais
 $router->get('/', 'App\Controllers\HomeController@index');
-$router->get('/relatorio-doacoes', 'DonationRelatorioController@index');
+$router->get('/relatorio-doacoes', 'App\Controllers\DonationRelatorioController@getDoacoes');
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 
 // Rotas de Autenticação

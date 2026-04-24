@@ -10,7 +10,7 @@ class LoginController {
         require_once __DIR__ . '/../views/login.html';
     }
 
-    
+    // Agora recebemos a requisição via JSON (API) do JavaScript
     public function authenticateApi() {
         $jsonRecebido = file_get_contents('php://input');
         $dados = json_decode($jsonRecebido, true);
@@ -28,7 +28,7 @@ class LoginController {
         $oscModel = new OscModel($conn); 
         $doadorModel = new DoadorModel($conn);
 
-        
+        // 1. Procura na tabela de Instituição
         $idInstituicao = $oscModel->buscarIdPorFirebaseUid($firebaseUid);
         
         if ($idInstituicao) {
@@ -40,7 +40,7 @@ class LoginController {
             return;
         }
 
-       
+        // 2. Se não achou, procura na tabela de Doador
         $idDoador = $doadorModel->buscarIdPorFirebaseUid($firebaseUid);
 
         if ($idDoador) {
@@ -52,7 +52,7 @@ class LoginController {
             return;
         }
 
-        
+        // 3. Se não achou em nenhum, retorna erro
         http_response_code(404);
         echo json_encode(["erro" => "Usuário não encontrado no banco de dados da Grative."]);
     }

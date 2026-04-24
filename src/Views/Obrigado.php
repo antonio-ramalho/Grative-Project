@@ -2,46 +2,46 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sucesso - Grative</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="../../public/css/style.css">
-    <style>
-        .success-container {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .success-icon {
-            font-size: 80px;
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-        .success-title {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .success-text {
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/estilo_sucesso.css">
 </head>
 <body>
     <div class="app-container">
-        <div class="content success-container">
-            <i class="ph-fill ph-check-circle success-icon"></i>
-            <h2 class="success-title">Muito obrigado!</h2>
-            <p class="success-text">
-                Sua doação foi confirmada e o status já foi atualizado no sistema. 
-                Sua ajuda faz toda a diferença para a nossa instituição.
-            </p>
-        </div>
-
-        <div class="footer">
-            <a href="/" class="btn btn-next" style="text-align: center; text-decoration: none; display: block;">
+        <div class="success-card">
+            <div class="icon-check">
+                <i class="ph-fill ph-check-circle"></i>
+            </div>
+            <div class="progress-bar">
+                <div class="step">1</div>
+                <div class="step">2</div>
+                <div class="step active">3</div>
+            </div>
+            <h2>Muito obrigado!</h2>
+            <p>Sua doação foi confirmada e o status atualizado. Sua ajuda faz toda a diferença!</p>
+            
+            <a href="/home_doador" class="btn-voltar">
                 Voltar para o Início
             </a>
+
+            Você será redirecionado para o feed em <span id="contador" class="fw-bold text-success">5</span> segundos...
         </div>
     </div>
+        <script>
+        let tempo = 5; 
+        const display = document.getElementById('contador');
+        const contagem = setInterval(function() {
+            tempo--; 
+            display.innerText = tempo;
+
+            if (tempo <= 0) {
+                clearInterval(contagem); 
+                window.location.href = "/home_doador"; 
+            }
+        }, 1000);
+        </script>
+    <script src="/js/sucesso.js"></script>
 </body>
 </html>

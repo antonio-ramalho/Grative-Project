@@ -1,0 +1,11 @@
+@import "cores.css";
+
+.botao_cancelar {
+  border: 1px solid var(--borda-card-input);
+  background-color: var(--fundo-card-botao);
+  border-radius: 10px;
+  padding: 10px;
+  min-width: 80px;
+  cursor: pointer;
+  color: #081c15;
+}

@@ -162,3 +162,7 @@ table {
   width: 24px;
   height: 24px;
 }
+
+#btn-salvar-categoria {
+  max-width: 150px;
+}

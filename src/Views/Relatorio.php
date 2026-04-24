@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <title>Relatório de Doações</title>
     <link rel="stylesheet" href="css\geral.css">
-    <link rel="stylesheet" href="css\gerar_relatorio.css">
-    <link rel="stylesheet" href="css\componentes.css">
+    <link rel="stylesheet" href="css\paginas\gerar_relatorio.css">
+    <link rel="stylesheet" href="css\componentes\botao_acao.css">
+    <link rel="stylesheet" href="css\componentes\input_padrao.css">
+    <link rel="stylesheet" href="css\componentes\icone.css">
+    <link rel="stylesheet" href="css\componentes\botao_cancelar.css">
 </head>
 <body>
     <section id="cabecalho" class="interface">
@@ -85,6 +88,6 @@
             </div>
         </div>
     </section>
-    <script src="js/donations.js"></script>
+    <script src="js/Relatorio.js"></script>
 </body>
 </html>
