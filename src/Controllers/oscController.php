@@ -34,7 +34,10 @@ class OscController {
 
 
         if ($idrecebido) {
+            if (session_status() === PHP_SESSION_NONE) {
             session_start();
+            }
+
             $_SESSION['id_instituicao'] = $idrecebido; 
             $_SESSION['logged_in'] = true;
 
@@ -43,9 +46,11 @@ class OscController {
                 "mensagem" => "Instituição cadastrada com sucesso!",
                 "id" => $idrecebido
             ]);
+            exit;
         } else {
             http_response_code(500);
             echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
+            exit;
     }
 
 }
@@ -66,8 +71,6 @@ public function atualizar() {
         }
         exit;
     }
-
-    // No seu OscController.php
     
     public function excluir() {
         session_start();
