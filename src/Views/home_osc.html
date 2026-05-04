@@ -24,10 +24,12 @@
             <option value="12">Dezembro</option>
         </select>
         <button class="btn btn-outline" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-perfil" aria-controls="offcanvas-perfil">
-            <i class="bi bi-person-circle fs-3"></i> <!--Adicionar foto de perfil da OSC no Sprint 2-->
+            <i class="bi bi-person-circle fs-3"></i> <!--!Adicionar foto de perfil da OSC no Sprint 2-->
         </button>
     </header>
     <main>
+
+        <!--?Botões de atalho-->
         <section class="container-fluid mt-4">
             <h1>Atalhos</h1>
             <div class="bg-white rounded-4 shadow-sm p-4 d-flex align-items-center gap-4">
@@ -35,13 +37,13 @@
                     <i class="bi bi-file-earmark-text-fill fs-3"></i>
                     Novo Relatório
                 </a>
-                <a href="/relatorio-doacoes" class="btn btn-outline p-4 rounded-3 d-flex flex-column align-items-center border-black shadow-sm">
-                    <i class="bi bi-file-earmark-text-fill fs-3"></i>
-                    Novo Relatório
-                </a>
-                <a href="/relatorio-doacoes" class="btn btn-outline p-4 rounded-3 d-flex flex-column align-items-center border-black shadow-sm">
-                    <i class="bi bi-file-earmark-text-fill fs-3"></i>
-                    Novo Relatório
+                <button type="button" class="btn btn-outline p-4 rounded-3 d-flex flex-column align-items-center border-black shadow-sm" data-bs-toggle="modal" data-bs-target="#modalPublicacao">
+                    <i class="bi bi-megaphone-fill fs-3"></i>
+                    Criar Publicação
+                </button>
+                <a href="feedOsc" class="btn btn-outline p-4 rounded-3 d-flex flex-column align-items-center border-black shadow-sm">
+                    <i class="bi bi-grid-3x3-gap-fill fs-3"></i>
+                    Minhas Publicações
                 </a>
                 <a href="/relatorio-doacoes" class="btn btn-outline p-4 rounded-3 d-flex flex-column align-items-center border-black shadow-sm">
                     <i class="bi bi-file-earmark-text-fill fs-3"></i>
@@ -49,6 +51,8 @@
                 </a>
             </div>
         </section>
+
+        <!--?Dashoboard-->
         <section class="container-fluid mt-5"> 
             <h1 class="mb-4">Dashboard</h1>
             <div class="row g-4">
@@ -68,6 +72,7 @@
         </section>
     </main>
 
+    <!--?OffCanvas (Barra lateral de editar e excluir o usuário)-->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-perfil" aria-labelledby="offcanvas-perfil">
         <div class="offcanvas-header">
             <h2 class="offcanvas-title" id="offcanvas-perfil">Seu Perfil</h2>
@@ -75,7 +80,7 @@
         </div>
         <div class="offcanvas-body d-flex flex-column pt-0">
             <div class="text-center">
-                <i style="font-size: 180px;" class="bi bi-person-circle lh-1"></i> <!--Adicionar foto de perfil da Osc no sprint 2-->
+                <i style="font-size: 180px;" class="bi bi-person-circle lh-1"></i> <!--!Adicionar foto de perfil da Osc no sprint 2-->
             </div>
             <div>
                 <button class="btn btn-outline-primary w-100 mt-3" id="btnEditarPerfil">Editar Perfil</button>
@@ -86,6 +91,51 @@
                     <i class="bi bi-box-arrow-right fs-3"></i>
                     Sair da conta
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!--?Modal de criar publicação-->
+    <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-labelledby="modalPublicacaoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                
+                <div class="modal-header border-bottom-0 pb-0">
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body pt-0 px-4 pb-4">
+                    <form id="formNovaPublicacao">
+                        <div class="d-flex gap-3">
+                            
+                            <div>
+                                <i class="bi bi-person-circle text-secondary" style="font-size: 48px; line-height: 1;"></i>
+                            </div>
+                            
+                            <div class="w-100 mt-2">
+                                
+                                <input type="text" class="form-control border-0 shadow-none px-0 fs-5 fw-semibold text-dark" id="tituloProjeto" name="titulo" placeholder="Título da ação ou projeto" required>
+                                
+                                <textarea class="form-control border-0 shadow-none px-0 mt-1 fs-5" id="descricaoProjeto" name="descricao" rows="3" placeholder="O que a sua OSC realizou hoje?" style="resize: none;" required></textarea>
+                                
+                                <hr class="border-secondary-subtle my-3">
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                
+                                    <div class="text-primary">
+                                        <label for="imagemProjeto" class="mb-0" style="cursor: pointer;" title="Adicionar foto">
+                                            <i class="bi bi-image fs-5"></i>
+                                        </label>
+                                        <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/png, image/jpeg">
+                                    </div>
+                                
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold" id="btnEnviarPublicacao">Publicar</button>
+                                </div> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
             </div>
         </div>
     </div>

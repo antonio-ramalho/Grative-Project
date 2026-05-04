@@ -46,11 +46,11 @@ class OscController {
         } else {
             http_response_code(500);
             echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
+        }
+
     }
 
-}
-
-public function atualizar() {
+    public function atualizar() {
         session_start();
         $id = $_SESSION['id_instituicao'] ?? $_SESSION['id_osc_logada'] ?? null;
         
@@ -66,8 +66,6 @@ public function atualizar() {
         }
         exit;
     }
-
-    // No seu OscController.php
     
     public function excluir() {
         session_start();
@@ -93,7 +91,6 @@ public function atualizar() {
         exit;
     }
 
-// Método para exibir a tela de edição
     public function mostrarFormularioEdicao() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();

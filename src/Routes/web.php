@@ -10,12 +10,11 @@ $router->post('/api/osc/editar', 'App\Controllers\OscController@atualizar');
 $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
 
 // Rotas Gerais
-$router->get('/', 'App\Controllers\HomeController@index');
 $router->get('/relatorio-doacoes', 'App\Controllers\DonationRelatorioController@getDoacoes');
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 
 // Rotas de Autenticação
-$router->get('/login', 'App\Controllers\LoginController@index');
+$router->get('/', 'App\Controllers\LoginController@index');
 $router->post('/api/login', 'App\Controllers\LoginController@authenticateApi');
 $router->get('/logout', 'App\Controllers\LoginController@logout');
 
@@ -39,3 +38,9 @@ $router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador
 $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
+
+//? Rotas Publicação
+$router->get('/feedOsc', 'App\controllers\PublicacaoController@mostrarFeedOsc');
+$router->post('/api/publicacao/criar','App\Controllers\PublicacaoController@fazerPublicacao');
+$router->get('/api/feed-osc', 'App\Controllers\PublicacaoController@listarFeed');
+$router->post('/api/excluir-publicacao', 'App\Controllers\PublicacaoController@excluirPublicacao');
