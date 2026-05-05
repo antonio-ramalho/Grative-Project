@@ -2,38 +2,31 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Buscar OSC por Categoria</title>
-    <link rel="stylesheet" href="/css/geral.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Categorias - Grative</title>
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/buscar_categoria.css">
 </head>
 <body>
-    <header>
-        <h1>Buscar por Categoria</h1>
-        <p>Escolha uma causa para apoiar:</p>
-    </header>
+    <main class="container-principal">
+        <!-- BARRA DE FILTROS: Fica fixa no topo e protegida do JavaScript -->
+        <header class="barra-filtros">
+            <h2 class="titulo-sessao">Categorias</h2>
+            <div class="categorias-grid">
+                <button class="card-categoria"><span>Saúde</span></button>
+                <button class="card-categoria"><span>Educação</span></button>
+                <button class="card-categoria"><span>Meio Ambiente</span></button>
+            </div>
+        </header>
 
-    <main class="container">
-        <div class="categorias-grid">
-            <button class="cat-card" onclick="filtrar('Saúde')">
-                <img src="/img/icons/check2-circle.svg" alt="Saúde">
-                <span>Saúde</span>
-            </button>
-            <button class="cat-card" onclick="filtrar('Educação')">
-                <img src="/img/icons/pencil-square.svg" alt="Educação">
-                <span>Educação</span>
-            </button>
-            <button class="cat-card" onclick="filtrar('Meio Ambiente')">
-                <img src="/img/icons/circle.svg" alt="Meio Ambiente">
-                <span>Meio Ambiente</span>
-            </button>
-        </div>
-
-        <div id="resultados-busca" class="resultados-container">
-            <p class="aviso">Selecione uma categoria para ver as OSCs.</p>
+        <!-- ÁREA DE RESULTADOS: Onde os cards serão injetados -->
+        <div id="lista-oscs" class="oscs-grid-layout">
+            <div class="placeholder-inicial">
+                <p>Selecione uma categoria acima para listar os projetos.</p>
+            </div>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/buscar_Categoria.js"></script>
+    <script src="/js/home.js"></script>
 </body>
 </html>

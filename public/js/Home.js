@@ -1,47 +1,53 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const listaOscs = document.querySelector('.oscs-list');
+    const listaResultados = document.getElementById('lista-oscs'); 
+    const botoesFiltro = document.querySelectorAll('.card-categoria');
 
-    fetch('/api/oscs')
-        .then(response => response.json())
-        .then(oscs => {
+    // Função para construir os cards com o layout do Figma
+    function renderizarCards(oscs) {
+        // Limpa APENAS a div de baixo
+        listaResultados.innerHTML = ''; 
 
-            listaOscs.innerHTML = '';
+        if (oscs.length === 0) {
+            listaResultados.innerHTML = '<p class="aviso">Nenhuma instituição encontrada nesta categoria.</p>';
+            return;
+        }
 
-            if (oscs.length === 0) {
-                listaOscs.innerHTML = '<p>Nenhuma OSC cadastrada no sistema.</p>';
-                return;
-            }
-
-            oscs.forEach(osc => {
-                const card = `
-                    <div class="osc-card">
-                        <div class="osc-main-info">
-                            <div class="profile-image">
-                                <i class="ph ph-user"></i>
-                            </div>
-                            <div class="osc-details">
-                                <div class="title-row">
-                                    <h3>${osc.nome_instituicao}</h3>
-                                    <span class="score-label">Score</span>
-                                </div>
-                                <div class="description-lines">
-                                    <p>${osc.descricao || 'Sem descrição disponível.'}</p>
-                                </div>
-                                <a href="#" class="more-link">...Saber mais sobre</a>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <a href="/fazer-doacao?id_osc=${osc.id_instituicao}" class="btn-doar">
-                                Doar
-                            </a>
+        oscs.forEach(osc => {
+            listaResultados.innerHTML += `
+                <div class="card-figma">
+                    <div class="card-header">
+                        <div class="circulo-avatar"></div>
+                        <div class="textos">
+                            <h3>${osc.nome_instituicao}</h3>
+                            <p class="desc">${osc.descricao || 'Projeto social dedicado à transformação da comunidade.'}</p>
                         </div>
                     </div>
-                `;
-                listaOscs.innerHTML += card;
-            });
-        })
-        .catch(error => {
-            console.error('Erro ao carregar OSCs:', error);
-            listaOscs.innerHTML = '<p>Erro técnico ao carregar dados. Verifique o console do seu Ryzen 3.</p>';
+                    <div class="card-footer">
+                        <a href="/fazer-doacao?id=${osc.id_instituicao}" class="btn-laranja">Apoiar Projeto</a>
+                    </div>
+                </div>
+            `;
         });
+    }
+
+    // Lógica de clique
+    botoesFiltro.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const categoria = btn.innerText.trim();
+            
+            // Feedback visual no botão selecionado
+            botoesFiltro.forEach(b => b.classList.remove('ativo'));
+            btn.classList.add('ativo');
+
+            listaResultados.innerHTML = '<div class="carregando">Buscando projetos...</div>';
+            
+            fetch(`/api/oscs/categoria?categoria=${categoria}`)
+                .then(res => res.json())
+                .then(dados => renderizarCards(dados))
+                .catch(err => {
+                    console.error(err);
+                    listaResultados.innerHTML = '<p class="aviso">Erro ao conectar com o banco de dados.</p>';
+                });
+        });
+    });
 });
