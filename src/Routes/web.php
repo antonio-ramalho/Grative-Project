@@ -44,3 +44,4 @@ $router->get('/feedOsc', 'App\controllers\PublicacaoController@mostrarFeedOsc');
 $router->post('/api/publicacao/criar','App\Controllers\PublicacaoController@fazerPublicacao');
 $router->get('/api/feed-osc', 'App\Controllers\PublicacaoController@listarFeed');
 $router->post('/api/excluir-publicacao', 'App\Controllers\PublicacaoController@excluirPublicacao');
+$router->get('/api/feed-geral', 'App\Controllers\PublicacaoController@listarFeedGlobal');

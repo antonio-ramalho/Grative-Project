@@ -82,4 +82,20 @@ class PublicacaoModel {
 
         return true;
     }
+
+    public function listarFeedGlobal(){
+        $colecao = $this->firestore->database()->collection('publicacoes');
+        $envelopes = $colecao->documents();
+
+        foreach ($envelopes as $envelope) {
+            if ($envelope->exists()) {
+                
+                $dados_da_carta = $envelope->data();
+                $codigo_rastreio = $envelope->id();
+                $dados_da_carta['id'] = $codigo_rastreio;
+                $lista_publicacoes[] = $dados_da_carta;
+            }
+        }
+        return $lista_publicacoes;
+    }
 }

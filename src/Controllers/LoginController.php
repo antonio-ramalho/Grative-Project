@@ -35,7 +35,7 @@ class LoginController {
             if (session_status() === PHP_SESSION_NONE) { session_start(); }
             $_SESSION['logged_in'] = true;
             $_SESSION['id_instituicao'] = $idInstituicao;
-            $_SESSION['nome_instituicao'] = $dadosOsc['nome'] ?? 'Minha OSC';
+            $_SESSION['nome_instituicao'] = $dadosOsc['nome_instituicao'] ?? 'Minha OSC';
             
             echo json_encode(["sucesso" => true, "redirect" => "/home_osc?id=" . $idInstituicao]);
             return;
@@ -62,7 +62,7 @@ class LoginController {
         session_start();
         $_SESSION = array();
         session_destroy();
-        header("Location: ?msg=logout_success");
+        header("Location:/?msg=logout_success");
         exit;
     }
 }

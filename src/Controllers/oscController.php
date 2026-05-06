@@ -34,7 +34,9 @@ class OscController {
 
 
         if ($idrecebido) {
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $_SESSION['id_instituicao'] = $idrecebido; 
             $_SESSION['logged_in'] = true;
 
