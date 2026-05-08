@@ -42,3 +42,5 @@ $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir')
 // Rotas Mostrar Categorias
 $router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');
 $router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
+
+$router->get('/buscar', 'App\Controllers\BuscarController@mostrarBusca');

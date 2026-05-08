@@ -1,23 +1,33 @@
 function filtrar(categoria) {
     const container = document.getElementById('resultados-busca');
-    container.innerHTML = '<p>Buscando...</p>';
+    container.innerHTML = '<p class="aviso">Buscando...</p>';
 
+    // O fetch agora usa a rota que você já tem no web.php
     fetch(`/api/oscs/categoria?cat=${categoria}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error('Erro na rota');
+            return response.json();
+        })
         .then(oscs => {
-            container.innerHTML = ''; // Limpa o aviso
+            container.innerHTML = ''; 
 
-            if (oscs.length === 0) {
-                container.innerHTML = '<p>Nenhuma OSC encontrada nesta categoria.</p>';
+            if (!oscs || oscs.length === 0) {
+                container.innerHTML = '<p class="aviso">Nenhuma OSC encontrada.</p>';
                 return;
             }
 
             oscs.forEach(osc => {
+                // HTML que usa a classe 'card-figma' do seu CSS
                 const card = `
-                    <div class="osc-card-busca">
-                        <h3>${osc.nome_instituicao}</h3>
-                        <p>${osc.descricao}</p>
-                        <a href="/fazer-doacao?id_osc=${osc.id_instituicao}" class="btn-doar">Doar Agora</a>
+                    <div class="card-figma">
+                        <div class="card-header">
+                            <div class="circulo-avatar"></div>
+                            <div class="textos">
+                                <h3>${osc.nome_instituicao}</h3>
+                                <p>${osc.descricao || 'Projeto social dedicado à comunidade.'}</p>
+                            </div>
+                        </div>
+                        <a href="/fazer-doacao?id=${osc.id_instituicao}" class="btn-laranja">Apoiar Projeto</a>
                     </div>
                 `;
                 container.innerHTML += card;
@@ -25,6 +35,7 @@ function filtrar(categoria) {
         })
         .catch(error => {
             console.error('Erro:', error);
-            Swal.fire('Erro', 'Não foi possível buscar as OSCs.', 'error');
+            container.innerHTML = '<p class="aviso">Erro ao carregar dados.</p>';
+            Swal.fire('Erro', 'Verifique se o banco de dados está ligado!', 'error');
         });
 }

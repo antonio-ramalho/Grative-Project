@@ -17,14 +17,17 @@ class DonationModel {
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindValue(':fk_id_inst', $dados['id_instituicao']); 
             $stmt->bindValue(':fk_id_user', $dados['id_doador']);
-            $stmt->bindValue(':quantia', $dados['valor']);
+            
+            // AQUI ESTAVA O ERRO: mudamos de 'valor' para 'quantia'
+            $stmt->bindValue(':quantia', $dados['quantia']); 
+            
             $stmt->bindValue(':mensagem', $dados['mensagem']);
             
             $stmt->execute();
             return $this->pdo->lastInsertId(); 
 
         } catch (PDOException $e) {
-            throw new Exception("Erro no SQL ao salvar: " . $e->getMessage());
+            throw new Exception("Erro no banco: " . $e->getMessage());
         }
     }
 

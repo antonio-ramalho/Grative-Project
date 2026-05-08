@@ -30,35 +30,45 @@ class DonationController {
         $json = file_get_contents('php://input');
         $dados = json_decode($json, true);
 
-        if (!$dados || empty($dados['valor'])) {
+        // 1. Pega o ID do Usuário pela Sessão (puxa quem está logado)
+        // Certifica-te que no Login tu fazes: $_SESSION['usuario_id'] = $id_vido_do_banco;
+        // No DonationController.php
+            $id_usuario_logado = $_SESSION['id_usuario'] ?? null;
+
+        // 2. Pega o ID da Instituição enviado pelo JavaScript
+        $id_instituicao = $dados['id_instituicao'] ?? null;
+
+        $valor = $dados['valor'] ?? $dados['quantia'] ?? null;
+
+        if (!$id_usuario_logado) {
+            http_response_code(401);
+            echo json_encode(["erro" => "Deves estar logado para doar."]);
+            return;
+        }
+
+        if (!$id_instituicao || !$valor) {
             http_response_code(400);
-            echo json_encode(["erro" => "O valor da doação é obrigatório."]);
+            echo json_encode(["erro" => "Dados da doação incompletos."]);
             return;
         }
 
         $conn = require __DIR__ . '/../../config/database.php';
         require_once __DIR__ . '/../Models/DonationModel.php';
-
         $model = new DonationModel($conn);
 
         $payload = [
-            'id_instituicao' => $dados['id_instituicao'] ?? 1,
-            'id_doador'      => $dados['id_doador'] ?? 1,
-            'valor'          => $dados['valor'],
+            'id_instituicao' => $id_instituicao,
+            'id_doador'      => $id_usuario_logado,
+            'quantia'        => $valor,
             'mensagem'       => $dados['mensagem'] ?? null
         ];
 
-        $id_gerado = $model->salvar($payload);
-
-        if ($id_gerado) {
-            http_response_code(201);
-            echo json_encode([
-                "mensagem" => "Doação registrada com sucesso!",
-                "id_doacao" => $id_gerado
-            ]);
-        } else {
+        try {
+            $id_gerado = $model->salvar($payload);
+            echo json_encode(["mensagem" => "Sucesso!", "id_doacao" => $id_gerado]);
+        } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao processar a doação no servidor."]);
+            echo json_encode(["erro" => $e->getMessage()]);
         }
     }
 
