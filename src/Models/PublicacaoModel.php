@@ -18,20 +18,17 @@ class PublicacaoModel {
 
         $this->firestore = $factory->createFirestore();
         
-        $this->storage = $factory->createStorage();
     }
     
-    public function fazerUpload($endereco_img) {
-        $img = file_get_contents($endereco_img);
-        $nome_unico = 'publicacoes/' . uniqid() . '.jpg';
-        $bucket = $this->storage->getBucket();
-    
-        $comprovante_envio = $bucket->upload($img, [
-            'name' =>  $nome_unico
-        ]);
+    public function fazerUpload($endereco_img, $extensao) {
+        $nome_unico = uniqid() . "." . $extensao;
+        $caminho = __DIR__ . '/../../public/img/uploads/publicacoes/' . $nome_unico;
+        
+        if(move_uploaded_file($endereco_img, $caminho)){
+            return '/img/uploads/publicacoes/'.$nome_unico;
+        }
 
-        $link_da_imagem = $comprovante_envio->info()['mediaLink'];
-        return $link_da_imagem;
+        return null;
     }
 
     public function salvarNoBanco($dados_publicacao) {
@@ -64,19 +61,17 @@ class PublicacaoModel {
 
         $snapshot = $referencia_doc->snapshot();
 
-        /*if ($snapshot->exists()){
+        if ($snapshot->exists()){
             $dados = $snapshot->data();
 
             if (isset($dados['imagem_url']) && !empty($dados['imagem_url'])){
                 $url_imagem = $dados['imagem_url'];
-                $url_limpa = urldecode($url_imagem);
-                $partes_url = explode('publicacoes/', $url_limpa);
-                $nome_e_lixo = explode('?', $partes_url[1]);
-                $caminho_url = 'publicacoes/' . $nome_e_lixo[0];
-
-                $this->storage->getBucket()->object($caminho_url)->delete();
+                $caminho_imagem = __DIR__ . '/../../public' . $url_imagem;
+                if(file_exists($caminho_imagem)){
+                    unlink($caminho_imagem);
+                }
             }
-        }*/
+        }
 
         $referencia_doc->delete();
 

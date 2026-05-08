@@ -34,13 +34,26 @@ class PublicacaoController {
         }
 
         if(isset($imagem) && $imagem['error'] == 0 ){
+            $nome_original = $imagem['name'];
+            $extensao = strtolower(pathinfo($nome_original, PATHINFO_EXTENSION));
+            $extensoes_permitidas = ['png','jpg','jpeg'];
+            if(!in_array($extensao, $extensoes_permitidas)){
+                http_response_code(400);
+                echo json_encode(['erro' => 'Formato de imagem inválido. Use apenas PNG ou JPG.']);
+                return;
+            }
             $endereco_img = $imagem['tmp_name'];
         }
 
         $dados_publicacao = ['titulo' => $titulo, 'descricao' => $descricao, 'id_instituicao' => $this->id_osc, 'imagem_url' => null, 'data_publicacao' => date('Y-m-d H:i:s')];
 
         if($endereco_img != null){
-            $url_final = $this->PublicacaoModel -> fazerUpload($endereco_img);
+            $url_final = $this->PublicacaoModel -> fazerUpload($endereco_img, $extensao);
+            if (empty($url_final)){
+                http_response_code(500);
+                echo json_encode(['erro' => 'Falha ao tentar gravar a imagem no servidor.']);
+                return;
+            }
             $dados_publicacao['imagem_url'] = $url_final;
         }
 
