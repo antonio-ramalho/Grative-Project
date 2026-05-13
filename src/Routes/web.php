@@ -5,6 +5,7 @@ $router->get('/cadastro_osc', 'App\Controllers\OscController@mostrarFormulario')
 $router->get('/home_osc', 'App\Controllers\OscController@mostrarHomeOsc');
 $router->post('/api/osc/cadastrar', 'App\Controllers\OscController@cadastrar');
 $router->get('/editar_osc', 'App\Controllers\OscController@mostrarFormularioEdicao');
+$router->get('/api/osc/dados', 'App\Controllers\OscController@obterDados');
 
 $router->post('/api/osc/editar', 'App\Controllers\OscController@atualizar');
 $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
