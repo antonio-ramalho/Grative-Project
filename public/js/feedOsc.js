@@ -1,3 +1,5 @@
+let publicacaoSelecionadaOsc = null;
+
 async function carregarFeedOsc(){
     const divPublicacoes = document.getElementById("feed-publicacoes");
     divPublicacoes.innerHTML = "";
@@ -34,7 +36,7 @@ async function carregarFeedOsc(){
                             <!--? Interações -->
                             <div class="d-flex gap-4">
                                 <span class="text-muted" style="cursor: pointer;"><i class="bi bi-heart"></i> Curtir</span>
-                                <span class="text-muted" style="cursor: pointer;"><i class="bi bi-chat"></i> Comentar</span>
+                                <span class="text-muted btn-comentar-osc" style="cursor: pointer;" data-id-publicacao="${publicacao.id}"><i class="bi bi-chat"></i> Comentar</span>
                             </div>
                             
                             <!--? Ações -->
@@ -46,6 +48,64 @@ async function carregarFeedOsc(){
         `
         divPublicacoes.innerHTML += cardHTML;
     });
+    
+    anexarListenersComentariosOsc();
+}
+
+function anexarListenersComentariosOsc() {
+    document.querySelectorAll('.btn-comentar-osc').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            publicacaoSelecionadaOsc = btn.getAttribute('data-id-publicacao');
+            abrirModalComentarioOsc();
+        });
+    });
+}
+
+function abrirModalComentarioOsc() {
+    const modal = new bootstrap.Modal(document.getElementById('modalComentarioOsc'));
+    modal.show();
+    document.getElementById('textoComentarioOsc').focus();
+}
+
+async function enviarComentarioOsc() {
+    const texto = document.getElementById('textoComentarioOsc').value.trim();
+    
+    if (!texto) {
+        alert('Por favor, digite um comentário');
+        return;
+    }
+    
+    if (!publicacaoSelecionadaOsc) {
+        alert('Erro: publicação não identificada');
+        return;
+    }
+    
+    try {
+        const resposta = await fetch('/api/comentario/adicionar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id_publicacao: publicacaoSelecionadaOsc,
+                comentario: texto
+            })
+        });
+        
+        const resultado = await resposta.json();
+        
+        if (resultado.sucesso) {
+            document.getElementById('textoComentarioOsc').value = '';
+            bootstrap.Modal.getInstance(document.getElementById('modalComentarioOsc')).hide();
+            carregarFeedOsc();
+        } else {
+            alert('Erro ao enviar comentário: ' + resultado.erro);
+        }
+    } catch (erro) {
+        console.error('Erro:', erro);
+        alert('Erro ao enviar comentário');
+    }
 }
 
 document.getElementById("feed-publicacoes").addEventListener("click", async (event) => {

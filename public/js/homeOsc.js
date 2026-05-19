@@ -19,7 +19,10 @@ document.getElementById('btnEditarPerfil').addEventListener('click', function() 
     window.location.href = '/editar_osc';
 });
 
-const formPublicacao = document.getElementById('formNovaPublicacao')
+const modalPublicacao = document.getElementById('modalPublicacao');
+const controladorModal = bootstrap.Modal.getOrCreateInstance(modalPublicacao);
+const divAlertaPublicacao = document.getElementById('alertaPublicacao');
+const formPublicacao = document.getElementById('formNovaPublicacao');
 
 formPublicacao.addEventListener('submit',function(event){
     event.preventDefault()
@@ -34,6 +37,18 @@ formPublicacao.addEventListener('submit',function(event){
         if (!response.ok) {
             throw new Error("Falha ao enviar os dados para o servidor.");
         }
+        formPublicacao.reset();
+        controladorModal.hide();
+        divAlertaPublicacao.classList.remove('d-none');
+        setTimeout(function () {
+            divAlertaPublicacao.classList.add('show');
+        },20);
+        setTimeout(function() {
+            divAlertaPublicacao.classList.remove('show');
+            setTimeout(function(){
+                divAlertaPublicacao.classList.add('d-none');
+            },300)
+        }, 3000);
         return response;
     })
     .catch((error) => {

@@ -137,4 +137,146 @@ class PublicacaoController {
         header('Content-Type: application/json');
         echo json_encode($lista_final);
     }
+
+    public function adicionarComentario()
+    {
+        header('Content-Type: application/json');
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
+            http_response_code(401); 
+            echo json_encode([
+                'sucesso' => false,
+                'erro' => 'Sua sessão expirou ou você não está logado.'
+            ]);
+            exit; 
+
+        $usuarioId = $_SESSION['usuario_id'];
+
+        $dadosRecebidos = json_decode(file_get_contents('php://input'), true);
+        $postId = intval($dadosRecebidos['id_publicacao'] ?? 0);
+        $comment = trim($dadosRecebidos['comentario'] ?? '');
+
+        if ($postId <= 0 || $comment === '') {
+            http_response_code(400);
+            echo json_encode([
+                'sucesso' => false,
+                'erro' => 'Dados inválidos ou comentário vazio.'
+            ]);
+            exit;
+        }
+
+        try {
+            $conn = require __DIR__ . '/../../config/database.php';
+            require_once __DIR__ . '/../Models/Comment.php';
+            
+            $commentModel = new \App\Models\Comment($conn);
+            
+            $commentModel->create([
+                'post_id' => $postId,
+                'comment' => htmlspecialchars($comment, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                'usuario_id' => $usuarioId
+            ]);
+
+            echo json_encode(['sucesso' => true]);
+            exit;
+
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'sucesso' => false,
+                'erro' => 'Erro interno no servidor: ' . $e->getMessage()
+            ]);
+            exit;
+            }
+        }
+    }
+
+    public function listarComentarios() {
+        $id_publicacao = $_GET['id_publicacao'] ?? null;
+
+        if (empty($id_publicacao)) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'ID da publicação é obrigatório']);
+            return;
+        }
+
+       
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/Comment.php';
+        
+        $commentModel = new \App\Models\Comment($conn);
+        
+        $comentarios = $commentModel->getByPostId($id_publicacao);
+
+        header('Content-Type: application/json');
+        echo json_encode($comentarios);
+    }
+
+    public function deletarComentario() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            return;
+        }
+
+        header('Content-Type: application/json');
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // VALIDAÇÃO REAL DA SESSÃO
+        if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
+            http_response_code(401);
+            echo json_encode(['erro' => 'Sua sessão expirou ou você não está logado.']);
+            exit; // Para o código imediatamente
+        }
+
+        // Pega o ID real do usuário logado
+        $id_usuario = $_SESSION['usuario_id'];
+
+        $json = file_get_contents('php://input');
+        $dados = json_decode($json, true);
+
+        $id_comentario = $dados['id_comentario'] ?? null;
+
+        if (empty($id_comentario)) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'ID do comentário é obrigatório']);
+            exit;
+        }
+
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/Comment.php';
+        
+        $commentModel = new \App\Models\Comment($conn);
+        
+        $comentario = $commentModel->getById($id_comentario);
+
+        if (!$comentario) {
+            http_response_code(404);
+            echo json_encode(['erro' => 'Comentário não encontrado']);
+            exit;
+        }
+
+        // Validação de segurança: verifica se o ID da sessão bate com o dono
+        if ($comentario['usuario_id'] != $id_usuario) {
+            http_response_code(403);
+            echo json_encode(['erro' => 'Não autorizado. Você só pode excluir seus próprios comentários.']);
+            exit;
+        }
+        
+        $resultado = $commentModel->delete($id_comentario);
+
+        if ($resultado) {
+            echo json_encode(['sucesso' => true]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['erro' => 'Erro interno ao tentar excluir o comentário.']);
+        }
+        exit;
+    }
 }
