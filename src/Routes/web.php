@@ -39,6 +39,11 @@ $router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador
 $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
+// Rotas Mostrar Categorias
+$router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');
+$router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
+
+$router->get('/buscar', 'App\Controllers\BuscarController@mostrarBusca');
 
 //? Rotas Publicação
 $router->get('/feedOsc', 'App\controllers\PublicacaoController@mostrarFeedOsc');

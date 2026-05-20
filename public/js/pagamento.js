@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Pega o ID da doação pela URL
     const urlParams = new URLSearchParams(window.location.search);
     const idDoacao = urlParams.get('id');
     
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // 2. Busca os detalhes da doação no Banco
     fetch(`/api/pagamento/detalhes?id=${idDoacao}`)
         .then(response => response.json())
         .then(data => {
@@ -16,22 +18,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            document.getElementById('nome-osc').innerText = data.nome_instituicao;
-            document.getElementById('pix-key').value = data.chave_pix;
+            // Preenche os campos no HTML (IDs devem bater com o PHP)
+            const nomeOsc = document.getElementById('nome-osc');
+            const pixKey = document.getElementById('pix-key');
+            const valorDisplay = document.getElementById('valor-display');
+            const qrImg = document.getElementById('qr-code-pix');
+
+            if (nomeOsc) nomeOsc.innerText = data.nome_instituicao;
+            if (pixKey) pixKey.value = data.chave_pix;
             
-            const valorFormatado = parseFloat(data.quantia).toLocaleString('pt-br', {
+            // Formata o valor (tenta 'quantia' ou 'valor')
+            const valorBruto = data.quantia || data.valor || 0;
+            const valorFormatado = parseFloat(valorBruto).toLocaleString('pt-br', {
                 style: 'currency',
                 currency: 'BRL'
             });
-            document.getElementById('valor-display').innerHTML = `Valor da doação: <strong>${valorFormatado}</strong>`;
 
-            const qrImg = document.getElementById('qr-code-pix');
-            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.chave_pix)}`;
-            qrImg.style.display = 'inline-block'; 
+            if (valorDisplay) {
+                valorDisplay.innerHTML = `Valor da doação: <strong>${valorFormatado}</strong>`;
+            }
+
+            // Gera o QR Code e força ele a aparecer
+            if (qrImg) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.chave_pix)}`;
+                qrImg.style.display = 'inline-block'; 
+            }
         })
         .catch(err => console.error("Erro ao carregar detalhes:", err));
 
-
+    // 3. Lógica do botão Finalizar (Confirmar e ir para Obrigado)
     const btnFinalizar = document.querySelector('.btn-next');
 
     if (btnFinalizar) {
@@ -45,17 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ id_doacao: idDoacao })
                 });
 
-                const data = await response.json();
+                const resData = await response.json();
 
-                if (data.sucesso) {
-                    alert("Pagamento confirmado com sucesso!");
+                if (resData.sucesso) {
+                    // Redireciona para a página de agradecimento
                     window.location.href = "/obrigado";
                 } else {
-                    alert("Erro ao confirmar: " + (data.erro || "Tente novamente."));
+                    alert("Erro ao confirmar: " + (resData.erro || "Tente novamente."));
                 }
             } catch (error) {
                 console.error('Erro na requisição:', error);
-                alert("Erro crítico ao conectar com o servidor.");
+                alert("Erro ao conectar com o servidor.");
             }
         });
     }

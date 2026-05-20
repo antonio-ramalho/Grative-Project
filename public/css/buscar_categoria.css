@@ -1,0 +1,158 @@
+/* FUNDO CLARO COM TEXTURA SUAVE */
+body {
+    background-color: #f4f6f8;
+    background-image: radial-gradient(#e0e4e8 1px, transparent 1px);
+    background-size: 20px 20px; /* Cria um padrão de pontos bem discreto no fundo */
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0 0 40px 0;
+    min-height: 100vh;
+}
+
+/* NAVBAR SUPERIOR (NOVO DETALHE) */
+.navbar-grative {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 15px 40px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-grative .logo {
+    font-size: 22px;
+    font-weight: 900;
+    color: #2e7d32;
+    letter-spacing: 1.5px;
+}
+
+.navbar-grative .avatar-perfil {
+    width: 35px;
+    height: 35px;
+    background: #e0e4e8;
+    border-radius: 50%;
+    border: 2px solid #2e7d32;
+    cursor: pointer;
+}
+
+/* BLOCO DE FILTROS */
+.filtro-wrapper {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 35px 20px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    text-align: center;
+    border-top: 5px solid #2e7d32;
+}
+
+.barra-filtros h1 { margin: 0 0 10px; font-size: 30px; color: #1a1a1a; font-weight: 800; }
+.barra-filtros p { margin: 0; color: #777; font-size: 16px; }
+
+/* BOTÕES DE CATEGORIA */
+.categorias-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.card-categoria {
+    background: #ffffff;
+    border: 1px solid #e0e4e8;
+    border-radius: 30px;
+    padding: 10px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.card-categoria:hover {
+    border-color: #2e7d32;
+    background: #f0f7f1;
+    color: #2e7d32;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(46, 125, 50, 0.1);
+}
+
+.card-categoria img { width: 20px; height: 20px; filter: invert(0.5); transition: 0.3s; }
+.card-categoria:hover img { filter: invert(0.3) sepia(1) saturate(3) hue-rotate(90deg); }
+
+/* GRID DE RESULTADOS */
+.container-principal { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.oscs-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 25px; }
+.aviso { grid-column: 1 / -1; text-align: center; color: #888; font-size: 16px; }
+
+/* CARTÕES DAS INSTITUIÇÕES */
+.card-figma {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid #ffffff;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-figma::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #e0e4e8;
+    transition: 0.3s;
+}
+
+.card-figma:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(46, 125, 50, 0.08);
+    border-color: #d1e2d3;
+}
+
+.card-figma:hover::before { background: #2e7d32; }
+
+.card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; z-index: 1; }
+.circulo-avatar { width: 48px; height: 48px; background: #f8f9fa; border-radius: 50%; border: 2px solid #2e7d32; box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2); }
+.textos h3 { margin: 0 0 5px; color: #222; font-size: 18px; font-weight: 800; }
+.textos p { margin: 0; color: #666; font-size: 14px; line-height: 1.5; }
+
+/* BOTÃO FINAL */
+.btn-laranja {
+    display: block;
+    text-align: center;
+    background: linear-gradient(135deg, #388e3c 0%, #1b5e20 100%);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 10px rgba(27, 94, 32, 0.2);
+    z-index: 1;
+}
+
+.btn-laranja:hover { 
+    background: linear-gradient(135deg, #2e7d32 0%, #144d18 100%);
+    box-shadow: 0 6px 15px rgba(27, 94, 32, 0.3);
+    transform: translateY(-2px);
+}

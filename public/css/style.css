@@ -204,37 +204,138 @@ input[readonly] {
 .btn:active {
     transform: scale(0.98);
 }
-/* Estilo do card de pagamento */
-.payment-card {
+
+/* =========================================
+   ESTILO FINAL GRATIVE - SEM ERRO DE SCROLL
+   ========================================= */
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #2c2f33;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 140, 66, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(46, 125, 50, 0.15) 0%, transparent 40%);
+    background-attachment: fixed; /* O fundo não mexe quando você rola */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo para permitir o scroll natural */
+    min-height: 100vh;
+    padding: 40px 20px; /* Espaço de segurança em cima e embaixo */
+}
+
+.app-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 700px; /* Largura idêntica ao Fazer Doação */
+    border-radius: 20px;
+    padding: 40px 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Deixa o card crescer conforme o conteúdo */
+}
+
+/* Título e Header */
+.header { text-align: right; margin-bottom: 10px; }
+.close-btn { color: #666; font-size: 28px; text-decoration: none; }
+h2 { font-size: 28px; color: #333; margin-bottom: 30px; text-align: center; }
+
+/* Barra de Progresso (Idêntica) */
+.progress-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 0 20px;
+}
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+.step {
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #999;
+    z-index: 2;
+}
+.step.active { border-color: #ff8c42; background: #ff8c42; color: #fff; }
+
+/* QR Code Section */
+.qr-section { text-align: center; margin-bottom: 25px; }
+#qr-code-pix {
+    width: 200px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.pix-label { color: #888; font-size: 14px; margin-bottom: 15px; }
+
+/* Inputs (Estilo idêntico ao Fazer Doação) */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 15px 20px;
+    background: #fdfdfd;
+    margin-bottom: 25px;
+}
+.input-wrapper input { border: none; background: transparent; width: 100%; font-size: 16px; outline: none; }
+.input-wrapper i { color: #ff8c42; font-size: 24px; cursor: pointer; }
+
+/* Box de Valor (Estilo do Payment Card verde) */
+.payment-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #2e7d32;
+    background: #e8f5e9;
     padding: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    border-radius: 12px;
+    color: #2e7d32;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Botão do Rodapé */
+.footer { margin-top: 40px; }
+.btn-next {
+    width: 100%;
+    background: #2e7d32;
+    color: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    font-size: 18px;
     cursor: pointer;
     transition: 0.3s;
 }
+.btn-next:hover { background: #1b5e20; }
 
-.card-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 16px;
-}
-
-.card-content i {
-    color: #32BCAD;
-    font-size: 24px;
-}
-
-.payment-card:has(input:checked) {
-    border-color: #4CAF50;
-    background-color: #f1f8e9;
-}
-
-input[type="radio"] {
-    accent-color: #4CAF50;
-    width: 20px;
-    height: 20px;
+/* Mobile */
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    .app-container { padding: 30px 20px; width: 100%; }
+    h2 { font-size: 22px; }
 }
