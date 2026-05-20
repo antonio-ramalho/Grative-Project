@@ -56,3 +56,26 @@ formPublicacao.addEventListener('submit',function(event){
         showAlert("Não foi possível enviar os dados. Tente novamente mais tarde.");
     });
 })
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/api/osc/dados', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Não foi possível carregar os dados.");
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.nome_instituicao) {
+            document.getElementById('nomeOscHeader').textContent = data.nome_instituicao;
+        }
+    })
+    .catch(error => {
+        console.error("Erro ao buscar dados do perfil:", error);
+    });
+});
