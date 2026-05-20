@@ -46,3 +46,8 @@ $router->post('/api/publicacao/criar','App\Controllers\PublicacaoController@faze
 $router->get('/api/feed-osc', 'App\Controllers\PublicacaoController@listarFeed');
 $router->post('/api/excluir-publicacao', 'App\Controllers\PublicacaoController@excluirPublicacao');
 $router->get('/api/feed-geral', 'App\Controllers\PublicacaoController@listarFeedGlobal');
+
+// Rotas de Comentários
+$router->post('/api/comentario/adicionar', 'App\Controllers\PublicacaoController@adicionarComentario');
+$router->get('/api/comentario/listar', 'App\Controllers\PublicacaoController@listarComentarios'); 
+$router->post('/api/comentario/deletar', 'App\Controllers\PublicacaoController@deletarComentario');
