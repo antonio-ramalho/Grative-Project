@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Grative - OSC</title>
+    <title>Minhas Publicações - Grative</title>
     
     <style>
         body {
@@ -14,7 +14,6 @@
         }
         .text-grative-green { color: #11784A !important; }
         
-        /* Estilo para os botões da sidebar (Doador Style) */
         .btn-sidebar {
             color: #6c757d;
             border: none;
@@ -28,26 +27,29 @@
             width: 100%;
             text-align: left;
             background: transparent;
+            text-decoration: none;
         }
 
-        /* Efeito de hover solicitado: Fundo verde claro e texto verde escuro */
         .btn-sidebar:hover {
             background-color: #eef7f2 !important;
             color: #11784A !important;
         }
 
-        .search-bar-header { background-color: #f0f2f5; }
+        .btn-sidebar.active {
+            background-color: #eef7f2 !important;
+            color: #11784A !important;
+        }
     </style>
 </head>
 <body>
     <header class="navbar navbar-expand-lg bg-white border-bottom py-3 sticky-top shadow-sm">
         <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-            <a class="navbar-brand fs-4 text-decoration-none" href="#">
+            <a class="navbar-brand fs-4 text-decoration-none" href="/home_osc">
                 <span class="fw-bold text-grative-green" style="letter-spacing: -1px;">GRA</span><span class="fw-bold text-dark" style="letter-spacing: -1px;">TIVE</span>
             </a>
 
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-link text-secondary p-0 shadow-none position-relative">
+                <button class="btn btn-link text-secondary p-0 shadow-none">
                     <i class="bi bi-bell fs-5"></i>
                 </button>
                 <button class="btn btn-link text-dark p-0 shadow-none" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-perfil">
@@ -75,6 +77,10 @@
                         <h6 class="fw-bold text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px;">ATALHOS</h6>
                         
                         <nav class="d-flex flex-column gap-1">
+                            <a href="/home_osc" class="btn btn-sidebar">
+                                <i class="bi bi-house-door fs-5"></i> Início
+                            </a>
+
                             <a href="/relatorio-doacoes" class="btn btn-sidebar">
                                 <i class="bi bi-file-earmark-text fs-5"></i> Novo Relatório
                             </a>
@@ -83,92 +89,26 @@
                                 <i class="bi bi-megaphone fs-5"></i> Criar Publicação
                             </button>
                             
-                            <a href="feedOsc" class="btn btn-sidebar">
-                                <i class="bi bi-grid-3x3-gap fs-5"></i> Minhas Publicações
+                            <a href="/feedOsc" class="btn btn-sidebar active">
+                                <i class="bi bi-grid-3x3-gap-fill fs-5"></i> Minhas Publicações
                             </a>
                         </nav>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 col-lg-9">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-                    <h2 class="fw-bold text-dark mb-0 fs-3">Dashboard</h2>
-                    
-                    <select class="form-select w-auto fw-medium border-secondary-subtle text-secondary rounded-pill px-4 shadow-sm bg-white">
-                        <option value="1" selected>Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                        </select>
+            <div class="col-12 col-lg-9 d-flex flex-column align-items-center">
+                <div class="w-100 mb-4" style="max-width: 650px;">
+                    <h3 class="fw-bold text-dark mb-0">Minhas Publicações</h3>
+                    <p class="text-muted">Gerencie as histórias compartilhadas pela sua organização.</p>
                 </div>
 
-                <div class="row g-4">
-                    <div class="col-md-6"><div class="bg-white shadow-sm rounded-4" style="height: 200px;"></div></div>
-                    <div class="col-md-6"><div class="bg-white shadow-sm rounded-4" style="height: 200px;"></div></div>
-                    <div class="col-md-6"><div class="bg-white shadow-sm rounded-4" style="height: 200px;"></div></div>
-                    <div class="col-md-6"><div class="bg-white shadow-sm rounded-4" style="height: 200px;"></div></div>
-                </div>
+                <div id="feed-publicacoes" class="d-flex flex-column gap-4 w-100" style="max-width: 650px;">
+                    </div>
             </div>
         </div>
-    </main>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-perfil">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="fw-bold mb-0">Configurações da Conta</h5>
-            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body d-flex flex-column">
-            <div class="text-center mb-4">
-                <i style="font-size: 100px;" class="bi bi-person-circle text-secondary"></i>
-            </div>
-            <button class="btn btn-outline-primary w-100 mb-3 rounded-pill" id="btnEditarPerfil">Editar Perfil</button>
-            <button class="btn btn-outline-danger w-100 rounded-pill" id="btnExcluirPerfil">Excluir Conta</button>
-            
-            <div class="mt-auto border-top pt-3">
-                <button onclick="window.location.href='/logout'" class="btn w-100 d-flex align-items-center justify-content-center gap-2 text-danger">
-                    <i class="bi bi-box-arrow-right fs-5"></i> Sair da conta
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow-lg">
-                <div class="modal-header border-bottom-0"><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body pt-0 px-4 pb-4">
-                    <form id="formNovaPublicacao" enctype="multipart/form-data">
-                        <input type="text" class="form-control border-0 shadow-none fs-5 fw-semibold px-0" id="tituloProjeto" name="titulo" placeholder="Título da ação ou projeto" required>
-                        <textarea class="form-control border-0 shadow-none px-0 mt-1 fs-5" id="descricaoProjeto" name="descricao" rows="3" placeholder="O que a sua OSC realizou hoje?" style="resize: none;" required></textarea>
-                        <hr class="border-secondary-subtle">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="imagemProjeto" style="cursor: pointer;" class="text-grative-green"><i class="bi bi-image fs-4"></i></label>
-                            <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*">
-                            <button type="submit" class="btn text-white rounded-pill px-4 fw-bold" style="background-color: #11784A;" id="btnEnviarPublicacao">Publicar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="alert alert-success fade d-none position-fixed top-0 start-50 translate-middle-x z-3 mt-5 shadow-sm" id="alertaPublicacao">
-        <p>Publicação Criada com sucesso!</p>
-    </div>
-
-    <script src="/js/homeOsc.js" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
-    <!-- Modal de Comentário OSC -->
+    </main>    
+    <!-- Modal de Comentário OSC Feed -->
     <div class="modal fade" id="modalComentarioOsc" tabindex="-1" aria-labelledby="modalComentarioOscLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -182,10 +122,49 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="enviarComentarioOsc()">Enviar</button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-perfil">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="fw-bold mb-0">Configurações da Conta</h5>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div class="text-center mb-4 mt-3">
+                <i style="font-size: 100px;" class="bi bi-person-circle text-secondary"></i>
+            </div>
+            <button class="btn btn-outline-primary w-100 mb-3 rounded-pill fw-medium" id="btnEditarPerfil">Editar Perfil</button>
+            <button class="btn btn-outline-danger w-100 rounded-pill fw-medium" id="btnExcluirPerfil">Excluir Conta</button>
+            
+            <div class="mt-auto border-top pt-3">
+                <button onclick="window.location.href='/logout'" class="btn w-100 d-flex align-items-center justify-content-center gap-2 text-danger rounded-pill border py-2">
+                    <i class="bi bi-box-arrow-right fs-5"></i> Sair da conta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-bottom-0"><button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body pt-0 px-4 pb-4">
+                    <form id="formNovaPublicacao" enctype="multipart/form-data">
+                        <input type="text" class="form-control border-0 shadow-none fs-5 fw-semibold px-0" id="tituloProjeto" name="titulo" placeholder="Título da ação ou projeto" required>
+                        <textarea class="form-control border-0 shadow-none px-0 mt-1 fs-5 text-secondary" id="descricaoProjeto" name="descricao" rows="3" placeholder="O que a sua OSC realizou hoje?" style="resize: none;" required></textarea>
+                        <hr class="border-secondary-subtle">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="imagemProjeto" style="cursor: pointer;" class="text-grative-green"><i class="bi bi-image fs-4"></i></label>
+                            <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*">
+                            <button type="submit" class="btn text-white rounded-pill px-4 fw-bold shadow-sm" style="background-color: #11784A;" id="btnEnviarPublicacao">Publicar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/homeOsc.js" type="module"></script>
+    <script src="/js/feedOsc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

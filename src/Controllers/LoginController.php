@@ -10,7 +10,6 @@ class LoginController {
         require_once __DIR__ . '/../views/login.html';
     }
 
-    // Agora recebemos a requisição via JSON (API) do JavaScript
     public function authenticateApi() {
         $jsonRecebido = file_get_contents('php://input');
         $dados = json_decode($jsonRecebido, true);
@@ -28,14 +27,16 @@ class LoginController {
         $oscModel = new OscModel($conn); 
         $doadorModel = new DoadorModel($conn);
 
-        // 1. Procura na tabela de Instituição
         $idInstituicao = $oscModel->buscarIdPorFirebaseUid($firebaseUid);
         
         if ($idInstituicao) {
+            $dadosOsc = $oscModel->buscarPorId($idInstituicao);
+
             if (session_status() === PHP_SESSION_NONE) { session_start(); }
             $_SESSION['logged_in'] = true;
             $_SESSION['id_instituicao'] = $idInstituicao;
-
+            $_SESSION['nome_instituicao'] = $dadosOsc['nome_instituicao'] ?? 'Minha OSC';
+            
             echo json_encode(["sucesso" => true, "redirect" => "/home_osc?id=" . $idInstituicao]);
             return;
         }
@@ -61,7 +62,7 @@ class LoginController {
         session_start();
         $_SESSION = array();
         session_destroy();
-        header("Location: /login?msg=logout_success");
+        header("Location:/?msg=logout_success");
         exit;
     }
 }
