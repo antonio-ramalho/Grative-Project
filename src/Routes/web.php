@@ -5,12 +5,12 @@ $router->get('/cadastro_osc', 'App\Controllers\OscController@mostrarFormulario')
 $router->get('/home_osc', 'App\Controllers\OscController@mostrarHomeOsc');
 $router->post('/api/osc/cadastrar', 'App\Controllers\OscController@cadastrar');
 $router->get('/editar_osc', 'App\Controllers\OscController@mostrarFormularioEdicao');
+$router->get('/api/osc/dados', 'App\Controllers\OscController@obterDados');
 
 $router->post('/api/osc/editar', 'App\Controllers\OscController@atualizar');
 $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
 
 // Rotas Gerais
-$router->get('/', 'App\Controllers\HomeController@index');
 $router->get('/relatorio-doacoes', 'App\Controllers\DonationRelatorioController@getDoacoes');
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 $router->get('/inserir-documento', 'App\Controllers\InserirDocController@index');
@@ -22,7 +22,7 @@ $router->get('/api/notificacoes', 'App\Controllers\CaixaEntradaController@listar
 $router->post('/api/notificacoes/ler', 'App\Controllers\CaixaEntradaController@lerAjax'); 
 
 // Rotas de Autenticação
-$router->get('/login', 'App\Controllers\LoginController@index');
+$router->get('/', 'App\Controllers\LoginController@index');
 $router->post('/api/login', 'App\Controllers\LoginController@authenticateApi');
 $router->get('/logout', 'App\Controllers\LoginController@logout');
 
@@ -46,3 +46,20 @@ $router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador
 $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
+// Rotas Mostrar Categorias
+$router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');
+$router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
+
+$router->get('/buscar', 'App\Controllers\BuscarController@mostrarBusca');
+
+//? Rotas Publicação
+$router->get('/feedOsc', 'App\controllers\PublicacaoController@mostrarFeedOsc');
+$router->post('/api/publicacao/criar','App\Controllers\PublicacaoController@fazerPublicacao');
+$router->get('/api/feed-osc', 'App\Controllers\PublicacaoController@listarFeed');
+$router->post('/api/excluir-publicacao', 'App\Controllers\PublicacaoController@excluirPublicacao');
+$router->get('/api/feed-geral', 'App\Controllers\PublicacaoController@listarFeedGlobal');
+
+// Rotas de Comentários
+$router->post('/api/comentario/adicionar', 'App\Controllers\PublicacaoController@adicionarComentario');
+$router->get('/api/comentario/listar', 'App\Controllers\PublicacaoController@listarComentarios'); 
+$router->post('/api/comentario/deletar', 'App\Controllers\PublicacaoController@deletarComentario');

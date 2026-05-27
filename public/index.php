@@ -1,4 +1,10 @@
 <?php
+
+$uri_static = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+if ($uri_static !== '/' && file_exists(__DIR__ . $uri_static)) {
+    return false;
+}
+
 error_reporting(E_ALL & ~E_DEPRECATED);
 session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -29,3 +35,5 @@ $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $router->dispatch($method, $uri);
+
+require_once __DIR__ . '/../src/Controllers/BuscarController.php';
