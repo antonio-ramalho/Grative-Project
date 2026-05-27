@@ -1,0 +1,76 @@
+document.addEventListener("DOMContentLoaded", () => {
+  carregarNotificacoes();
+});
+
+async function carregarNotificacoes() {
+  const lista = document.getElementById("lista-notificacoes");
+  const badge = document.getElementById("badge-nao-lidas");
+
+  try {
+    // ATENÇÃO: Verifique se o nome dessa rota bate com o seu web.php
+    const resposta = await fetch("/api/notificacoes");
+    const json = await resposta.json();
+
+    if (json.sucesso) {
+      lista.innerHTML = ""; // Limpa o loader
+      let qtdNaoLidas = 0;
+
+      if (json.dados.length === 0) {
+        lista.innerHTML = '<li class="empty-state">Nenhuma notificação por enquanto.</li>';
+        badge.innerText = "0 novas";
+        return;
+      }
+
+      json.dados.forEach((notif) => {
+        if (notif.lida == 0) qtdNaoLidas++;
+
+        // Cria o item da lista
+        const li = document.createElement("li");
+        li.className = `inbox-item ${notif.lida == 0 ? "unread" : ""}`;
+        li.innerHTML = `
+                    <div class="inbox-content">
+                        <p class="inbox-text">${notif.mensagem}</p>
+                        <span class="inbox-date">${new Date(notif.data_criacao).toLocaleString("pt-BR")}</span>
+                    </div>
+                    ${notif.lida == 0 ? `<button class="btn-ler" onclick="marcarComoLida(${notif.id}, this)">✔ Lida</button>` : ""}
+                `;
+        lista.appendChild(li);
+      });
+
+      badge.innerText = `${qtdNaoLidas} novas`;
+      badge.style.display = qtdNaoLidas > 0 ? "inline-block" : "none";
+    }
+  } catch (erro) {
+    lista.innerHTML = '<li class="empty-state error">Erro ao carregar notificações.</li>';
+    console.error("Erro:", erro);
+  }
+}
+
+async function marcarComoLida(idNotificacao, botaoElemento) {
+  try {
+    const resposta = await fetch("/api/notificacoes/ler", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({id_notificacao: idNotificacao}),
+    });
+
+    const json = await resposta.json();
+    if (json.sucesso) {
+      // Remove o botão e a classe de "não lida" visualmente sem recarregar a página
+      const li = botaoElemento.closest("li");
+      li.classList.remove("unread");
+      botaoElemento.remove();
+
+      // Atualiza o contador lá em cima
+      const badge = document.getElementById("badge-nao-lidas");
+      let atual = parseInt(badge.innerText);
+      if (atual > 1) {
+        badge.innerText = `${atual - 1} novas`;
+      } else {
+        badge.style.display = "none";
+      }
+    }
+  } catch (erro) {
+    alert("Erro ao marcar como lida.");
+  }
+}

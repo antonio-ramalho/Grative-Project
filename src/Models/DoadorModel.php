@@ -36,7 +36,8 @@ class DoadorModel {
 
         } 
         catch (PDOException $e) {
-            die("ERRO SQL: " . $e->getMessage());
+            http_response_code(500);
+            die(json_encode(["erro" => "ERRO SQL: " . $e->getMessage()]));
         }
     }
     public function buscarPorId($id) {
