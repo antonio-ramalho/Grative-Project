@@ -13,6 +13,13 @@ $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
 // Rotas Gerais
 $router->get('/relatorio-doacoes', 'App\Controllers\DonationRelatorioController@getDoacoes');
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
+$router->get('/inserir-documento', 'App\Controllers\InserirDocController@index');
+$router->post('/upload-doc', 'App\Controllers\InserirDocController@upload');
+
+// Rotas de caixa-entrada
+$router->get('/caixa-entrada', 'App\Controllers\CaixaEntradaController@index'); 
+$router->get('/api/notificacoes', 'App\Controllers\CaixaEntradaController@listarAjax'); 
+$router->post('/api/notificacoes/ler', 'App\Controllers\CaixaEntradaController@lerAjax'); 
 
 // Rotas de Autenticação
 $router->get('/', 'App\Controllers\LoginController@index');
