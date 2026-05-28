@@ -135,6 +135,34 @@
             color: #6e767d !important;
             font-size: 0.75rem;
         }
+        .secao-comentarios {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.comentario-item {
+    margin-bottom: 4px;
+}
+
+.comentario-item strong {
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.btn-ver-todos {
+    background: none;
+    border: none;
+    color: #8e8e8e; /* Cinza clássico do Instagram */
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.btn-ver-todos:hover {
+    color: #555;
+}
     </style>
 </head>
 <body>
@@ -175,7 +203,6 @@
             
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="sticky-sidebar">
-                    
                     <div class="card mb-3 p-3">
                         <div class="card-body text-center p-0 pt-2">
                             <i class="bi bi-person-circle text-secondary" style="font-size: 3.5rem; color: #aab2b9 !important;"></i>
@@ -232,7 +259,8 @@
                 </div>
             </div>
 
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-6" id="feedDoador">
+                <!--
                 
                 <div class="card mb-4 p-1">
                     <div class="card-header bg-white border-0 pt-3 pb-1 d-flex justify-content-between align-items-start">
@@ -269,16 +297,7 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="card mb-4 p-1">
-                    <div class="card-header bg-white border-0 pt-3 pb-2 d-flex align-items-center gap-2">
-                        <i class="bi bi-person-circle fs-3" style="color: #444c54;"></i>
-                        <h6 class="m-0 fw-bold" style="font-size: 0.95rem;">Outra Instituição</h6>
-                    </div>
-                    <div class="card-body py-1">
-                        <div class="img-placeholder"></div>
-                    </div>
-                </div>
+                -->
 
             </div>
 
@@ -345,5 +364,27 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/excluirDoador.js" type="module"></script>
+    <script src="/js/feedDoador.js"></script>
+
+    <!-- Modal de Comentário -->
+    <div class="modal fade" id="modalComentario" tabindex="-1" aria-labelledby="modalComentarioLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalComentarioLabel">Adicionar Comentário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" id="textoComentario" placeholder="Escreva seu comentário..." rows="4"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="enviarComentario()">Enviar</button>
+                </div>
+                <div class="card-publicacao" data-id="123">
+            </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

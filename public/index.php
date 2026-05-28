@@ -17,6 +17,12 @@ require_once __DIR__ . '/../src/Models/GetDonationModel.php';
 require_once __DIR__ . '/../src/Controllers/DonationController.php';
 require_once __DIR__ . '/../src/Models/DonationModel.php';
 
+require_once __DIR__ . '/../src/Controllers/InserirDocController.php';
+require_once __DIR__ . '/../src/Models/DocumentoModel.php';
+
+require_once __DIR__ . '/../src/Controllers/CaixaEntradaController.php';
+require_once __DIR__ . '/../src/Models/NotificacaoModel.php';
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 $dotenv->required(['DB_HOST', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD']);

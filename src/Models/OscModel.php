@@ -43,7 +43,7 @@ class OscModel {
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function salvar($dados) {

@@ -47,14 +47,12 @@ class OscController {
             ]);
         } else {    
             http_response_code(500);
-            echo json_encode([
-                "erro" => "Erro ao salvar no banco de dados. O Model retornou um ID inválido ou falso."
-            ]);
+            echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
         }
 
-}
+    }
 
-public function atualizar() {
+    public function atualizar() {
         session_start();
         $id = $_SESSION['id_instituicao'] ?? $_SESSION['id_osc_logada'] ?? null;
         
@@ -70,8 +68,6 @@ public function atualizar() {
         }
         exit;
     }
-
-    // No seu OscController.php
     
     public function excluir() {
         session_start();
@@ -97,7 +93,6 @@ public function atualizar() {
         exit;
     }
 
-// Método para exibir a tela de edição
     public function mostrarFormularioEdicao() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -124,5 +119,35 @@ public function atualizar() {
 
 
         require_once __DIR__ . '/../views/editar_osc.php';
+    }
+
+    public function obterDados() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Verifica se a OSC está logada
+        if (!isset($_SESSION['id_instituicao'])) {
+            http_response_code(401);
+            echo json_encode(["erro" => "Usuário não autenticado."]);
+            return;
+        }
+
+        $id = $_SESSION['id_instituicao'];
+
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/OscModel.php';
+        
+        $oscModel = new OscModel($conn);
+        $dados = $oscModel->buscarPorId($id);
+
+        if ($dados) {
+            http_response_code(200);
+            // Retorna os dados em JSON para o front-end
+            echo json_encode($dados);
+        } else {
+            http_response_code(404);
+            echo json_encode(["erro" => "Instituição não encontrada."]);
+        }
     }
 }
