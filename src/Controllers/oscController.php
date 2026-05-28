@@ -34,7 +34,9 @@ class OscController {
 
 
         if ($idrecebido) {
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $_SESSION['id_instituicao'] = $idrecebido; 
             $_SESSION['logged_in'] = true;
 
@@ -43,10 +45,12 @@ class OscController {
                 "mensagem" => "Instituição cadastrada com sucesso!",
                 "id" => $idrecebido
             ]);
-        } else {
+        } else {    
             http_response_code(500);
-            echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
-    }
+            echo json_encode([
+                "erro" => "Erro ao salvar no banco de dados. O Model retornou um ID inválido ou falso."
+            ]);
+        }
 
 }
 

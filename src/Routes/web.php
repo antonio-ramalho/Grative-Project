@@ -1,5 +1,9 @@
 <?php
-//OSC rotas
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Rotas de OSC
 require_once __DIR__ . '/../Controllers/OscController.php';
 $router->get('/cadastro_osc', 'App\Controllers\OscController@mostrarFormulario');
 $router->get('/home_osc', 'App\Controllers\OscController@mostrarHomeOsc');
@@ -44,3 +48,7 @@ $router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca
 $router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
 
 $router->get('/buscar', 'App\Controllers\BuscarController@mostrarBusca');
+
+// Altere as suas duas rotas para ficarem assim:
+$router->get('/buscar-proximidade', 'App\Controllers\ProximidadeController@index');
+$router->get('/api/osc/buscar_proximidade', 'App\Controllers\ProximidadeController@buscar');
