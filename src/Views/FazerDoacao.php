@@ -2,14 +2,15 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fazer Doação - Grative</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/fazer_doacao.css">
 </head>
 <body>
     <div class="app-container">
         <div class="header">
-            <a href="/home" class="close-btn"><i class="ph ph-x"></i></a>
+            <a href="/home_doador" class="close-btn"><i class="ph ph-x"></i></a>
         </div>
         
         <div class="content">
@@ -35,8 +36,7 @@
                         required
                     >
                 </div>
-</div>
-            
+            </div>
 
             <div class="input-group">
                 <label for="mensagem_doacao">Mensagem (opcional)</label>
@@ -59,7 +59,7 @@
         </div>
 
         <div class="footer">
-            <a href="/home" class="btn btn-cancel">Voltar</a>
+            <a href="/home_doador" class="btn btn-cancel">Voltar</a>
             <a href="#" class="btn btn-next">Avançar</a>
         </div>
     </div>

@@ -43,7 +43,6 @@ class OscModel {
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        // Retorna um array com todos os dados da linha
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 

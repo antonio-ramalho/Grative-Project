@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\DoadorModel;
-use App\Services\FirebaseService; // Importe caso vá deletar o Auth também
+use App\Services\FirebaseService;
 
 class DoadorController {
     
@@ -26,8 +26,7 @@ class DoadorController {
         $idrecebido = $model->salvar($dados);
 
         if ($idrecebido) {
-            // Cria a sessão igual ao fluxo da OSC
-           if (session_status() === PHP_SESSION_NONE) {
+            if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
             $_SESSION['id_usuario'] = $idrecebido; 
@@ -43,13 +42,12 @@ class DoadorController {
             echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
         }
     }
-    // Adicione esta função dentro da classe DoadorController
+
     public function mostrarHomeDoador() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // Proteção: Se o usuário tentar acessar a home sem logar/cadastrar, manda pro login
         if (!isset($_SESSION['id_usuario']) && !isset($_SESSION['logged_in'])) {
             header("Location: /login");
             exit;
@@ -124,4 +122,5 @@ class DoadorController {
         }
         exit;
     }
+
 }

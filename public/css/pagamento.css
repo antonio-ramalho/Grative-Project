@@ -1,0 +1,35 @@
+/* Estilos exclusivos para os elementos do Pagamento */
+
+.content {
+    text-align: center;
+}
+
+.qr-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+#qr-code-pix {
+    width: 220px;
+    height: 220px;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 15px;
+    background: white;
+}
+
+/* Ajuste fino para o card de valor não parecer um rádio selecionável */
+.msg-box {
+    cursor: default;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Responsividade específica para o QR Code */
+@media (max-width: 768px) {
+    #qr-code-pix {
+        width: 180px;
+        height: 180px;
+    }
+}
