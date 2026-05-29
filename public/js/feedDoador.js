@@ -1,31 +1,32 @@
 let publicacaoSelecionada = null;
+let instituicaoSelecionada = null;
 
 async function carregarFeedGeral() {
-    const divFeed = document.getElementById("feedDoador");
-    divFeed.innerHTML = "";
+  const divFeed = document.getElementById("feedDoador");
+  divFeed.innerHTML = "";
 
-    const resposta = await fetch('/api/feed-geral');
-    const publicacoes = await resposta.json();
+  const resposta = await fetch("/api/feed-geral");
+  const publicacoes = await resposta.json();
 
-    let todosOsCardsHTML = '';
+  let todosOsCardsHTML = "";
 
-    publicacoes.forEach(publicacao => {
-        let tagImagem = '';
-        if (publicacao.imagem_url) {
-            tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-2" style="width: 100%; object-fit: cover;">`;
-        }
+  publicacoes.forEach((publicacao) => {
+    let tagImagem = "";
+    if (publicacao.imagem_url) {
+      tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-2" style="width: 100%; object-fit: cover;">`;
+    }
 
-        todosOsCardsHTML += `
+    todosOsCardsHTML += `
             <div class="card mb-4 p-1 card-publicacao" data-id="${publicacao.id}">
                 <div class="card-header bg-white border-0 pt-3 pb-1 d-flex justify-content-between align-items-start">
                     <div class="d-flex align-items-center gap-2">
                         <i class="bi bi-person-circle fs-3" style="color: #444c54;"></i>
                         <div class="lh-sm">
                             <h6 class="m-0 fw-bold" style="font-size: 0.95rem;">${publicacao.nome_osc}</h6>
-                            <small style="font-size: 0.75rem; color: #88939c;">${publicacao.data_publicacao || 'Recentemente'}</small>
+                            <small style="font-size: 0.75rem; color: #88939c;">${publicacao.data_publicacao || "Recentemente"}</small>
                         </div>
                     </div>
-                    <span class="badge badge-score border-0 fw-normal px-2 py-1">Score 0.0</span>
+                    <span class="badge badge-score border-0 fw-normal px-2 py-1">Score ${publicacao.trust_score || "0.0"}</span>
                 </div>
 
                 <div class="card-body py-1">
@@ -39,7 +40,7 @@ async function carregarFeedGeral() {
                 </div>
 
                 <div class="card-footer bg-white border-0 pt-2 pb-2 d-flex justify-content-center gap-5 px-4">
-                    <button class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent btn-comentar" data-id-publicacao="${publicacao.id}">
+                    <button class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent btn-comentar" data-id-publicacao="${publicacao.id}" data-id-instituicao="${publicacao.id_instituicao}">
                         <i class="bi bi-chat-left-text fs-6"></i> Comentar
                     </button>
                     <button class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent">
@@ -53,161 +54,173 @@ async function carregarFeedGeral() {
                 </div>
             </div>
         `;
-    });
+  });
 
-    divFeed.innerHTML = todosOsCardsHTML;
-    
-    anexarListenersComentarios();
+  divFeed.innerHTML = todosOsCardsHTML;
 
-    publicacoes.forEach(publicacao => {
-        carregarComentarios(publicacao.id);
-    });
+  anexarListenersComentarios();
+
+  publicacoes.forEach((publicacao) => {
+    carregarComentarios(publicacao.id);
+  });
 }
 
 function anexarListenersComentarios() {
-    document.querySelectorAll('.btn-comentar').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            publicacaoSelecionada = btn.getAttribute('data-id-publicacao');
-            abrirModalComentario();
-        });
+  document.querySelectorAll(".btn-comentar").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      publicacaoSelecionada = btn.getAttribute("data-id-publicacao");
+      instituicaoSelecionada = btn.getAttribute("data-id-instituicao");
+      abrirModalComentario();
     });
+  });
 }
 
 function abrirModalComentario() {
-    const modal = new bootstrap.Modal(document.getElementById('modalComentario'));
-    modal.show();
+  const modal = new bootstrap.Modal(document.getElementById("modalComentario"));
+  modal.show();
 
-    setTimeout(() => {
-        document.getElementById('textoComentario').focus();
-    }, 400);
+  setTimeout(() => {
+    document.getElementById("textoComentario").focus();
+  }, 400);
 }
 
 async function enviarComentario() {
-    const texto = document.getElementById('textoComentario').value.trim();
-    
-    if (!texto) {
-        alert('Por favor, digite um comentário');
-        return;
+  const texto = document.getElementById("textoComentario").value.trim();
+
+  if (!texto) {
+    alert("Por favor, digite um comentário");
+    return;
+  }
+
+  if (!publicacaoSelecionada) {
+    alert("Erro: publicação não identificada");
+    return;
+  }
+
+  try {
+    const resposta = await fetch("/api/comentario/adicionar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({
+        id_publicacao: publicacaoSelecionada,
+        comentario: texto,
+        id_instituicao_dona: instituicaoSelecionada,
+      }),
+    });
+
+    const resultado = await resposta.json();
+
+    if (resultado.sucesso) {
+      document.getElementById("textoComentario").value = "";
+      bootstrap.Modal.getInstance(document.getElementById("modalComentario")).hide();
+
+      carregarComentarios(publicacaoSelecionada);
+    } else {
+      alert("Erro ao enviar comentário: " + resultado.erro);
     }
-    
-    if (!publicacaoSelecionada) {
-        alert('Erro: publicação não identificada');
-        return;
-    }
-    
-    try {
-        const resposta = await fetch('/api/comentario/adicionar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id_publicacao: publicacaoSelecionada,
-                comentario: texto
-            })
-        });
-        
-        const resultado = await resposta.json();
-        
-        if (resultado.sucesso) {
-            document.getElementById('textoComentario').value = '';
-            bootstrap.Modal.getInstance(document.getElementById('modalComentario')).hide();
-            
-            carregarComentarios(publicacaoSelecionada);
-        } else {
-            alert('Erro ao enviar comentário: ' + resultado.erro);
-        }
-    } catch (erro) {
-        console.error('Erro:', erro);
-        alert('Erro ao enviar comentário');
-    }
+  } catch (erro) {
+    console.error("Erro:", erro);
+    alert("Erro ao enviar comentário");
+  }
 }
 
 async function carregarComentarios(idPublicacao) {
-    try {
-        const resposta = await fetch(`/api/comentario/listar?id_publicacao=${idPublicacao}`);
-        
-        if (!resposta.ok) throw new Error("Erro na requisição");
-        
-        const comentarios = await resposta.json();
+  try {
+    const resposta = await fetch(`/api/comentario/listar?id_publicacao=${idPublicacao}`);
 
-        const postElement = document.querySelector(`.card-publicacao[data-id="${idPublicacao}"]`);
-        if (!postElement) return;
+    if (!resposta.ok) throw new Error("Erro na requisição");
 
-        const listaDiv = postElement.querySelector('.lista-comentarios');
-        const btnVerTodos = postElement.querySelector('.btn-ver-todos');
+    const comentarios = await resposta.json();
 
-        listaDiv.innerHTML = ''; 
+    const postElement = document.querySelector(`.card-publicacao[data-id="${idPublicacao}"]`);
+    if (!postElement) return;
 
-        if (comentarios.length > 0) {
-            const limitePreview = 2;
-            const previewComentarios = comentarios.slice(0, limitePreview);
+    const listaDiv = postElement.querySelector(".lista-comentarios");
+    const btnVerTodos = postElement.querySelector(".btn-ver-todos");
 
-            renderizarLista(previewComentarios, listaDiv);
+    listaDiv.innerHTML = "";
 
-            if (comentarios.length > limitePreview) {
-                btnVerTodos.textContent = `Ver todos os ${comentarios.length} comentários`;
-                btnVerTodos.style.display = 'block';
+    if (comentarios.length > 0) {
+      const limitePreview = 2;
+      const previewComentarios = comentarios.slice(0, limitePreview);
 
-                btnVerTodos.onclick = () => {
-                    listaDiv.innerHTML = ''; 
-                    renderizarLista(comentarios, listaDiv); 
-                    btnVerTodos.style.display = 'none'; 
-                };
-            } else {
-                btnVerTodos.style.display = 'none';
-            }
-        }
-    } catch (erro) {
-        console.error("Erro ao buscar comentários do post", idPublicacao, erro);
+      renderizarLista(previewComentarios, listaDiv);
+
+      if (comentarios.length > limitePreview) {
+        btnVerTodos.textContent = `Ver todos os ${comentarios.length} comentários`;
+        btnVerTodos.style.display = "block";
+
+        btnVerTodos.onclick = () => {
+          listaDiv.innerHTML = "";
+          renderizarLista(comentarios, listaDiv);
+          btnVerTodos.style.display = "none";
+        };
+      } else {
+        btnVerTodos.style.display = "none";
+      }
     }
+  } catch (erro) {
+    console.error("Erro ao buscar comentários do post", idPublicacao, erro);
+  }
 }
 
 function renderizarLista(arrayComentarios, container) {
-    arrayComentarios.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'comentario-item d-flex justify-content-between align-items-center mb-1';
-        
-        div.innerHTML = `
+  const urlParams = new URLSearchParams(window.location.search);
+  const meuIdLogado = urlParams.get("id");
+
+  arrayComentarios.forEach((c) => {
+    const div = document.createElement("div");
+    div.className = "comentario-item d-flex justify-content-between align-items-center mb-1";
+
+    let botaoLixeira = "";
+
+    if (String(c.usuario_id) === String(meuIdLogado)) {
+      botaoLixeira = `
+                <button onclick="deletarComentario(${c.id}, this)" class="btn btn-sm text-danger p-0 border-0 bg-transparent" title="Excluir comentário">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            `;
+    }
+
+    div.innerHTML = `
             <div>
-                <strong>${c.nome_usuario}</strong> <span>${c.texto}</span>
+                <strong>${c.nome_usuario}</strong> <span style="font-size: 0.95rem;">${c.comment || c.texto}</span>
             </div>
-            <button onclick="deletarComentario(${c.id}, this)" class="btn btn-sm text-danger p-0 border-0 bg-transparent" title="Excluir comentário">
-                <i class="bi bi-trash3"></i>
-            </button>
+            ${botaoLixeira}
         `;
-        
-        container.appendChild(div);
-    });
+
+    container.appendChild(div);
+  });
 }
+
 async function deletarComentario(idComentario, botaoElemento) {
+  if (!confirm("Tem certeza que deseja apagar este comentário?")) {
+    return;
+  }
 
-    if (!confirm("Tem certeza que deseja apagar este comentário?")) {
-        return;
+  try {
+    const resposta = await fetch("/api/comentario/deletar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({id_comentario: idComentario}),
+    });
+
+    const resultado = await resposta.json();
+
+    if (resposta.ok && resultado.sucesso) {
+      botaoElemento.closest(".comentario-item").remove();
+    } else {
+      alert("Aviso: " + (resultado.erro || "Não foi possível excluir."));
     }
-
-    try {
-        const resposta = await fetch('/api/comentario/deletar', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id_comentario: idComentario })
-        });
-
-        const resultado = await resposta.json();
-
-        if (resposta.ok && resultado.sucesso) {
-
-            botaoElemento.closest('.comentario-item').remove();
-        } else {
-
-            alert('Aviso: ' + (resultado.erro || 'Não foi possível excluir.'));
-        }
-    } catch (erro) {
-        console.error('Erro ao deletar:', erro);
-        alert('Erro de conexão ao tentar excluir o comentário.');
-    }
+  } catch (erro) {
+    console.error("Erro ao deletar:", erro);
+    alert("Erro de conexão ao tentar excluir o comentário.");
+  }
 }
 carregarFeedGeral();

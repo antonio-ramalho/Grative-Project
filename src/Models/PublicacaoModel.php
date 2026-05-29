@@ -5,6 +5,8 @@ use Kreait\Firebase\Factory;
 
 class PublicacaoModel {
 
+    private $firestore;
+
     public function __construct() {
         $caminhoChave = realpath(__DIR__ . '/../../config/firebase_credentials.json');
 
@@ -79,6 +81,7 @@ class PublicacaoModel {
     }
 
     public function listarFeedGlobal(){
+        $lista_publicacoes = [];
         $colecao = $this->firestore->database()->collection('publicacoes');
         $envelopes = $colecao->documents();
 

@@ -36,5 +36,4 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $router->dispatch($method, $uri);
 
-// No index.php
 require_once __DIR__ . '/../src/Controllers/BuscarController.php';

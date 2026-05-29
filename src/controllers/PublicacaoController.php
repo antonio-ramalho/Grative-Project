@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-
 class PublicacaoController {
     private $id_osc;
     private $PublicacaoModel;
@@ -105,7 +104,7 @@ class PublicacaoController {
         $lista_publicacoes = $PublicacaoModel->listarFeedGlobal();
 
         $lista_final = [];
-        $cacheNomes = [];
+        $cacheOscs = [];
 
         require_once __DIR__ . '/../../config/database.php';
         $osc_model = new \App\Models\OscModel($conn);
@@ -114,23 +113,31 @@ class PublicacaoController {
             $id_instituicao = $publicacao['id_instituicao'] ?? null;
 
             $nome_osc = 'Instituição Desconhecida';
+            $trust_score = '0.0';
 
             if ($id_instituicao) {
-                if (array_key_exists($id_instituicao, $cacheNomes)) {
-                    $nome_osc = $cacheNomes[$id_instituicao];
+                if (array_key_exists($id_instituicao, $cacheOscs)) {
+                    $nome_osc = $cacheOscs[$id_instituicao]['nome'];
+                    $trust_score = $cacheOscs[$id_instituicao]['score'];
                 } else {
                     $resultadoBanco = $osc_model->buscarPorId($id_instituicao);
 
                     if ($resultadoBanco && isset($resultadoBanco['nome_instituicao'])){
                         $nome_osc = $resultadoBanco['nome_instituicao'];
+                        
+                        $trust_score = isset($resultadoBanco['trust_score']) ? number_format((float)$resultadoBanco['trust_score'], 1, '.', '') : '0.0';
 
-                        $cacheNomes[$id_instituicao] = $nome_osc;
+                        $cacheOscs[$id_instituicao] = [
+                            'nome' => $nome_osc,
+                            'score' => $trust_score
+                        ];
                     }
-
                 }
             }
 
             $publicacao['nome_osc'] = $nome_osc;
+            $publicacao['trust_score'] = $trust_score; 
+            
             $lista_final[] = $publicacao;
         }
 
@@ -141,24 +148,17 @@ class PublicacaoController {
     public function adicionarComentario()
     {
         header('Content-Type: application/json');
+        
+        require_once '../src/Helpers/VerificarSessao.php';
+        verificarSessao();
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
-            http_response_code(401); 
-            echo json_encode([
-                'sucesso' => false,
-                'erro' => 'Sua sessão expirou ou você não está logado.'
-            ]);
-            exit; 
-
-        $usuarioId = $_SESSION['usuario_id'];
+        $usuarioId = $_SESSION['id_usuario'];
 
         $dadosRecebidos = json_decode(file_get_contents('php://input'), true);
         $postId = intval($dadosRecebidos['id_publicacao'] ?? 0);
         $comment = trim($dadosRecebidos['comentario'] ?? '');
+        
+        $idOscDonaDoPost = intval($dadosRecebidos['id_instituicao_dona'] ?? 0);
 
         if ($postId <= 0 || $comment === '') {
             http_response_code(400);
@@ -181,6 +181,16 @@ class PublicacaoController {
                 'usuario_id' => $usuarioId
             ]);
 
+            if ($idOscDonaDoPost > 0) {
+                require_once __DIR__ . '/../Models/NotificacaoModel.php';
+                $notificacaoModel = new \App\Models\NotificacaoModel($conn);
+                
+                $mensagem = "Tem um novo comentário na sua publicação!";
+                $link = "/post/" . $postId; 
+                
+                $notificacaoModel->criarNotificacao($idOscDonaDoPost, $mensagem, $link);
+            }
+
             echo json_encode(['sucesso' => true]);
             exit;
 
@@ -191,7 +201,6 @@ class PublicacaoController {
                 'erro' => 'Erro interno no servidor: ' . $e->getMessage()
             ]);
             exit;
-            }
         }
     }
 
@@ -228,15 +237,13 @@ class PublicacaoController {
             session_start();
         }
 
-        // VALIDAÇÃO REAL DA SESSÃO
-        if (!isset($_SESSION['usuario_id']) || empty($_SESSION['usuario_id'])) {
+        if (!isset($_SESSION['id_usuario']) || empty($_SESSION['id_usuario'])) {
             http_response_code(401);
             echo json_encode(['erro' => 'Sua sessão expirou ou você não está logado.']);
-            exit; // Para o código imediatamente
+            exit;
         }
 
-        // Pega o ID real do usuário logado
-        $id_usuario = $_SESSION['usuario_id'];
+        $id_usuario = $_SESSION['id_usuario'];
 
         $json = file_get_contents('php://input');
         $dados = json_decode($json, true);
@@ -262,7 +269,6 @@ class PublicacaoController {
             exit;
         }
 
-        // Validação de segurança: verifica se o ID da sessão bate com o dono
         if ($comentario['usuario_id'] != $id_usuario) {
             http_response_code(403);
             echo json_encode(['erro' => 'Não autorizado. Você só pode excluir seus próprios comentários.']);

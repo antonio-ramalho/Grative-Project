@@ -7,12 +7,11 @@ async function carregarNotificacoes() {
   const badge = document.getElementById("badge-nao-lidas");
 
   try {
-    // ATENÇÃO: Verifique se o nome dessa rota bate com o seu web.php
     const resposta = await fetch("/api/notificacoes");
     const json = await resposta.json();
 
     if (json.sucesso) {
-      lista.innerHTML = ""; // Limpa o loader
+      lista.innerHTML = "";
       let qtdNaoLidas = 0;
 
       if (json.dados.length === 0) {
@@ -24,7 +23,6 @@ async function carregarNotificacoes() {
       json.dados.forEach((notif) => {
         if (notif.lida == 0) qtdNaoLidas++;
 
-        // Cria o item da lista
         const li = document.createElement("li");
         li.className = `inbox-item ${notif.lida == 0 ? "unread" : ""}`;
         li.innerHTML = `
@@ -56,12 +54,10 @@ async function marcarComoLida(idNotificacao, botaoElemento) {
 
     const json = await resposta.json();
     if (json.sucesso) {
-      // Remove o botão e a classe de "não lida" visualmente sem recarregar a página
       const li = botaoElemento.closest("li");
       li.classList.remove("unread");
       botaoElemento.remove();
 
-      // Atualiza o contador lá em cima
       const badge = document.getElementById("badge-nao-lidas");
       let atual = parseInt(badge.innerText);
       if (atual > 1) {
