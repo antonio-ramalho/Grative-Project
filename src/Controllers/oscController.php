@@ -45,7 +45,7 @@ class OscController {
                 "mensagem" => "Instituição cadastrada com sucesso!",
                 "id" => $idrecebido
             ]);
-        } else {
+        } else {    
             http_response_code(500);
             echo json_encode(["erro" => "Erro ao salvar no banco de dados. Verifique os dados e tente novamente."]);
         }

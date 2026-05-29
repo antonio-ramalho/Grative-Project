@@ -10,7 +10,7 @@ const firebaseConfig = {
     messagingSenderId: "603920363639",
     appId: "1:603920363639:web:15e57b8bceb9fa4e27d672",
     measurementId: "G-CKM606DLJ7"
-};
+};  
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -22,7 +22,7 @@ const senhaInput = document.getElementById("senha_doador");
 const confirmaSenhaInput = document.getElementById("confirma_senha_doador");
 const cpfInput = document.getElementById("cpf_doador");
 const telefoneInput = document.getElementById("telefone_doador");
-
+const cepInput = document.getElementById("cep_doador");
 
 function formatCpfMask(rawValue) {
     const digits = rawValue.replace(/\D/g, "").slice(0, 11);
@@ -31,6 +31,39 @@ function formatCpfMask(rawValue) {
     formatted = formatted.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
     formatted = formatted.replace(/\.(\d{3})(\d)/, ".$1-$2");
     return formatted;
+}
+
+if (cepInput) {
+    cepInput.addEventListener("input", (e) => {
+        const digits = e.target.value.replace(/\D/g, "").slice(0, 8);
+        e.target.value = digits.replace(/^(\d{5})(\d)/, "$1-$2");
+    });
+
+    cepInput.addEventListener("blur", function() {
+        const cep = this.value.replace(/\D/g, '');
+        const btnSubmit = formCadastroDoador.querySelector('button[type="submit"]');
+
+        if (cep.length !== 8) {
+            showAlert("O CEP deve conter exatamente 8 números.");
+            if (btnSubmit) btnSubmit.disabled = true;
+            return;
+        }
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(dados => {
+                if (dados.erro) {
+                    showAlert("Este CEP não existe. Insira um CEP válido para continuar.");
+                    if (btnSubmit) btnSubmit.disabled = true;
+                } else {
+                    hideAlert();
+                    if (btnSubmit) btnSubmit.disabled = false;
+                }
+            })
+            .catch(() => {
+                console.error("Erro ao conectar com a API do ViaCEP.");
+            });
+    });
 }
 
 function formatPhoneMask(rawValue) {
@@ -106,13 +139,20 @@ function registrarNovoUsuario(email, password) {
 
 
 function collectFormData(userUid) {
+
+    const safeGetValue = (id) => {
+        const elemento = document.getElementById(id);
+        return elemento ? elemento.value : "";
+    };
+
     return {
-        nome_doador: getInputValue("nome_doador"),
-        usuario_doador: getInputValue("usuario_doador"),
-        cpf_doador: getInputValue("cpf_doador").replace(/\D/g, ""), 
-        telefone_doador: getInputValue("telefone_doador").replace(/\D/g, ""), 
-        email_doador: getInputValue("email_doador"),
-        data_nasc_doador: getInputValue("data_nasc_doador"),
+        nome_doador: safeGetValue("nome_doador") || safeGetValue("nome_completo"),
+        usuario_doador: safeGetValue("usuario_doador") || safeGetValue("usuario"),
+        cpf_doador: (safeGetValue("cpf_doador") || safeGetValue("cpf")).replace(/\D/g, ""), 
+        telefone_doador: (safeGetValue("telefone_doador") || safeGetValue("telefone")).replace(/\D/g, ""), 
+        email_doador: safeGetValue("email_doador") || safeGetValue("email"),
+        data_nasc_doador: safeGetValue("data_nasc_doador") || safeGetValue("data_nasc"),
+        cep_doador: safeGetValue("cep_doador"),
         id_firebase: userUid
     };
 }
