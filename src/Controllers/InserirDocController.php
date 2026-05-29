@@ -15,6 +15,65 @@ class InserirDocController {
         require '../src/Views/inserirDoc.php';
     }
 
+    public function listar() {
+        require_once '../src/Helpers/VerificarSessao.php';
+        verificarSessao();
+
+        try {
+            $conn = require __DIR__ . '/../../config/database.php';
+            $model = new \App\Models\DocumentoModel($conn);
+            $documentos = $model->listarDocumentos($_SESSION['id_instituicao']);
+            
+            echo json_encode(['sucesso' => true, 'documentos' => $documentos]);
+        } catch (\Exception $e) {
+            echo json_encode(['sucesso' => false, 'erro' => 'Erro no banco: ' . $e->getMessage()]);
+        }
+    }
+
+    public function excluir() {
+        @session_start();
+        
+        if (!isset($_SESSION['id_instituicao'])) {
+            echo json_encode(['sucesso' => false, 'erro' => 'Sessão expirada.']);
+            return;
+        }
+
+        $dados = json_decode(file_get_contents("php://input"), true);
+        
+        if (!isset($dados['id_documento'])) {
+            echo json_encode(['sucesso' => false, 'erro' => 'ID do documento não informado.']);
+            return;
+        }
+
+        $idDocumento = $dados['id_documento'];
+        $idInstituicao = $_SESSION['id_instituicao'];
+
+        try {
+            $conn = require __DIR__ . '/../../config/database.php';
+            $model = new \App\Models\DocumentoModel($conn);
+            
+            $caminhoArquivo = $model->buscarCaminhoArquivo($idDocumento, $idInstituicao);
+            
+            $apagou = $model->excluirDocumento($idDocumento, $idInstituicao);
+            
+            if ($apagou) {
+                if ($caminhoArquivo && file_exists($caminhoArquivo)) {
+                    @unlink($caminhoArquivo);
+                }
+
+                require_once __DIR__ . '/../Services/TrustScoreService.php';
+                $trustService = new \App\Services\TrustScoreService($conn);
+                $trustService->atualizarScoreDaOsc($idInstituicao);
+
+                echo json_encode(['sucesso' => true]);
+            } else {
+                 echo json_encode(['sucesso' => false, 'erro' => 'Documento não encontrado ou sem permissão.']);
+            }
+        } catch (\Exception $e) {
+            echo json_encode(['sucesso' => false, 'erro' => 'Erro interno: ' . $e->getMessage()]);
+        }
+    }
+
     public function upload() {
         try {
             if (!isset($_FILES['documento']) || $_FILES['documento']['error'] !== UPLOAD_ERR_OK) {
