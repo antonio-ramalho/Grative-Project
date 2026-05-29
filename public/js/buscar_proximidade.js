@@ -4,19 +4,21 @@ document.getElementById("btnLocalizacao").addEventListener("click", () => {
     const latValida = (typeof doadorLat !== "undefined" && doadorLat !== null) ? String(doadorLat).trim() : "";
     const lngValida = (typeof doadorLng !== "undefined" && doadorLng !== null) ? String(doadorLng).trim() : "";
 
+   
     if (latValida === "" || lngValida === "") {
         Swal.fire({
             icon: 'warning',
-            title: 'Sessão Expirada ou Sem Localização',
-            text: 'Faça login novamente ou verifique se o seu perfil possui um CEP válido cadastrado.',
+            title: 'Sem Localização no Perfil',
+            text: 'O teu perfil de doador não possui coordenadas válidas. Verifica o teu CEP cadastrado.',
             confirmButtonColor: '#1a8853'
         });
         return;
     }
 
-    container.innerHTML = '<p class="aviso">Buscando instituições próximas...</p>';
+    container.innerHTML = '<p class="aviso">A calcular distâncias a partir do teu endereço cadastrado...</p>';
 
-   fetch(`/api/osc/buscar_proximidade?lat=${latValida}&lng=${lngValida}`)
+
+    fetch(`/api/osc/buscar_proximidade?lat=${latValida}&lng=${lngValida}`)
         .then(response => {
             if (!response.ok) throw new Error("Erro na requisição.");
             return response.json();
@@ -57,6 +59,6 @@ document.getElementById("btnLocalizacao").addEventListener("click", () => {
         .catch(error => {
             console.error(error);
             container.innerHTML = '<p class="aviso">Erro ao carregar dados.</p>';
-            Swal.fire('Erro', 'Verifique se o banco de dados está ligado!', 'error');
+            Swal.fire('Erro', 'Verifica se o banco de dados está ligado!', 'error');
         });
 });

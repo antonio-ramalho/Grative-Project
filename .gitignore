@@ -3,9 +3,9 @@
 #node_modules/
 
 # Variáveis de ambiente (SEGURANÇA CRÍTICA: NUNCA versione!)
-.env
-.env.local
-.env.production
+#.env
+#.env.local
+#.env.production
 
 #Chave de acesso do Firebase
 config/firebase_credentials.json
@@ -22,5 +22,3 @@ Thumbs.db
 # Configurações da sua IDE (VS Code / PHPStorm)
 .idea/
 .vscode/settings.json
-
-#php -S localhost:8000 -t public/

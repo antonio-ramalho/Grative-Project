@@ -2,7 +2,7 @@ function filtrar(categoria) {
     const container = document.getElementById('resultados-busca');
     container.innerHTML = '<p class="aviso">Buscando...</p>';
 
-    // O fetch agora usa a rota que você já tem no web.php
+   
     fetch(`/api/oscs/categoria?cat=${categoria}`)
         .then(response => {
             if (!response.ok) throw new Error('Erro na rota');
@@ -17,7 +17,7 @@ function filtrar(categoria) {
             }
 
             oscs.forEach(osc => {
-                // HTML que usa a classe 'card-figma' do seu CSS
+                
                 const card = `
                     <div class="card-figma">
                         <div class="card-header">

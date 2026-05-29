@@ -59,9 +59,9 @@
             alert("Chave Pix copiada com sucesso!");
         }
 
-        // Lógica de clique para ir para a página OBRIGADO
+        
         document.getElementById('btn-finalizar-doacao').addEventListener('click', function() {
-            // Aqui você pode adicionar uma verificação se quiser, ou apenas redirecionar
+           
             window.location.href = "/obrigado"; 
         });
     </script>

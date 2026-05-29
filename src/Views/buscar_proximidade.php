@@ -14,7 +14,11 @@
             <div class="avatar-perfil"></div>
         </div>
     </nav>
-
+    <div class="container-voltar">
+    <a href="/home_doador?id=<?= $_GET['id'] ?? ($_SESSION['id_usuario'] ?? '300002') ?>" class="btn-voltar-grative">
+        <i class="bi bi-arrow-left"></i> Voltar para Home
+    </a>
+</div>
     <div class="filtro-wrapper">
         <header class="barra-filtros">
             <h1>Buscar por Proximidade</h1>
@@ -37,10 +41,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-    // Força os valores do usuário bre12345 para o teste funcionar direto
-    const doadorLat = "-25.44232730";
-    const doadorLng = "-49.06044730";
-    </script>>
+    // O teu PHP preenche estas variáveis com os dados do doador logado vindos do banco
+    const doadorLat = "<?= $doador['latitude'] ?? '' ?>";
+    const doadorLng = "<?= $doador['longitude'] ?? '' ?>";
+    </script>
 
     <script src="/js/buscar_proximidade.js"></script>
 </body>

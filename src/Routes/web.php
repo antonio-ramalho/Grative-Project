@@ -53,7 +53,7 @@ $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormular
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
 
-// Rotas Mostrar Categorias e Proximadade
+// Rotas Mostrar Categorias e Proximidade
 $router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');
 $router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
 $router->get('/buscar-proximidade', 'App\Controllers\ProximidadeController@index');
