@@ -13,55 +13,11 @@ class DoadorModel {
 
     public function salvar($dados) {
         try {
-            $cep = isset($dados['cep_doador']) ? preg_replace('/\D/', '', $dados['cep_doador']) : null;
-            $latitude = null;
-            $longitude = null;
-            
-            if (!empty($cep)) {
-                $opts = [
-                    "http" => [
-                        "method" => "GET",
-                        "header" => "User-Agent: GrativeBackend/1.0 (breno@pucpr.edu.br)\r\n",
-                        "timeout" => 5
-                    ],
-                    "ssl" => [
-                        "verify_peer" => false,
-                        "verify_peer_name" => false
-                    ]
-                ];
-                $context = stream_context_create($opts);
-
-                // CONSULTA VIA CEP 
-                $urlViaCep = "https://viacep.com.br/ws/" . $cep . "/json/";
-                $responseViaCep = @file_get_contents($urlViaCep, false, $context);
-                
-                // Endereço padrão sem ViaCEP 
-                $enderecoTexto = $cep . ", Brasil"; 
-                
-                if ($responseViaCep) {
-                    $dadosViaCep = json_decode($responseViaCep, true);
-                    if (!isset($dadosViaCep['erro'])) {
-                        $enderecoTexto = $dadosViaCep['localidade'] . ", " . $dadosViaCep['uf'] . ", Brasil";
-                    }
-                }
-
-                $urlGeo = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($enderecoTexto) . "&limit=1";
-                $responseGeo = @file_get_contents($urlGeo, false, $context);
-            
-                if ($responseGeo) {
-                    $resultadoGeo = json_decode($responseGeo, true);
-                    if (!empty($resultadoGeo) && isset($resultadoGeo[0])) {
-                        $latitude = $resultadoGeo[0]['lat'];
-                        $longitude = $resultadoGeo[0]['lon'];
-                    }
-                }
-            }
-
-
+           
             $sql = "INSERT INTO usuario 
-                    (usuario, firebase_uid, nome_completo, cpf, data_nasc, telefone, email, data_cadastro, status_ativo, cep, latitude, longitude) 
+                    (usuario, firebase_uid, nome_completo, cpf, data_nasc, telefone, email, data_cadastro, status_ativo) 
                     VALUES 
-                    (:usuario, :uid, :nome, :cpf, :data_nasc, :telefone, :email, NOW(), 1,:cep, :latitude, :longitude)";
+                    (:usuario, :uid, :nome, :cpf, :data_nasc, :telefone, :email, NOW(), 1)";
 
             $stmt = $this->conn->prepare($sql);
 
@@ -73,9 +29,6 @@ class DoadorModel {
             $stmt->bindValue(':data_nasc', $dados['data_nasc_doador']);
             $stmt->bindValue(':telefone', $dados['telefone_doador']);
             $stmt->bindValue(':email', $dados['email_doador']);
-            $stmt->bindValue(':cep', $cep);
-            $stmt->bindValue(':latitude', $latitude);
-            $stmt->bindValue(':longitude', $longitude);
 
             $stmt->execute();
             

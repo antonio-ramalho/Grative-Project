@@ -1,9 +1,5 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Rotas de OSC
+//OSC rotas
 require_once __DIR__ . '/../Controllers/OscController.php';
 $router->get('/cadastro_osc', 'App\Controllers\OscController@mostrarFormulario');
 $router->get('/home_osc', 'App\Controllers\OscController@mostrarHomeOsc');
@@ -52,12 +48,11 @@ $router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador
 $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
-
-// Rotas Mostrar Categorias e Proximidade
+// Rotas Mostrar Categorias
 $router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');
 $router->get('/api/oscs/categoria', 'App\Controllers\BuscarController@filtrarPorCategoria');
-$router->get('/buscar-proximidade', 'App\Controllers\ProximidadeController@index');
-$router->get('/api/osc/buscar_proximidade', 'App\Controllers\ProximidadeController@buscar');
+
+$router->get('/buscar', 'App\Controllers\BuscarController@mostrarBusca');
 
 //? Rotas Publicação
 $router->get('/feedOsc', 'App\controllers\PublicacaoController@mostrarFeedOsc');

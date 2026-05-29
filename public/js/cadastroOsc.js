@@ -26,7 +26,7 @@ const divAlertas = document.getElementById("divAlertas");
 
 // Exibe mensagem dentro do container de alertas.
 function showAlert(message, tipo = "danger") {
-    divAlertas.classList.remove("d-none", "alert-danger", "alert-success", "alert-info");
+    divAlertas.classList.remove("d-none", "alert-danger", "alert-success");
     divAlertas.classList.add(`alert-${tipo}`);
     divAlertas.innerHTML = `<p class='text-${tipo} fw-bold mb-0'>${message}</p>`;
 }
@@ -137,12 +137,9 @@ function collectFormData(userUid) {
         bairro_osc: getInputValue("bairro_osc"),
         cidade_osc: getInputValue("cidade_osc"),
         estado_osc: getInputValue("estado_osc"),
-        categoria_osc: getInputValue("categoria_osc"),
         descricao_osc: getInputValue("descricao_osc"),
         pix_osc: getInputValue("pix_osc"),
-        id_firebase: userUid,
-        latitude_osc: getInputValue("latitude_osc"),
-        longitude_osc: getInputValue("longitude_osc")
+        id_firebase: userUid
     };
 }
 
@@ -159,32 +156,13 @@ function submitOscData(data) {
         if (!response.ok) {
             throw new Error("Falha ao enviar os dados para o servidor.");
         }
-        return response.json();
+        return response.json(); // Isso retorna o JSON com o ID que colocamos no PHP
     })
     .catch((error) => {
         console.error("Erro ao enviar dados ao servidor:", error);
         showAlert("Não foi possível enviar os dados. Tente novamente mais tarde.");
     });
 }
-
-// Evento para buscar Endereço por CEP (ViaCEP)
-cepInput.addEventListener("blur", () => {
-    const cepRaw = cepInput.value.replace(/\D/g, "");
-    
-    if (cepRaw.length === 8) {
-        fetch(`https://viacep.com.br/ws/${cepRaw}/json/`)
-            .then(response => response.json())
-            .then(data => {
-                if (!data.erro) {
-                    document.getElementById('logradouro_osc').value = data.logradouro || "";
-                    document.getElementById('bairro_osc').value = data.bairro || "";
-                    document.getElementById('cidade_osc').value = data.localidade || "";
-                    document.getElementById('estado_osc').value = data.uf || "";
-                }
-            })
-            .catch(err => console.error("Erro ao buscar CEP:", err));
-    }
-});
 
 // Atualiza a máscara do input do CNPJ em tempo real.
 cnpjInput.addEventListener("input", (event) => {
@@ -211,6 +189,7 @@ btnMostrarSenha.addEventListener("click", () => {
     );
 });
 
+// Valida o formulário e executa o fluxo de cadastro.
 formCadastroOsc.addEventListener("submit", async (event) => {
     event.preventDefault();
     hideAlert();
@@ -231,15 +210,9 @@ formCadastroOsc.addEventListener("submit", async (event) => {
     const senhaOsc = getInputValue("senha_osc");
 
     try {
-        showAlert("Processando cadastro...", "info");
-
-        // 1. Cadastra a conta no Firebase Auth normalmente
         const userUid = await registrarNovoUsuario(emailOsc, senhaOsc);
-        
-        // 2. Coleta os dados padrão gerados pela tela
         const dadosOsc = collectFormData(userUid);
         
-        // 3. Envia os dados estruturados direto ao PHP
         const resposta = await submitOscData(dadosOsc);
         
         if (resposta && resposta.id) {
@@ -247,6 +220,9 @@ formCadastroOsc.addEventListener("submit", async (event) => {
             window.location.href = `/home_osc?id=${resposta.id}`;
         }
     } catch (error) {
-        console.error("Erro durante o processo de envio:", error);
+
     }
-});;
+});
+
+
+
