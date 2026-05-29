@@ -19,6 +19,8 @@ $router->get('/relatorio-doacoes', 'App\Controllers\DonationRelatorioController@
 $router->post('/relatorio/publicar', 'App\Controllers\RelatorioController@publicar');
 $router->get('/inserir-documento', 'App\Controllers\InserirDocController@index');
 $router->post('/upload-doc', 'App\Controllers\InserirDocController@upload');
+$router->get('/listar-docs', 'App\Controllers\InserirDocController@listar');
+$router->post('/excluir-doc', 'App\Controllers\InserirDocController@excluir');
 
 // Rotas de caixa-entrada
 $router->get('/caixa-entrada', 'App\Controllers\CaixaEntradaController@index'); 
