@@ -14,6 +14,12 @@
         </div>
     </nav>
 
+    <div class="container-voltar">
+    <a href="/home_doador?id=<?= $_GET['id'] ?? '300002' ?>" class="btn-voltar-grative">
+        <i class="bi bi-arrow-left"></i> Voltar para Home
+    </a>
+    </div>
+
     <div class="filtro-wrapper">
         <header class="barra-filtros">
             <h1>Buscar por Categoria</h1>
