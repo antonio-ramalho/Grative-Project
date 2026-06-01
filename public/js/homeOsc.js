@@ -23,6 +23,24 @@ const modalPublicacao = document.getElementById('modalPublicacao');
 const controladorModal = bootstrap.Modal.getOrCreateInstance(modalPublicacao);
 const divAlertaPublicacao = document.getElementById('alertaPublicacao');
 const formPublicacao = document.getElementById('formNovaPublicacao');
+const inputImagem = document.getElementById('imagemProjeto');
+const labelImagem = document.querySelector('label[for="imagemProjeto"]');
+const htmlOriginalLabel = labelImagem.innerHTML;
+
+inputImagem.addEventListener('change', function() {
+    if (this.files && this.files.length > 0) {
+        // Pega o nome do arquivo selecionado
+        const nomeArquivo = this.files[0].name;
+        
+        // Trunca o nome do arquivo se for muito grande
+        const nomeExibicao = nomeArquivo.length > 20 ? nomeArquivo.substring(0, 20) + '...' : nomeArquivo;
+
+        // Muda o ícone para um "check" verde e mostra o nome do arquivo
+        labelImagem.innerHTML = `<i class="bi bi-check-circle-fill fs-4 text-success"></i> <span class="text-success fw-bold ms-2" style="font-size: 0.9rem;">${nomeExibicao}</span>`;
+    } else {
+        labelImagem.innerHTML = htmlOriginalLabel;
+    }
+});
 
 formPublicacao.addEventListener('submit',function(event){
     event.preventDefault()
@@ -38,7 +56,20 @@ formPublicacao.addEventListener('submit',function(event){
             throw new Error("Falha ao enviar os dados para o servidor.");
         }
         formPublicacao.reset();
-        controladorModal.hide();
+        document.querySelector('label[for="imagemProjeto"]').innerHTML = htmlOriginalLabel;
+
+        const modalElement = document.getElementById('modalPublicacao');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement) || bootstrap.Modal.getOrCreateInstance(modalElement);
+
+        modalInstance.hide();
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('padding-right');
+        document.body.style.removeProperty('overflow');
+
+        // Exibe o alerta
+        divAlertaPublicacao.classList.remove('d-none');
         divAlertaPublicacao.classList.remove('d-none');
         setTimeout(function () {
             divAlertaPublicacao.classList.add('show');
