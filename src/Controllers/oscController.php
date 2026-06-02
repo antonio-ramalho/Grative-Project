@@ -150,4 +150,52 @@ class OscController {
             echo json_encode(["erro" => "Instituição não encontrada."]);
         }
     }
+
+    public function obterDashboard() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['id_instituicao'])) {
+            http_response_code(401);
+            echo json_encode(["erro" => "Usuário não autenticado."]);
+            return;
+        }
+
+        $id_osc = $_SESSION['id_instituicao'];
+        
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/OscModel.php';
+        $oscModel = new \App\Models\OscModel($conn);
+        
+        $dadosMysql = $oscModel->obterMetricasDashboard($id_osc);
+
+        $trustScore = isset($dadosMysql['score']) ? number_format((float)$dadosMysql['score'], 1, '.', '') : '0.0';
+        $totalDoacoes = isset($dadosMysql['total_doacoes']) ? (float)$dadosMysql['total_doacoes'] : 0.00;
+
+        require_once __DIR__ . '/../Models/PublicacaoModel.php';
+        $pubModel = new \App\Models\PublicacaoModel();
+        $publicacoes = $pubModel->listarPorOsc($id_osc);
+
+        $totalLikes = 0;
+        $totalComentarios = 0;
+        $totalCompartilhamentos = 0;
+
+        foreach ($publicacoes as $post) {
+            if (isset($post['likes'])) {
+                $totalLikes += is_array($post['likes']) ? count($post['likes']) : (int)$post['likes'];
+            }
+            $totalComentarios += (int)($post['comentarios'] ?? 0);
+            $totalCompartilhamentos += (int)($post['compartilhamentos'] ?? 0);
+        }
+
+        $interacoesTotais = $totalComentarios + $totalCompartilhamentos;
+
+        echo json_encode([
+            'doacoes' => 'R$ ' . number_format($totalDoacoes, 2, ',', '.'),
+            'score' => $trustScore,
+            'likes' => $totalLikes,
+            'interacoes' => $interacoesTotais
+        ]);
+    }
 }
