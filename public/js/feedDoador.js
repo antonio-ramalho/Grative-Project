@@ -13,8 +13,11 @@ async function carregarFeedGeral() {
   publicacoes.forEach((publicacao) => {
     let tagImagem = "";
     if (publicacao.imagem_url) {
-      tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-2" style="width: 100%; object-fit: cover;">`;
+      tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-2" loading="lazy" style="width: 100%; object-fit: cover;">`;
     }
+
+    // Verifica se vai ser um coração vazio ou preenchido/vermelho
+    let classeCoracao = publicacao.usuario_curtiu ? 'bi-heart-fill text-danger' : 'bi-heart';
 
     todosOsCardsHTML += `
             <div class="card mb-4 p-1 card-publicacao" data-id="${publicacao.id}">
@@ -40,14 +43,19 @@ async function carregarFeedGeral() {
                 </div>
 
                 <div class="card-footer bg-white border-0 pt-2 pb-2 d-flex justify-content-center gap-5 px-4">
+                    
+                    <button onclick="curtirPostagem('${publicacao.id}', this)" class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent">
+                        <i class="bi ${classeCoracao} fs-6"></i> Curtir <span class="contador-curtidas">${publicacao.curtidas || 0}</span>
+                    </button>
+
                     <button class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent btn-comentar" data-id-publicacao="${publicacao.id}" data-id-instituicao="${publicacao.id_instituicao}">
                         <i class="bi bi-chat-left-text fs-6"></i> Comentar
                     </button>
-                    <button class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent">
+                    
+                    <button onclick="compartilharPostagem('${publicacao.titulo}', '${publicacao.descricao}')" class="btn btn-post-action btn-sm px-3 d-flex align-items-center gap-2 border-0 bg-transparent">
                         <i class="bi bi-share fs-6"></i> Compartilhar
                     </button>
-                </div>
-
+                </div>                      
                 <div class="px-4 pb-3 secao-comentarios">
                     <div class="lista-comentarios"></div>
                     <button class="btn-ver-todos" style="display: none;">Ver todos os comentários</button>
@@ -118,13 +126,14 @@ async function enviarComentario() {
       document.getElementById("textoComentario").value = "";
       bootstrap.Modal.getInstance(document.getElementById("modalComentario")).hide();
 
+      // Recarrega apenas os comentários desse post, mantendo o usuário no mesmo lugar!
       carregarComentarios(publicacaoSelecionada);
     } else {
       alert("Erro ao enviar comentário: " + resultado.erro);
     }
   } catch (erro) {
-    console.error("Erro:", erro);
-    alert("Erro ao enviar comentário");
+    console.error("Erro na comunicação com o servidor:", erro);
+    alert("Houve um problema de conexão. Tente novamente.");
   }
 }
 
@@ -169,16 +178,13 @@ async function carregarComentarios(idPublicacao) {
 }
 
 function renderizarLista(arrayComentarios, container) {
-  const urlParams = new URLSearchParams(window.location.search);
-  const meuIdLogado = urlParams.get("id");
-
   arrayComentarios.forEach((c) => {
     const div = document.createElement("div");
     div.className = "comentario-item d-flex justify-content-between align-items-center mb-1";
 
     let botaoLixeira = "";
 
-    if (String(c.usuario_id) === String(meuIdLogado)) {
+    if (c.pode_deletar) {
       botaoLixeira = `
                 <button onclick="deletarComentario(${c.id}, this)" class="btn btn-sm text-danger p-0 border-0 bg-transparent" title="Excluir comentário">
                     <i class="bi bi-trash3"></i>
@@ -214,7 +220,12 @@ async function deletarComentario(idComentario, botaoElemento) {
     const resultado = await resposta.json();
 
     if (resposta.ok && resultado.sucesso) {
-      botaoElemento.closest(".comentario-item").remove();
+      // Pega o ID do post pai subindo pelas divs e atualiza só a lista dele
+      const cardPost = botaoElemento.closest('.card-publicacao');
+      if (cardPost) {
+          const idPost = cardPost.getAttribute('data-id');
+          carregarComentarios(idPost);
+      }
     } else {
       alert("Aviso: " + (resultado.erro || "Não foi possível excluir."));
     }
@@ -223,4 +234,57 @@ async function deletarComentario(idComentario, botaoElemento) {
     alert("Erro de conexão ao tentar excluir o comentário.");
   }
 }
+
+// Função para Curtir Dinâmica
+async function curtirPostagem(idPostagem, botaoElement) {
+    try {
+        const response = await fetch('/curtir-publicacao', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_publicacao: idPostagem })
+        });
+
+        const data = await response.json();
+
+        if (data.sucesso) {
+            // 1. Atualiza o número de curtidas direto na tela
+            const contadorElement = botaoElement.querySelector('.contador-curtidas');
+            if (contadorElement) contadorElement.textContent = data.curtidas;
+            
+            // 2. Inverte o coração (vazio <-> preenchido vermelho)
+            const iconeElement = botaoElement.querySelector('i');
+            if (iconeElement.classList.contains('bi-heart-fill')) {
+                iconeElement.classList.remove('bi-heart-fill', 'text-danger');
+                iconeElement.classList.add('bi-heart');
+            } else {
+                iconeElement.classList.remove('bi-heart');
+                iconeElement.classList.add('bi-heart-fill', 'text-danger');
+            }
+        } else {
+            console.error(data.erro);
+        }
+    } catch (error) {
+        console.error("Erro ao curtir:", error);
+    }
+}
+
+// Função para Compartilhar (Web Share API)
+function compartilharPostagem(titulo, descricao) {
+    const urlPost = window.location.href; 
+
+    if (navigator.share) {
+        navigator.share({
+            title: `Olhe este impacto: ${titulo} - Grative`,
+            text: descricao,
+            url: urlPost
+        }).then(() => {
+            console.log('Postagem compartilhada com sucesso!');
+        }).catch((error) => {
+            console.log('Erro ao compartilhar', error);
+        });
+    } else {
+        alert('Seu navegador não suporta a função nativa de compartilhar. Copie o link do site!');
+    }
+}
+
 carregarFeedGeral();
