@@ -114,4 +114,14 @@ class CampanhaController {
             echo json_encode(['sucesso' => false, 'erro' => 'Campanha não encontrada ou falha ao atualizar.']);
         }
     }
+
+    public function listarCampanhasDestaque() {
+        require_once __DIR__ . '/../Models/CampanhaModel.php';
+        $campanhaModel = new \App\Models\CampanhaModel();
+        
+        $campanhas = $campanhaModel->listarCampanhasAtivas(3);
+        
+        header('Content-Type: application/json');
+        echo json_encode($campanhas);
+    }
 }

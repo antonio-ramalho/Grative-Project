@@ -25,6 +25,7 @@ $router->post('/excluir-doc', 'App\Controllers\InserirDocController@excluir');
 $router->post('/api/campanha/criar', 'App\Controllers\CampanhaController@criarCampanha');
 $router->get('/api/campanhas/osc', 'App\Controllers\CampanhaController@listarCampanhasOsc');
 $router->post('/api/campanha/interromper', 'App\Controllers\CampanhaController@interromperCampanha');
+$router->get('/api/campanhas/destaque', 'App\Controllers\CampanhaController@listarCampanhasDestaque');
 
 // Rotas de caixa-entrada
 $router->get('/caixa-entrada', 'App\Controllers\CaixaEntradaController@index'); 

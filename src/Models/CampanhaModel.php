@@ -97,4 +97,20 @@ class CampanhaModel {
 
         return false;
     }
+
+    public function listarCampanhasAtivas($limite = 3) {
+        $lista = [];
+        $colecao = $this->firestore->database()->collection('campanhas');
+        
+        $documentos = $colecao->where('status', '=', 'ativa')->limit($limite)->documents();
+
+        foreach ($documentos as $doc) {
+            if ($doc->exists()) {
+                $dados = $doc->data();
+                $dados['id'] = $doc->id();
+                $lista[] = $dados;
+            }
+        }
+        return $lista;
+    }
 }
