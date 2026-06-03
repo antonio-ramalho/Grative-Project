@@ -7,50 +7,60 @@ async function carregarFeedOsc(){
     const resposta = await fetch('/api/feed-osc');
     const publicacoes = await resposta.json();
 
+    let todosOsCardsHTML = "";
 
     publicacoes.forEach(publicacao => {
         let tagImagem = ``
         if (publicacao.imagem_url){
-            tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-3">`;
+            tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-3" loading="lazy">`;
         }
 
-        const cardHTML = `
-                    <div class="card border-0 shadow-sm">
-                        <!--? Cabeçalho -->
-                        <div class="card-header d-flex align-items-center gap-3 bg-white border-0">
-                            <i class="bi bi-person-circle fs-2 text-secondary"></i> 
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold">${publicacao.nome_osc}</span>
-                                <span class="text-muted small">${publicacao.data_publicacao}</span>
-                            </div>
-                        </div>
-                        
-                        <!--? Corpo -->
-                        <div class="card-body">
-                            <h3>${publicacao.titulo}</h3>
-                            <p>${publicacao.descricao}</p>
-                            ${tagImagem}
-                        </div>
-                        
-                        <!--? Rodapé -->
-                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                            <!--? Interações -->
-                            <div class="d-flex gap-4">
-                                <span class="text-muted" style="cursor: pointer;"><i class="bi bi-heart"></i> Curtir</span>
-                                <span class="text-muted btn-comentar-osc" style="cursor: pointer;" data-id-publicacao="${publicacao.id}"><i class="bi bi-chat"></i> Comentar</span>
-                            </div>
-                            
-                            <!--? Ações -->
-                            <button class="btn btn-outline-danger btn-sm" data-id="${publicacao.id}">
-                                <i class="bi bi-trash"></i> Excluir
-                            </button>
-                        </div>
+        todosOsCardsHTML += `
+            <div class="card border-0 shadow-sm mb-4 card-publicacao-osc" data-id="${publicacao.id}">
+                <div class="card-header d-flex align-items-center gap-3 bg-white border-0 pt-3">
+                    <i class="bi bi-person-circle fs-2 text-secondary"></i> 
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">${publicacao.nome_osc || 'Minha OSC'}</span>
+                        <span class="text-muted small">${publicacao.data_publicacao || 'Recentemente'}</span>
                     </div>
-        `
-        divPublicacoes.innerHTML += cardHTML;
+                </div>
+                
+                <div class="card-body">
+                    <h4 class="fs-5 fw-bold">${publicacao.titulo}</h4>
+                    <p class="text-secondary mb-1">${publicacao.descricao}</p>
+                    ${tagImagem}
+                </div>
+                
+                <div class="card-footer bg-white border-0 pt-2 pb-2 d-flex justify-content-between align-items-center px-4">
+                    <div class="d-flex gap-4">
+                        <span class="text-muted"><i class="bi bi-heart-fill text-danger"></i> ${publicacao.curtidas || 0} Curtidas</span>
+                        <span class="text-muted btn-comentar-osc" style="cursor: pointer;" data-id-publicacao="${publicacao.id}">
+                            <i class="bi bi-chat"></i> Comentar
+                        </span>
+                    </div>
+                    
+                    <button class="btn btn-outline-danger btn-sm btn-excluir-osc" data-id="${publicacao.id}">
+                        <i class="bi bi-trash"></i> Excluir
+                    </button>
+                </div>
+
+                <div class="px-4 pb-3 secao-comentarios-osc">
+                    <hr class="text-secondary opacity-25 mt-0 mb-3">
+                    <div class="lista-comentarios-osc"></div>
+                    <button class="btn-ver-todos-osc" style="display: none; background: none; border: none; color: #8e8e8e; font-size: 14px; padding: 0;">Ver todos os comentários</button>
+                </div>
+            </div>
+        `;
     });
     
-    anexarListenersComentariosOsc();
+    divPublicacoes.innerHTML = todosOsCardsHTML;
+    
+    anexarListenersOsc();
+
+    // Dispara a busca de comentários para cada post
+    publicacoes.forEach((publicacao) => {
+        carregarComentariosOsc(publicacao.id);
+    });
 }
 
 function anexarListenersOsc() {

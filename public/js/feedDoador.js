@@ -13,7 +13,6 @@ async function carregarFeedGeral() {
   publicacoes.forEach((publicacao) => {
     let tagImagem = "";
     
-    // Lógica adicionada para diferenciar Imagem de Vídeo
     if (publicacao.imagem_url) {
       const extensao = publicacao.imagem_url.split('.').pop().toLowerCase();
       const formatosVideo = ['mp4', 'mov', 'avi', 'webm'];
