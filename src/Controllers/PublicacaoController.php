@@ -236,7 +236,7 @@ class PublicacaoController {
         $comment = trim($dadosRecebidos['comentario'] ?? '');
         $idOscDonaDoPost = intval($dadosRecebidos['id_instituicao_dona'] ?? 0);
 
-        if ($postId <= 0 || $comment === '') {
+        if ($postId < 0 || $comment === '') {
             http_response_code(400);
             echo json_encode(['sucesso' => false, 'erro' => 'Dados inválidos ou comentário vazio.']);
             exit;
