@@ -37,51 +37,45 @@ inputImagem.addEventListener("change", function () {
   }
 });
 
-formPublicacao.addEventListener("submit", function (event) {
+formPublicacao.addEventListener("submit", async function (event) {
   event.preventDefault();
+
+  document.getElementById("btnEnviarPublicacao").blur();
 
   const formData = new FormData(formPublicacao);
 
-  return fetch("/api/publicacao/criar", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Falha ao enviar os dados para o servidor.");
-      }
-      formPublicacao.reset();
-      document.querySelector('label[for="imagemProjeto"]').innerHTML = htmlOriginalLabel;
-
-      const modalElement = document.getElementById("modalPublicacao");
-      const modalInstance =
-        bootstrap.Modal.getInstance(modalElement) || bootstrap.Modal.getOrCreateInstance(modalElement);
-
-      modalInstance.hide();
-      const backdrop = document.querySelector(".modal-backdrop");
-      if (backdrop) backdrop.remove();
-      document.body.classList.remove("modal-open");
-      document.body.style.removeProperty("padding-right");
-      document.body.style.removeProperty("overflow");
-
-      // Exibe o alerta
-      divAlertaPublicacao.classList.remove("d-none");
-      divAlertaPublicacao.classList.remove("d-none");
-      setTimeout(function () {
-        divAlertaPublicacao.classList.add("show");
-      }, 20);
-      setTimeout(function () {
-        divAlertaPublicacao.classList.remove("show");
-        setTimeout(function () {
-          divAlertaPublicacao.classList.add("d-none");
-        }, 300);
-      }, 3000);
-      return response;
-    })
-    .catch((error) => {
-      console.error("Erro ao enviar dados ao servidor:", error);
-      showAlert("Não foi possível enviar os dados. Tente novamente mais tarde.");
+  try {
+    const response = await fetch("/api/publicacao/criar", {
+      method: "POST",
+      body: formData,
     });
+
+    if (!response.ok) {
+      throw new Error("Falha ao enviar os dados para o servidor.");
+    }
+
+    formPublicacao.reset();
+    document.querySelector('label[for="imagemProjeto"]').innerHTML = htmlOriginalLabel;
+
+    const modalElement = document.getElementById("modalPublicacao");
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modalInstance.hide();
+
+    divAlertaPublicacao.classList.remove("d-none");
+    setTimeout(function () {
+      divAlertaPublicacao.classList.add("show");
+    }, 20);
+
+    setTimeout(function () {
+      divAlertaPublicacao.classList.remove("show");
+      setTimeout(function () {
+        divAlertaPublicacao.classList.add("d-none");
+      }, 300);
+    }, 3000);
+  } catch (error) {
+    console.error("Erro ao enviar dados ao servidor:", error);
+    alert("Não foi possível enviar a publicação. A imagem pode ser muito grande ou ocorreu um erro no servidor.");
+  }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
