@@ -251,3 +251,32 @@ formCadastroOsc.addEventListener("submit", async (event) => {
     console.error("Erro durante o processo de envio:", error);
   }
 });
+
+const avisoForca = document.getElementById('aviso_forca');
+
+if (senhaInput && avisoForca) {
+  senhaInput.addEventListener('input', () => {
+    const senha = senhaInput.value;
+    let pontuacao = 0;
+
+    if (senha.length >= 8) pontuacao++; 
+    if (/[A-Z]/.test(senha)) pontuacao++; 
+    if (/[a-z]/.test(senha)) pontuacao++; 
+    if (/[0-9]/.test(senha)) pontuacao++; 
+    if (/[^A-Za-z0-9]/.test(senha)) pontuacao++; 
+
+    if (senha.length === 0) {
+        avisoForca.textContent = "Vazia";
+        avisoForca.style.color = "black";
+    } else if (pontuacao <= 2) {
+        avisoForca.textContent = "Fraca (Use letras, números e símbolos)";
+        avisoForca.style.color = "red";
+    } else if (pontuacao >= 3 && pontuacao <= 4) {
+        avisoForca.textContent = "Média";
+        avisoForca.style.color = "orange";
+    } else if (pontuacao === 5) {
+        avisoForca.textContent = "Forte";
+        avisoForca.style.color = "green";
+    }
+  });
+}
