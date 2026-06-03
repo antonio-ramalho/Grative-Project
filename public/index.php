@@ -1,11 +1,15 @@
 <?php
+ini_set('display_errors', 0);
+error_reporting(0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/erros_sistema.log');
 
 $uri_static = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 if ($uri_static !== '/' && file_exists(__DIR__ . $uri_static)) {
     return false;
 }
 
-error_reporting(E_ALL & ~E_DEPRECATED);
+
 session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/Helpers/functions.php';
