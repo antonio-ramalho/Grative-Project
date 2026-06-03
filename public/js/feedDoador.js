@@ -12,8 +12,31 @@ async function carregarFeedGeral() {
 
   publicacoes.forEach((publicacao) => {
     let tagImagem = "";
+    
+    // Lógica adicionada para diferenciar Imagem de Vídeo
     if (publicacao.imagem_url) {
-      tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-2" style="width: 100%; object-fit: cover;">`;
+      const extensao = publicacao.imagem_url.split('.').pop().toLowerCase();
+      const formatosVideo = ['mp4', 'mov', 'avi', 'webm'];
+      
+      if (formatosVideo.includes(extensao)) {
+          let tipoMime = 'video/mp4'; 
+          if (extensao === 'webm') tipoMime = 'video/webm';
+          else if (extensao === 'mov') tipoMime = 'video/quicktime';
+          else if (extensao === 'avi') tipoMime = 'video/x-msvideo';
+
+          tagImagem = `
+              <div class="mt-2 text-center rounded overflow-hidden" style="background-color: #000;">
+                  <video controls preload="metadata" style="width: 100%; height: 400px; object-fit: contain;">
+                      <source src="${publicacao.imagem_url}" type="${tipoMime}">
+                      Seu navegador não suporta a tag de vídeo.
+                  </video>
+              </div>`;
+      } else {
+          tagImagem = `
+              <div class="mt-2 text-center rounded overflow-hidden" style="background-color: #f8f9fa;">
+                  <img src="${publicacao.imagem_url}" style="width: 100%; height: 400px; object-fit: contain;">
+              </div>`;
+      }
     }
 
     todosOsCardsHTML += `

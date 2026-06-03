@@ -17,40 +17,59 @@ class PublicacaoController {
     }
 
     public function fazerPublicacao() {
-        require_once __DIR__ . '/../Helpers/VerificarSessao.php';
-        $this->id_osc = verificarSessao();
+    require_once __DIR__ . '/../Helpers/VerificarSessao.php';
+    $this->id_osc = verificarSessao();
 
-        $titulo = $_POST['titulo'] ?? null;
-        $descricao = $_POST['descricao'] ?? null;
-        $imagem = $_FILES['imagem'] ?? null;
-        $endereco_img = null;
-        $dados_publicacao = array();
+    $titulo = $_POST['titulo'] ?? null;
+    $descricao = $_POST['descricao'] ?? null;
+    
+    // Mantemos a chave 'imagem' para o PHP capturar corretamente o que vem do seu FormData do JS
+    $midia = $_FILES['imagem'] ?? null; 
+    $endereco_midia = null;
+    $dados_publicacao = array();
 
-        if(empty($titulo) || empty($descricao)){
+    if(empty($titulo) || empty($descricao)){
+        http_response_code(400);
+        echo json_encode(['erro' => 'O título e a descrição são obrigatórios!']);
+        return;
+    }
+
+    if(isset($midia) && $midia['error'] == 0 ){
+        $nome_original = $midia['name'];
+        $extensao = strtolower(pathinfo($nome_original, PATHINFO_EXTENSION));
+        
+        $extensoes_permitidas = ['png','jpg','jpeg', 'webp', 'mp4', 'mov', 'avi', 'webm'];
+        
+        if(!in_array($extensao, $extensoes_permitidas)){
             http_response_code(400);
-            echo json_encode(['erro' => 'O título e a descrição são obrigatórios!']);
+            echo json_encode(['erro' => 'Formato de arquivo inválido. Envie uma imagem ou vídeo suportado.']);
             return;
         }
 
-        if(isset($imagem) && $imagem['error'] == 0 ){
-            $nome_original = $imagem['name'];
-            $extensao = strtolower(pathinfo($nome_original, PATHINFO_EXTENSION));
-            $extensoes_permitidas = ['png','jpg','jpeg'];
-            if(!in_array($extensao, $extensoes_permitidas)){
-                http_response_code(400);
-                echo json_encode(['erro' => 'Formato de imagem inválido. Use apenas PNG ou JPG.']);
-                return;
-            }
-            $endereco_img = $imagem['tmp_name'];
+        $tamanho_maximo = 40 * 1024 * 1024;
+        if($midia['size'] > $tamanho_maximo) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'O arquivo é muito grande. O limite máximo é de 40MB.']);
+            return;
         }
 
-        $dados_publicacao = ['titulo' => $titulo, 'descricao' => $descricao, 'id_instituicao' => $this->id_osc, 'imagem_url' => null, 'data_publicacao' => date('Y-m-d H:i:s')];
+        $endereco_midia = $midia['tmp_name'];
+    }
 
-        if($endereco_img != null){
-            $url_final = $this->PublicacaoModel -> fazerUpload($endereco_img, $extensao);
+        $dados_publicacao = [
+            'titulo' => $titulo, 
+            'descricao' => $descricao, 
+            'id_instituicao' => $this->id_osc, 
+            'imagem_url' => null, 
+            'data_publicacao' => date('Y-m-d H:i:s')
+        ];
+
+        if($endereco_midia != null){
+            $url_final = $this->PublicacaoModel->fazerUpload($endereco_midia, $extensao);
+            
             if (empty($url_final)){
                 http_response_code(500);
-                echo json_encode(['erro' => 'Falha ao tentar gravar a imagem no servidor.']);
+                echo json_encode(['erro' => 'Falha ao tentar gravar o arquivo no servidor.']);
                 return;
             }
             $dados_publicacao['imagem_url'] = $url_final;
