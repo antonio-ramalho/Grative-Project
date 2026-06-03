@@ -236,7 +236,7 @@ class PublicacaoController {
         $comment = trim($dadosRecebidos['comentario'] ?? '');
         $idOscDonaDoPost = intval($dadosRecebidos['id_instituicao_dona'] ?? 0);
 
-        if ($postId <= 0 || $comment === '') {
+        if ($postId < 0 || $comment === '') {
             http_response_code(400);
             echo json_encode(['sucesso' => false, 'erro' => 'Dados inválidos ou comentário vazio.']);
             exit;
@@ -255,12 +255,11 @@ class PublicacaoController {
                 'instituicao_id' => $id_instituicao
             ]);
 
-            // Se for um doador comentando, avisa a OSC
             if ($id_usuario && $idOscDonaDoPost > 0) {
                 require_once __DIR__ . '/../Models/NotificacaoModel.php';
                 $notificacaoModel = new \App\Models\NotificacaoModel($conn);
                 $mensagem = "Tem um novo comentário na sua publicação!";
-                $link = "/post/" . $postId; 
+                $link = "/feedOsc/" . $postId; 
                 $notificacaoModel->criarNotificacao($idOscDonaDoPost, $mensagem, $link);
             }
 

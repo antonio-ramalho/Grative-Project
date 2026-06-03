@@ -89,10 +89,22 @@
               <div class="card-body p-4 pb-3">
                 <h6 class="fw-bold text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px">ATALHOS</h6>
                 <nav class="d-flex flex-column gap-1">
-                  <a href="/home_osc" class="btn btn-sidebar active"> <i class="bi bi-house-door fs-5"></i> Início </a>
+                  <button type="button" class="btn btn-sidebar active" id="btnAbaInicio">
+                    <i class="bi bi-house-door fs-5"></i> Início
+                  </button>
+
                   <a href="/relatorio-doacoes" class="btn btn-sidebar">
                     <i class="bi bi-file-earmark-text fs-5"></i> Novo Relatório
                   </a>
+
+                  <button type="button" class="btn btn-sidebar" data-bs-toggle="modal" data-bs-target="#modalCampanha">
+                    <i class="bi bi-rocket fs-5"></i> Criar Campanha
+                  </button>
+
+                  <button type="button" class="btn btn-sidebar" id="btnAbaCampanhas">
+                    <i class="bi bi-flag fs-5"></i> Minhas Campanhas
+                  </button>
+
                   <button
                     type="button"
                     class="btn btn-sidebar"
@@ -101,6 +113,7 @@
                   >
                     <i class="bi bi-megaphone fs-5"></i> Criar Publicação
                   </button>
+
                   <a href="/inserir-documento" class="btn btn-sidebar">
                     <i class="bi bi-file-earmark-text fs-5"></i> Inserir Documento
                   </a>
@@ -115,69 +128,72 @@
 
         <div class="col-12 col-lg-9">
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-            <h2 class="fw-bold text-dark mb-0 fs-3">Dashboard</h2>
+            <h2 class="fw-bold text-dark mb-0 fs-3" id="tituloPagina">Dashboard</h2>
           </div>
 
-          <div class="row g-4" id="dashboardCards">
-            <div class="col-md-6">
-              <div
-                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
-                style="height: 180px"
-              >
-                <div class="d-flex align-items-center mb-3">
-                  <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                    <i class="bi bi-currency-dollar fs-3 text-success"></i>
+          <div id="abaDashboard">
+            <div class="row g-4" id="dashboardCards">
+              <div class="col-md-6">
+                <div
+                  class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                  style="height: 180px"
+                >
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+                      <i class="bi bi-currency-dollar fs-3 text-success"></i>
+                    </div>
+                    <h6 class="text-muted fw-bold mb-0">Doações (Últimos 30 dias)</h6>
                   </div>
-                  <h6 class="text-muted fw-bold mb-0">Doações (Últimos 30 dias)</h6>
+                  <h2 class="fw-bold mb-0 text-dark" id="dashDoacoes">Carregando...</h2>
                 </div>
-                <h2 class="fw-bold mb-0 text-dark" id="dashDoacoes">Carregando...</h2>
+              </div>
+              <div class="col-md-6">
+                <div
+                  class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                  style="height: 180px"
+                >
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                      <i class="bi bi-shield-check fs-3 text-primary"></i>
+                    </div>
+                    <h6 class="text-muted fw-bold mb-0">Trust Score Atual</h6>
+                  </div>
+                  <h2 class="fw-bold mb-0 text-dark" id="dashScore">Carregando...</h2>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div
+                  class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                  style="height: 180px"
+                >
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                      <i class="bi bi-heart fs-3 text-danger"></i>
+                    </div>
+                    <h6 class="text-muted fw-bold mb-0">Curtidas Recebidas</h6>
+                  </div>
+                  <h2 class="fw-bold mb-0 text-dark" id="dashLikes">Carregando...</h2>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div
+                  class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                  style="height: 180px"
+                >
+                  <div class="d-flex align-items-center mb-3">
+                    <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                      <i class="bi bi-chat-right-text fs-3 text-warning"></i>
+                    </div>
+                    <h6 class="text-muted fw-bold mb-0">Comentários e Partilhas</h6>
+                  </div>
+                  <h2 class="fw-bold mb-0 text-dark" id="dashInteracoes">Carregando...</h2>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="col-md-6">
-              <div
-                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
-                style="height: 180px"
-              >
-                <div class="d-flex align-items-center mb-3">
-                  <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-                    <i class="bi bi-shield-check fs-3 text-primary"></i>
-                  </div>
-                  <h6 class="text-muted fw-bold mb-0">Trust Score Atual</h6>
-                </div>
-                <h2 class="fw-bold mb-0 text-dark" id="dashScore">Carregando...</h2>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div
-                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
-                style="height: 180px"
-              >
-                <div class="d-flex align-items-center mb-3">
-                  <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
-                    <i class="bi bi-heart fs-3 text-danger"></i>
-                  </div>
-                  <h6 class="text-muted fw-bold mb-0">Curtidas Recebidas</h6>
-                </div>
-                <h2 class="fw-bold mb-0 text-dark" id="dashLikes">Carregando...</h2>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div
-                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
-                style="height: 180px"
-              >
-                <div class="d-flex align-items-center mb-3">
-                  <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-                    <i class="bi bi-chat-right-text fs-3 text-warning"></i>
-                  </div>
-                  <h6 class="text-muted fw-bold mb-0">Comentários e Partilhas</h6>
-                </div>
-                <h2 class="fw-bold mb-0 text-dark" id="dashInteracoes">Carregando...</h2>
-              </div>
-            </div>
+          <div id="abaCampanhas" class="d-none">
+            <div class="row g-4" id="gridCampanhas"></div>
           </div>
         </div>
       </div>
@@ -202,6 +218,101 @@
           >
             <i class="bi bi-box-arrow-right fs-5"></i> Sair da conta
           </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalCampanha" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+          <div class="modal-header border-bottom">
+            <h5 class="fw-bold text-dark mb-0">Criar Nova Campanha</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="formNovaCampanha" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label class="form-label fw-bold text-muted small">TÍTULO DA CAMPANHA</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="titulo"
+                  placeholder="Ex: Campanha do Agasalho 2026"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold text-muted small">DESCRIÇÃO E REGRAS</label>
+                <textarea
+                  class="form-control"
+                  name="descricao"
+                  rows="3"
+                  placeholder="Explique por que esta campanha existe..."
+                  required
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold text-grative-green small">OBJETIVOS CLAROS DA ARRECADAÇÃO *</label>
+                <textarea
+                  class="form-control border-success"
+                  id="objetivosCampanha"
+                  name="objetivos"
+                  rows="2"
+                  placeholder="Onde o valor será aplicado exatamente?"
+                ></textarea>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-grative-green small">META FINANCEIRA (R$) *</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    class="form-control border-success"
+                    id="metaCampanha"
+                    name="meta_financeira"
+                    placeholder="Ex: 5000.00"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-muted small">DATA DE ENCERRAMENTO</label>
+                  <input type="date" class="form-control" name="data_encerramento" required />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3">
+                <div>
+                  <label
+                    for="posterCampanha"
+                    style="cursor: pointer"
+                    class="text-grative-green mb-0 d-flex align-items-center gap-2"
+                  >
+                    <i class="bi bi-image fs-3"></i>
+                    <span class="fw-bold" id="textoLabelPoster">Adicionar Pôster (Imagem)</span>
+                  </label>
+                  <input class="d-none" type="file" id="posterCampanha" name="imagem" accept="image/*" />
+                  <img
+                    id="previewCampanha"
+                    src=""
+                    alt="Preview do Pôster"
+                    class="d-none rounded border border-success"
+                    style="width: 50px; height: 50px; object-fit: cover; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn text-white rounded-pill px-5 fw-bold"
+                  style="background-color: #2e7d32"
+                  id="btnPublicarCampanha"
+                >
+                  Publicar Campanha
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -236,7 +347,7 @@
                 <label for="imagemProjeto" style="cursor: pointer" class="text-grative-green"
                   ><i class="bi bi-image fs-4"></i
                 ></label>
-                <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*" />
+                <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*, video/*" />
                 <button
                   type="submit"
                   class="btn text-white rounded-pill px-4 fw-bold"
@@ -260,36 +371,6 @@
       <p>Publicação Criada com sucesso!</p>
     </div>
 
-    <script src="/js/homeOsc.js" type="module"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
-
-  <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-4 border-0 shadow-lg">
-        <div class="modal-header border-bottom-0">
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body pt-0 px-4 pb-4">
-          <form id="formNovaPublicacao" enctype="multipart/form-data">
-            <input type="text" class="form-control border-0 shadow-none fs-5 fw-semibold px-0" id="tituloProjeto"
-              name="titulo" placeholder="Título da ação ou projeto" required />
-            <textarea class="form-control border-0 shadow-none px-0 mt-1 fs-5" id="descricaoProjeto" name="descricao"
-              rows="3" placeholder="O que a sua OSC realizou hoje?" style="resize: none" required></textarea>
-            <hr class="border-secondary-subtle" />
-            <div class="d-flex justify-content-between align-items-center">
-              <label for="imagemProjeto" style="cursor: pointer" class="text-grative-green"><i
-                  class="bi bi-image fs-4"></i></label>
-              <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*, video/*" />
-              <button type="submit" class="btn text-white rounded-pill px-4 fw-bold" style="background-color: #11784a"
-                id="btnEnviarPublicacao">
-                Publicar
-              </button>
-            </div>
-          </form>
     <!-- Modal de Comentário OSC -->
     <div
       class="modal fade"
@@ -319,6 +400,12 @@
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/homeOsc.js" type="module"></script>
+    <script src="js/campanhas.js"></script>
   </body>
 </html>

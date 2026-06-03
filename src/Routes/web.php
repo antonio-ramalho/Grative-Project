@@ -22,6 +22,9 @@ $router->get('/inserir-documento', 'App\Controllers\InserirDocController@index')
 $router->post('/upload-doc', 'App\Controllers\InserirDocController@upload');
 $router->get('/listar-docs', 'App\Controllers\InserirDocController@listar');
 $router->post('/excluir-doc', 'App\Controllers\InserirDocController@excluir');
+$router->post('/api/campanha/criar', 'App\Controllers\CampanhaController@criarCampanha');
+$router->get('/api/campanhas/osc', 'App\Controllers\CampanhaController@listarCampanhasOsc');
+$router->post('/api/campanha/interromper', 'App\Controllers\CampanhaController@interromperCampanha');
 
 // Rotas de caixa-entrada
 $router->get('/caixa-entrada', 'App\Controllers\CaixaEntradaController@index'); 

@@ -25,12 +25,17 @@ async function carregarNotificacoes() {
 
         const li = document.createElement("li");
         li.className = `inbox-item ${notif.lida == 0 ? "unread" : ""}`;
+
+        // Garante que o link aponta para o lugar certo (se o banco não enviar, vai pro feed geral)
+        const linkDestino = notif.link ? notif.link : "/feedOsc";
+
+        // Envolvemos a div 'inbox-content' inteira em uma tag <a>
         li.innerHTML = `
-                    <div class="inbox-content">
+                    <a href="${linkDestino}" class="inbox-content" style="text-decoration: none; color: inherit; display: block; flex-grow: 1;">
                         <p class="inbox-text">${notif.mensagem}</p>
                         <span class="inbox-date">${new Date(notif.data_criacao).toLocaleString("pt-BR")}</span>
-                    </div>
-                    ${notif.lida == 0 ? `<button class="btn-ler" onclick="marcarComoLida(${notif.id}, this)">✔ Lida</button>` : ""}
+                    </a>
+                    ${notif.lida == 0 ? `<button class="btn-ler" onclick="marcarComoLida(${notif.id}, this); event.stopPropagation();">✔ Lida</button>` : ""}
                 `;
         lista.appendChild(li);
       });
