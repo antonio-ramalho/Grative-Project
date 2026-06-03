@@ -10,6 +10,7 @@ $router->get('/home_osc', 'App\Controllers\OscController@mostrarHomeOsc');
 $router->post('/api/osc/cadastrar', 'App\Controllers\OscController@cadastrar');
 $router->get('/editar_osc', 'App\Controllers\OscController@mostrarFormularioEdicao');
 $router->get('/api/osc/dados', 'App\Controllers\OscController@obterDados');
+$router->get('/api/osc/dashboard', 'App\Controllers\OscController@obterDashboard');
 
 $router->post('/api/osc/editar', 'App\Controllers\OscController@atualizar');
 $router->post('/api/osc/excluir', 'App\Controllers\OscController@excluir');
@@ -52,6 +53,7 @@ $router->get('/home_doador', 'App\Controllers\DoadorController@mostrarHomeDoador
 $router->get('/editar_doador', 'App\Controllers\DoadorController@mostrarFormularioEdicao');
 $router->post('/api/doador/editar', 'App\Controllers\DoadorController@atualizar');
 $router->post('/api/doador/excluir', 'App\Controllers\DoadorController@excluir');
+$router->post('/curtir-publicacao', 'App\Controllers\PublicacaoController@curtir');
 
 // Rotas Mostrar Categorias
 $router->get('/buscar-categoria', 'App\Controllers\BuscarController@mostrarBusca');

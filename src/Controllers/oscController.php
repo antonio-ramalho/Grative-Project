@@ -150,4 +150,68 @@ class OscController {
             echo json_encode(["erro" => "Instituição não encontrada."]);
         }
     }
+
+    public function obterDashboard() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['id_instituicao'])) {
+            http_response_code(401);
+            echo json_encode(["erro" => "Usuário não autenticado."]);
+            return;
+        }
+
+        $id_osc = $_SESSION['id_instituicao'];
+        
+        $conn = require __DIR__ . '/../../config/database.php';
+        require_once __DIR__ . '/../Models/OscModel.php';
+        $oscModel = new \App\Models\OscModel($conn);
+        
+        $dadosMysql = $oscModel->obterMetricasDashboard($id_osc);
+
+        $trustScore = isset($dadosMysql['score']) ? number_format((float)$dadosMysql['score'], 1, '.', '') : '0.0';
+        $totalDoacoes = isset($dadosMysql['total_doacoes']) ? (float)$dadosMysql['total_doacoes'] : 0.00;
+
+        require_once __DIR__ . '/../Models/PublicacaoModel.php';
+        $pubModel = new \App\Models\PublicacaoModel();
+        $publicacoes = $pubModel->listarPorOsc($id_osc);
+
+        $totalCurtidas = 0;
+        $totalCompartilhamentos = 0;
+        $postIds = []; 
+
+        foreach ($publicacoes as $post) {
+            $totalCurtidas += (int)($post['curtidas'] ?? 0);
+            
+            $totalCompartilhamentos += (int)($post['compartilhamentos'] ?? 0);
+            
+            if (isset($post['id'])) {
+                $postIds[] = $post['id'];
+            }
+        }
+
+        $totalComentarios = 0;
+
+        if (count($postIds) > 0) {
+            $inQuery = implode(',', array_fill(0, count($postIds), '?'));
+        
+            $sqlComments = "SELECT COUNT(*) as total_comentarios FROM comentarios WHERE post_id IN ($inQuery)";
+            $stmtComments = $conn->prepare($sqlComments);
+            
+            $stmtComments->execute($postIds);
+            $resultComments = $stmtComments->fetch(\PDO::FETCH_ASSOC);
+            
+            $totalComentarios = (int) $resultComments['total_comentarios'];
+        }
+
+        $interacoesTotais = $totalComentarios + $totalCompartilhamentos;
+
+        echo json_encode([
+            'doacoes' => 'R$ ' . number_format($totalDoacoes, 2, ',', '.'),
+            'score' => $trustScore,
+            'likes' => $totalCurtidas, 
+            'interacoes' => $interacoesTotais
+        ]);
+    }
 }

@@ -22,8 +22,6 @@ class PublicacaoController {
 
     $titulo = $_POST['titulo'] ?? null;
     $descricao = $_POST['descricao'] ?? null;
-    
-    // Mantemos a chave 'imagem' para o PHP capturar corretamente o que vem do seu FormData do JS
     $midia = $_FILES['imagem'] ?? null; 
     $endereco_midia = null;
     $dados_publicacao = array();
@@ -55,13 +53,13 @@ class PublicacaoController {
 
         $endereco_midia = $midia['tmp_name'];
     }
-
         $dados_publicacao = [
             'titulo' => $titulo, 
             'descricao' => $descricao, 
             'id_instituicao' => $this->id_osc, 
             'imagem_url' => null, 
-            'data_publicacao' => date('Y-m-d H:i:s')
+            'data_publicacao' => date('Y-m-d H:i:s'),
+            'curtidas' => 0
         ];
 
         if($endereco_midia != null){
@@ -77,6 +75,42 @@ class PublicacaoController {
 
         $resultado = $this->PublicacaoModel->salvarNoBanco($dados_publicacao);
         echo json_encode(['sucesso' => true]);
+    }
+
+    public function curtir() {
+        header('Content-Type: application/json');
+        
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Pega o ID do usuário logado
+        $id_usuario = $_SESSION['id_usuario'] ?? null;
+
+        if (!$id_usuario) {
+            http_response_code(401);
+            echo json_encode(['erro' => 'Você precisa estar logado para curtir.']);
+            return;
+        }
+
+        $dadosRecebidos = json_decode(file_get_contents('php://input'), true);
+        $id_publicacao = $dadosRecebidos['id_publicacao'] ?? null;
+
+        if (empty($id_publicacao)) {
+            http_response_code(400);
+            echo json_encode(['erro' => 'ID da publicação é obrigatório']);
+            return;
+        }
+
+        // Chama a função nova passando também o ID do usuário
+        $nova_quantidade = $this->PublicacaoModel->alternarCurtida($id_publicacao, $id_usuario);
+
+        if ($nova_quantidade !== false) {
+            echo json_encode(['sucesso' => true, 'curtidas' => $nova_quantidade]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['erro' => 'Erro ao processar a curtida no banco.']);
+        }
     }
 
     public function listarFeed(){
@@ -128,6 +162,9 @@ class PublicacaoController {
         require_once __DIR__ . '/../../config/database.php';
         $osc_model = new \App\Models\OscModel($conn);
 
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        $id_usuario_logado = $_SESSION['id_usuario'] ?? null;
+
         foreach ($lista_publicacoes as $publicacao) {
             $id_instituicao = $publicacao['id_instituicao'] ?? null;
 
@@ -154,11 +191,25 @@ class PublicacaoController {
                 }
             }
 
+            // Atribui os dados da OSC
             $publicacao['nome_osc'] = $nome_osc;
             $publicacao['trust_score'] = $trust_score; 
+
+            // Garante que curtidas inicie em 0 se não existir
+            $publicacao['curtidas'] = isset($publicacao['curtidas']) ? (int)$publicacao['curtidas'] : 0;
             
+            // Verifica se o usuário atual curtiu
+            $lista_curtidas = isset($publicacao['usuarios_que_curtiram']) ? $publicacao['usuarios_que_curtiram'] : [];
+            $publicacao['usuario_curtiu'] = in_array($id_usuario_logado, $lista_curtidas);
+            
+            // Adiciona na lista final limpa, sem duplicatas
             $lista_final[] = $publicacao;
         }
+
+        // Ordena a lista de forma decrescente (maior engajamento primeiro)
+        usort($lista_final, function($a, $b) {
+            return $b['curtidas'] <=> $a['curtidas'];
+        });
 
         header('Content-Type: application/json');
         echo json_encode($lista_final);
@@ -168,23 +219,26 @@ class PublicacaoController {
     {
         header('Content-Type: application/json');
         
-        require_once '../src/Helpers/VerificarSessao.php';
-        verificarSessao();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-        $usuarioId = $_SESSION['id_usuario'];
+        // Pega quem estiver logado
+        $id_usuario = $_SESSION['id_usuario'] ?? null;
+        $id_instituicao = $_SESSION['id_instituicao'] ?? null;
+
+        if (!$id_usuario && !$id_instituicao) {
+            http_response_code(401);
+            echo json_encode(['erro' => 'Você precisa estar logado para comentar.']);
+            exit;
+        }
 
         $dadosRecebidos = json_decode(file_get_contents('php://input'), true);
         $postId = intval($dadosRecebidos['id_publicacao'] ?? 0);
         $comment = trim($dadosRecebidos['comentario'] ?? '');
-        
         $idOscDonaDoPost = intval($dadosRecebidos['id_instituicao_dona'] ?? 0);
 
         if ($postId <= 0 || $comment === '') {
             http_response_code(400);
-            echo json_encode([
-                'sucesso' => false,
-                'erro' => 'Dados inválidos ou comentário vazio.'
-            ]);
+            echo json_encode(['sucesso' => false, 'erro' => 'Dados inválidos ou comentário vazio.']);
             exit;
         }
 
@@ -197,16 +251,16 @@ class PublicacaoController {
             $commentModel->create([
                 'post_id' => $postId,
                 'comment' => htmlspecialchars($comment, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                'usuario_id' => $usuarioId
+                'usuario_id' => $id_usuario,
+                'instituicao_id' => $id_instituicao
             ]);
 
-            if ($idOscDonaDoPost > 0) {
+            // Se for um doador comentando, avisa a OSC
+            if ($id_usuario && $idOscDonaDoPost > 0) {
                 require_once __DIR__ . '/../Models/NotificacaoModel.php';
                 $notificacaoModel = new \App\Models\NotificacaoModel($conn);
-                
                 $mensagem = "Tem um novo comentário na sua publicação!";
                 $link = "/post/" . $postId; 
-                
                 $notificacaoModel->criarNotificacao($idOscDonaDoPost, $mensagem, $link);
             }
 
@@ -215,10 +269,7 @@ class PublicacaoController {
 
         } catch (\Exception $e) {
             http_response_code(500);
-            echo json_encode([
-                'sucesso' => false,
-                'erro' => 'Erro interno no servidor: ' . $e->getMessage()
-            ]);
+            echo json_encode(['sucesso' => false, 'erro' => 'Erro no servidor: ' . $e->getMessage()]);
             exit;
         }
     }
@@ -231,14 +282,26 @@ class PublicacaoController {
             echo json_encode(['erro' => 'ID da publicação é obrigatório']);
             return;
         }
-
        
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+        $id_logado_doador = $_SESSION['id_usuario'] ?? null;
+        $id_logado_osc = $_SESSION['id_instituicao'] ?? null;
+
         $conn = require __DIR__ . '/../../config/database.php';
         require_once __DIR__ . '/../Models/Comment.php';
         
         $commentModel = new \App\Models\Comment($conn);
-        
         $comentarios = $commentModel->getByPostId($id_publicacao);
+
+        // Verifica de quem é o comentário para desenhar a lixeira
+        foreach ($comentarios as &$c) {
+            $c['pode_deletar'] = false;
+            if ($id_logado_doador && $c['usuario_id'] == $id_logado_doador) {
+                $c['pode_deletar'] = true;
+            } elseif ($id_logado_osc && $c['instituicao_id'] == $id_logado_osc) {
+                $c['pode_deletar'] = true;
+            }
+        }
 
         header('Content-Type: application/json');
         echo json_encode($comentarios);
@@ -251,22 +314,19 @@ class PublicacaoController {
         }
 
         header('Content-Type: application/json');
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        $id_usuario = $_SESSION['id_usuario'] ?? null;
+        $id_instituicao = $_SESSION['id_instituicao'] ?? null;
 
-        if (!isset($_SESSION['id_usuario']) || empty($_SESSION['id_usuario'])) {
+        if (!$id_usuario && !$id_instituicao) {
             http_response_code(401);
             echo json_encode(['erro' => 'Sua sessão expirou ou você não está logado.']);
             exit;
         }
 
-        $id_usuario = $_SESSION['id_usuario'];
-
         $json = file_get_contents('php://input');
         $dados = json_decode($json, true);
-
         $id_comentario = $dados['id_comentario'] ?? null;
 
         if (empty($id_comentario)) {
@@ -279,7 +339,6 @@ class PublicacaoController {
         require_once __DIR__ . '/../Models/Comment.php';
         
         $commentModel = new \App\Models\Comment($conn);
-        
         $comentario = $commentModel->getById($id_comentario);
 
         if (!$comentario) {
@@ -288,7 +347,15 @@ class PublicacaoController {
             exit;
         }
 
-        if ($comentario['usuario_id'] != $id_usuario) {
+        // Valida se quem está tentando excluir é realmente o autor
+        $autorizado = false;
+        if ($id_usuario && $comentario['usuario_id'] == $id_usuario) {
+            $autorizado = true;
+        } elseif ($id_instituicao && $comentario['instituicao_id'] == $id_instituicao) {
+            $autorizado = true;
+        }
+
+        if (!$autorizado) {
             http_response_code(403);
             echo json_encode(['erro' => 'Não autorizado. Você só pode excluir seus próprios comentários.']);
             exit;

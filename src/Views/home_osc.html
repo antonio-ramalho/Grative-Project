@@ -1,166 +1,271 @@
 <!doctype html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Grative - OSC</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <title>Grative - OSC</title>
+    <style>
+      body {
+        background-color: #f4f6f7;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-  <style>
-    body {
-      background-color: #f4f6f7;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
+      .text-grative-green {
+        color: #11784a !important;
+      }
 
-    .text-grative-green {
-      color: #11784a !important;
-    }
+      /* Estilo para os botões da sidebar (Doador Style) */
+      .btn-sidebar {
+        color: #6c757d;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 15px;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 500;
+        width: 100%;
+        text-align: left;
+        background: transparent;
+      }
 
-    /* Estilo para os botões da sidebar (Doador Style) */
-    .btn-sidebar {
-      color: #6c757d;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 15px;
-      transition: all 0.2s ease-in-out;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-weight: 500;
-      width: 100%;
-      text-align: left;
-      background: transparent;
-    }
+      /* Efeito de hover solicitado: Fundo verde claro e texto verde escuro */
+      .btn-sidebar:hover {
+        background-color: #eef7f2 !important;
+        color: #11784a !important;
+      }
 
-    /* Efeito de hover solicitado: Fundo verde claro e texto verde escuro */
-    .btn-sidebar:hover {
-      background-color: #eef7f2 !important;
-      color: #11784a !important;
-    }
+      .search-bar-header {
+        background-color: #f0f2f5;
+      }
 
-    .search-bar-header {
-      background-color: #f0f2f5;
-    }
-  </style>
-</head>
+      .btn-sidebar.active {
+        background-color: #eef7f2 !important;
+        color: #11784a !important;
+      }
+    </style>
+  </head>
 
-<body>
-  <header class="navbar navbar-expand-lg bg-white border-bottom py-3 sticky-top shadow-sm">
-    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-      <a class="navbar-brand fs-4 text-decoration-none" href="#">
-        <span class="fw-bold text-grative-green" style="letter-spacing: -1px">GRA</span><span class="fw-bold text-dark"
-          style="letter-spacing: -1px">TIVE</span>
-      </a>
-
-      <div class="d-flex align-items-center gap-3">
-        <a href="/caixa-entrada" class="btn btn-sidebar">
-          <i class="bi bi-bell fs-5"></i>
+  <body>
+    <header class="navbar navbar-expand-lg bg-white border-bottom py-3 sticky-top shadow-sm">
+      <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fs-4 text-decoration-none" href="#">
+          <span class="fw-bold text-grative-green" style="letter-spacing: -1px">GRA</span
+          ><span class="fw-bold text-dark" style="letter-spacing: -1px">TIVE</span>
         </a>
-        <button class="btn btn-link text-dark p-0 shadow-none" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvas-perfil">
-          <i class="bi bi-person-circle fs-4"></i>
-        </button>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="/caixa-entrada" class="btn btn-sidebar">
+            <i class="bi bi-bell fs-5"></i>
+          </a>
+          <button
+            class="btn btn-link text-dark p-0 shadow-none"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvas-perfil"
+          >
+            <i class="bi bi-person-circle fs-4"></i>
+          </button>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container-fluid px-4 py-5">
-    <div class="row g-4 justify-content-center">
-      <div class="col-12 col-lg-3" style="max-width: 320px">
-        <div style="position: sticky; top: 100px; z-index: 10;">
+    <main class="container-fluid px-4 py-5">
+      <div class="row g-4 justify-content-center">
+        <div class="col-12 col-lg-3" style="max-width: 320px">
+          <div style="position: sticky; top: 100px; z-index: 10">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+              <div class="card-body text-center p-4">
+                <i class="bi bi-person-circle text-secondary" style="font-size: 5rem"></i>
+                <h5 class="fw-bold mt-2 mb-0" id="nomeOscHeader"></h5>
+                <p class="text-muted small mb-0" id="categoriaOscHeader">Categoria</p>
+              </div>
+            </div>
 
-          <div class="card border-0 shadow-sm rounded-4 mb-4">
-            <div class="card-body text-center p-4">
-              <i class="bi bi-person-circle text-secondary" style="font-size: 5rem"></i>
-              <h5 class="fw-bold mt-2 mb-0" id="nomeOscHeader"></h5>
-              <p class="text-muted small mb-0" id="categoriaOscHeader">Categoria</p>
+            <div class="card border-0 shadow-sm rounded-4">
+              <div class="card-body p-4 pb-3">
+                <h6 class="fw-bold text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px">ATALHOS</h6>
+                <nav class="d-flex flex-column gap-1">
+                  <a href="/home_osc" class="btn btn-sidebar active"> <i class="bi bi-house-door fs-5"></i> Início </a>
+                  <a href="/relatorio-doacoes" class="btn btn-sidebar">
+                    <i class="bi bi-file-earmark-text fs-5"></i> Novo Relatório
+                  </a>
+                  <button
+                    type="button"
+                    class="btn btn-sidebar"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalPublicacao"
+                  >
+                    <i class="bi bi-megaphone fs-5"></i> Criar Publicação
+                  </button>
+                  <a href="/inserir-documento" class="btn btn-sidebar">
+                    <i class="bi bi-file-earmark-text fs-5"></i> Inserir Documento
+                  </a>
+                  <a href="feedOsc" class="btn btn-sidebar">
+                    <i class="bi bi-grid-3x3-gap fs-5"></i> Minhas Publicações
+                  </a>
+                </nav>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4 pb-3">
-              <h6 class="fw-bold text-muted mb-3" style="font-size: 0.75rem; letter-spacing: 1px">ATALHOS</h6>
-              <nav class="d-flex flex-column gap-1">
-                <a href="/relatorio-doacoes" class="btn btn-sidebar">
-                  <i class="bi bi-file-earmark-text fs-5"></i> Novo Relatório
-                </a>
-                <button type="button" class="btn btn-sidebar" data-bs-toggle="modal" data-bs-target="#modalPublicacao">
-                  <i class="bi bi-megaphone fs-5"></i> Criar Publicação
+        <div class="col-12 col-lg-9">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <h2 class="fw-bold text-dark mb-0 fs-3">Dashboard</h2>
+          </div>
+
+          <div class="row g-4" id="dashboardCards">
+            <div class="col-md-6">
+              <div
+                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                style="height: 180px"
+              >
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="bi bi-currency-dollar fs-3 text-success"></i>
+                  </div>
+                  <h6 class="text-muted fw-bold mb-0">Doações (Últimos 30 dias)</h6>
+                </div>
+                <h2 class="fw-bold mb-0 text-dark" id="dashDoacoes">Carregando...</h2>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div
+                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                style="height: 180px"
+              >
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="bi bi-shield-check fs-3 text-primary"></i>
+                  </div>
+                  <h6 class="text-muted fw-bold mb-0">Trust Score Atual</h6>
+                </div>
+                <h2 class="fw-bold mb-0 text-dark" id="dashScore">Carregando...</h2>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div
+                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                style="height: 180px"
+              >
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="bi bi-heart fs-3 text-danger"></i>
+                  </div>
+                  <h6 class="text-muted fw-bold mb-0">Curtidas Recebidas</h6>
+                </div>
+                <h2 class="fw-bold mb-0 text-dark" id="dashLikes">Carregando...</h2>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div
+                class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column justify-content-center"
+                style="height: 180px"
+              >
+                <div class="d-flex align-items-center mb-3">
+                  <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                    <i class="bi bi-chat-right-text fs-3 text-warning"></i>
+                  </div>
+                  <h6 class="text-muted fw-bold mb-0">Comentários e Partilhas</h6>
+                </div>
+                <h2 class="fw-bold mb-0 text-dark" id="dashInteracoes">Carregando...</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-perfil">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="fw-bold mb-0">Configurações da Conta</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <div class="text-center mb-4">
+          <i style="font-size: 100px" class="bi bi-person-circle text-secondary"></i>
+        </div>
+        <button class="btn btn-outline-primary w-100 mb-3 rounded-pill" id="btnEditarPerfil">Editar Perfil</button>
+        <button class="btn btn-outline-danger w-100 rounded-pill" id="btnExcluirPerfil">Excluir Conta</button>
+
+        <div class="mt-auto border-top pt-3">
+          <button
+            onclick="window.location.href = '/logout'"
+            class="btn w-100 d-flex align-items-center justify-content-center gap-2 text-danger"
+          >
+            <i class="bi bi-box-arrow-right fs-5"></i> Sair da conta
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+          <div class="modal-header border-bottom-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body pt-0 px-4 pb-4">
+            <form id="formNovaPublicacao" enctype="multipart/form-data">
+              <input
+                type="text"
+                class="form-control border-0 shadow-none fs-5 fw-semibold px-0"
+                id="tituloProjeto"
+                name="titulo"
+                placeholder="Título da ação ou projeto"
+                required
+              />
+              <textarea
+                class="form-control border-0 shadow-none px-0 mt-1 fs-5"
+                id="descricaoProjeto"
+                name="descricao"
+                rows="3"
+                placeholder="O que a sua OSC realizou hoje?"
+                style="resize: none"
+                required
+              ></textarea>
+              <hr class="border-secondary-subtle" />
+              <div class="d-flex justify-content-between align-items-center">
+                <label for="imagemProjeto" style="cursor: pointer" class="text-grative-green"
+                  ><i class="bi bi-image fs-4"></i
+                ></label>
+                <input class="d-none" type="file" id="imagemProjeto" name="imagem" accept="image/*" />
+                <button
+                  type="submit"
+                  class="btn text-white rounded-pill px-4 fw-bold"
+                  style="background-color: #11784a"
+                  id="btnEnviarPublicacao"
+                >
+                  Publicar
                 </button>
-                <a href="/inserir-documento" class="btn btn-sidebar">
-                  <i class="bi bi-file-earmark-text fs-5"></i> Inserir Documento
-                </a>
-                <a href="feedOsc" class="btn btn-sidebar">
-                  <i class="bi bi-grid-3x3-gap fs-5"></i> Minhas Publicações
-                </a>
-              </nav>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="col-12 col-lg-9">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-          <h2 class="fw-bold text-dark mb-0 fs-3">Dashboard</h2>
-
-          <select
-            class="form-select w-auto fw-medium border-secondary-subtle text-secondary rounded-pill px-4 shadow-sm bg-white">
-            <option value="1" selected>Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="bg-white shadow-sm rounded-4" style="height: 200px"></div>
-          </div>
-          <div class="col-md-6">
-            <div class="bg-white shadow-sm rounded-4" style="height: 200px"></div>
-          </div>
-          <div class="col-md-6">
-            <div class="bg-white shadow-sm rounded-4" style="height: 200px"></div>
-          </div>
-          <div class="col-md-6">
-            <div class="bg-white shadow-sm rounded-4" style="height: 200px"></div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  </main>
 
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-perfil">
-    <div class="offcanvas-header border-bottom">
-      <h5 class="fw-bold mb-0">Configurações da Conta</h5>
-      <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+    <div
+      class="alert alert-success fade d-none position-fixed top-0 start-50 translate-middle-x mt-5 shadow-sm"
+      id="alertaPublicacao"
+      style="z-index: 1055"
+    >
+      <p>Publicação Criada com sucesso!</p>
     </div>
-    <div class="offcanvas-body d-flex flex-column">
-      <div class="text-center mb-4">
-        <i style="font-size: 100px" class="bi bi-person-circle text-secondary"></i>
-      </div>
-      <button class="btn btn-outline-primary w-100 mb-3 rounded-pill" id="btnEditarPerfil">Editar Perfil</button>
-      <button class="btn btn-outline-danger w-100 rounded-pill" id="btnExcluirPerfil">Excluir Conta</button>
 
-      <div class="mt-auto border-top pt-3">
-        <button onclick="window.location.href = '/logout'"
-          class="btn w-100 d-flex align-items-center justify-content-center gap-2 text-danger">
-          <i class="bi bi-box-arrow-right fs-5"></i> Sair da conta
-        </button>
-      </div>
-    </div>
-  </div>
+    <script src="/js/homeOsc.js" type="module"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
 
   <div class="modal fade" id="modalPublicacao" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -185,42 +290,35 @@
               </button>
             </div>
           </form>
+    <!-- Modal de Comentário OSC -->
+    <div
+      class="modal fade"
+      id="modalComentarioOsc"
+      tabindex="-1"
+      aria-labelledby="modalComentarioOscLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalComentarioOscLabel">Adicionar Comentário</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <textarea
+              class="form-control"
+              id="textoComentarioOsc"
+              placeholder="Escreva seu comentário..."
+              rows="4"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="enviarComentarioOsc()">Enviar</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="alert alert-success fade d-none position-fixed top-0 start-50 translate-middle-x mt-5 shadow-sm"
-    id="alertaPublicacao" style="z-index: 1055;">
-    <p>Publicação Criada com sucesso!</p>
-  </div>
-
-  <script src="/js/homeOsc.js" type="module"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-
-  <!-- Modal de Comentário OSC -->
-  <div class="modal fade" id="modalComentarioOsc" tabindex="-1" aria-labelledby="modalComentarioOscLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalComentarioOscLabel">Adicionar Comentário</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <textarea class="form-control" id="textoComentarioOsc" placeholder="Escreva seu comentário..."
-            rows="4"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" onclick="enviarComentarioOsc()">Enviar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

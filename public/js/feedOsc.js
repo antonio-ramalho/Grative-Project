@@ -7,81 +7,70 @@ async function carregarFeedOsc(){
     const resposta = await fetch('/api/feed-osc');
     const publicacoes = await resposta.json();
 
-    let htmlAcumulado = ""; 
 
     publicacoes.forEach(publicacao => {
-        let tagImagem = ``;
-        if (publicacao.imagem_url) {
-            const extensao = publicacao.imagem_url.split('.').pop().toLowerCase();
-            const formatosVideo = ['mp4', 'mov', 'avi', 'webm'];
-            
-            // Estilo padrão para manter tudo do mesmo tamanho, centralizado e sem cortar
-            const estiloMidia = "width: 100%; height: 400px; object-fit: contain; background-color: #000;"; 
-
-            if (formatosVideo.includes(extensao)) {
-                let tipoMime = 'video/mp4'; 
-                if (extensao === 'webm') tipoMime = 'video/webm';
-                else if (extensao === 'mov') tipoMime = 'video/quicktime';
-                else if (extensao === 'avi') tipoMime = 'video/x-msvideo';
-
-                tagImagem = `
-                    <div class="mt-3 text-center rounded overflow-hidden" style="background-color: #000;">
-                        <video controls preload="metadata" style="${estiloMidia}">
-                            <source src="${publicacao.imagem_url}" type="${tipoMime}">
-                            Seu navegador não suporta a tag de vídeo.
-                        </video>
-                    </div>`;
-            } else {
-                tagImagem = `
-                    <div class="mt-3 text-center rounded overflow-hidden" style="background-color: #f8f9fa;">
-                        <img src="${publicacao.imagem_url}" style="width: 100%; height: 400px; object-fit: contain;">
-                    </div>`;
-            }
+        let tagImagem = ``
+        if (publicacao.imagem_url){
+            tagImagem = `<img src="${publicacao.imagem_url}" class="img-fluid rounded mt-3">`;
         }
 
         const cardHTML = `
-            <div class="card border-0 shadow-sm">
-                <div class="card-header d-flex align-items-center gap-3 bg-white border-0">
-                    <i class="bi bi-person-circle fs-2 text-secondary"></i> 
-                    <div class="d-flex flex-column">
-                        <span class="fw-bold">${publicacao.nome_osc}</span>
-                        <span class="text-muted small">${publicacao.data_publicacao}</span>
+                    <div class="card border-0 shadow-sm">
+                        <!--? Cabeçalho -->
+                        <div class="card-header d-flex align-items-center gap-3 bg-white border-0">
+                            <i class="bi bi-person-circle fs-2 text-secondary"></i> 
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold">${publicacao.nome_osc}</span>
+                                <span class="text-muted small">${publicacao.data_publicacao}</span>
+                            </div>
+                        </div>
+                        
+                        <!--? Corpo -->
+                        <div class="card-body">
+                            <h3>${publicacao.titulo}</h3>
+                            <p>${publicacao.descricao}</p>
+                            ${tagImagem}
+                        </div>
+                        
+                        <!--? Rodapé -->
+                        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                            <!--? Interações -->
+                            <div class="d-flex gap-4">
+                                <span class="text-muted" style="cursor: pointer;"><i class="bi bi-heart"></i> Curtir</span>
+                                <span class="text-muted btn-comentar-osc" style="cursor: pointer;" data-id-publicacao="${publicacao.id}"><i class="bi bi-chat"></i> Comentar</span>
+                            </div>
+                            
+                            <!--? Ações -->
+                            <button class="btn btn-outline-danger btn-sm" data-id="${publicacao.id}">
+                                <i class="bi bi-trash"></i> Excluir
+                            </button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="card-body">
-                    <h3>${publicacao.titulo}</h3>
-                    <p>${publicacao.descricao}</p>
-                    ${tagImagem}
-                </div>
-                
-                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <div class="d-flex gap-4">
-                        <span class="text-muted" style="cursor: pointer;"><i class="bi bi-heart"></i> Curtir</span>
-                        <span class="text-muted btn-comentar-osc" style="cursor: pointer;" data-id-publicacao="${publicacao.id}"><i class="bi bi-chat"></i> Comentar</span>
-                    </div>
-                    
-                    <button class="btn btn-outline-danger btn-sm" data-id="${publicacao.id}">
-                        <i class="bi bi-trash"></i> Excluir
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        htmlAcumulado += cardHTML; 
+        `
+        divPublicacoes.innerHTML += cardHTML;
     });
-    
-    divPublicacoes.innerHTML = htmlAcumulado;
     
     anexarListenersComentariosOsc();
 }
 
-function anexarListenersComentariosOsc() {
+function anexarListenersOsc() {
+    // Listener para abrir o modal de comentário limpo
     document.querySelectorAll('.btn-comentar-osc').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             publicacaoSelecionadaOsc = btn.getAttribute('data-id-publicacao');
+            document.getElementById('textoComentarioOsc').value = ''; // Limpa se for comentário normal
             abrirModalComentarioOsc();
+        });
+    });
+
+    // Listener para excluir postagem sem dar F5
+    document.querySelectorAll('.btn-excluir-osc').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const idPublicacao = btn.getAttribute('data-id');
+            if (confirm("Tem certeza que deseja excluir esta publicação?")) {
+                await excluirPostagem(idPublicacao);
+            }
         });
     });
 }
@@ -89,9 +78,91 @@ function anexarListenersComentariosOsc() {
 function abrirModalComentarioOsc() {
     const modal = new bootstrap.Modal(document.getElementById('modalComentarioOsc'));
     modal.show();
-    document.getElementById('textoComentarioOsc').focus();
+    setTimeout(() => {
+        document.getElementById('textoComentarioOsc').focus();
+    }, 400);
 }
 
+// Lógica de Carregar e Renderizar os Comentários
+async function carregarComentariosOsc(idPublicacao) {
+    try {
+        const resposta = await fetch(`/api/comentario/listar?id_publicacao=${idPublicacao}`);
+        if (!resposta.ok) return;
+
+        const comentarios = await resposta.json();
+        const postElement = document.querySelector(`.card-publicacao-osc[data-id="${idPublicacao}"]`);
+        if (!postElement) return;
+
+        const listaDiv = postElement.querySelector(".lista-comentarios-osc");
+        const btnVerTodos = postElement.querySelector(".btn-ver-todos-osc");
+
+        listaDiv.innerHTML = "";
+
+        if (comentarios.length > 0) {
+            const limitePreview = 3; // Mostra os últimos 3
+            const previewComentarios = comentarios.slice(0, limitePreview);
+
+            renderizarListaComentariosOsc(previewComentarios, listaDiv, idPublicacao);
+
+            if (comentarios.length > limitePreview) {
+                btnVerTodos.textContent = `Ver todos os ${comentarios.length} comentários`;
+                btnVerTodos.style.display = "block";
+                btnVerTodos.onclick = () => {
+                    listaDiv.innerHTML = "";
+                    renderizarListaComentariosOsc(comentarios, listaDiv, idPublicacao);
+                    btnVerTodos.style.display = "none";
+                };
+            } else {
+                btnVerTodos.style.display = "none";
+            }
+        }
+    } catch (erro) {
+        console.error("Erro ao buscar comentários do post", idPublicacao, erro);
+    }
+}
+
+function renderizarListaComentariosOsc(arrayComentarios, container, idPublicacao) {
+    arrayComentarios.forEach((c) => {
+        const div = document.createElement("div");
+        div.className = "comentario-item d-flex flex-column mb-2";
+
+        // Botão de responder mágico (Preenche o modal com o @NomeDoUsuario)
+        let botaoResponder = `
+            <button onclick="prepararResposta('${c.nome_usuario}', '${idPublicacao}')" class="btn btn-sm text-grative-green p-0 border-0 bg-transparent ms-3 fw-bold" style="font-size: 0.75rem;">
+                Responder
+            </button>
+        `;
+
+        // Verifica se a OSC tem permissão para apagar
+        let botaoLixeira = c.pode_deletar ? 
+            `<button onclick="deletarComentarioOsc(${c.id}, this)" class="btn btn-sm text-danger p-0 border-0 bg-transparent ms-2" title="Excluir comentário"><i class="bi bi-trash3"></i></button>` : '';
+
+        div.innerHTML = `
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong style="font-size: 0.95rem;">${c.nome_usuario}</strong> 
+                    <span style="font-size: 0.95rem;">${c.comment || c.texto}</span>
+                    <div class="d-flex align-items-center mt-1">
+                        <small class="text-muted" style="font-size: 0.75rem;">${c.data_comentario || 'Recentemente'}</small>
+                        ${botaoResponder}
+                    </div>
+                </div>
+                ${botaoLixeira}
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Função disparada ao clicar em "Responder"
+function prepararResposta(nomeUsuario, idPublicacao) {
+    publicacaoSelecionadaOsc = idPublicacao;
+    const textarea = document.getElementById('textoComentarioOsc');
+    textarea.value = `@${nomeUsuario} `; // Adiciona a menção
+    abrirModalComentarioOsc();
+}
+
+// Enviar comentário modificado para não dar Reload
 async function enviarComentarioOsc() {
     const texto = document.getElementById('textoComentarioOsc').value.trim();
     
@@ -108,9 +179,7 @@ async function enviarComentarioOsc() {
     try {
         const resposta = await fetch('/api/comentario/adicionar', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id_publicacao: publicacaoSelecionadaOsc,
                 comentario: texto
@@ -122,28 +191,42 @@ async function enviarComentarioOsc() {
         if (resultado.sucesso) {
             document.getElementById('textoComentarioOsc').value = '';
             bootstrap.Modal.getInstance(document.getElementById('modalComentarioOsc')).hide();
-            carregarFeedOsc();
+            
+            // Recarrega SÓ a lista de comentários dessa postagem
+            carregarComentariosOsc(publicacaoSelecionadaOsc);
         } else {
             alert('Erro ao enviar comentário: ' + resultado.erro);
         }
     } catch (erro) {
         console.error('Erro:', erro);
-        alert('Erro ao enviar comentário');
+        alert('Houve um problema de conexão.');
     }
 }
 
-document.getElementById("feed-publicacoes").addEventListener("click", async (event) => {
+async function deletarComentarioOsc(idComentario, botaoElemento) {
+    if (!confirm("Tem certeza que deseja apagar este comentário?")) return;
     
-    const botaoExcluir = event.target.closest('.btn-outline-danger');
-    
-    if (botaoExcluir) {
-        const idPublicacao = botaoExcluir.getAttribute('data-id');
+    try {
+        const resposta = await fetch("/api/comentario/deletar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({id_comentario: idComentario}),
+        });
 
-        if (confirm("Tem certeza que deseja excluir esta publicação?")) {
-            await excluirPostagem(idPublicacao);
+        const resultado = await resposta.json();
+
+        if (resposta.ok && resultado.sucesso) {
+            const cardPost = botaoElemento.closest('.card-publicacao-osc');
+            if (cardPost) {
+                carregarComentariosOsc(cardPost.getAttribute('data-id'));
+            }
+        } else {
+            alert("Aviso: " + (resultado.erro || "Não autorizado."));
         }
+    } catch (erro) {
+        console.error("Erro ao deletar:", erro);
     }
-});
+}
 
 async function excluirPostagem(id) {
     const formData = new FormData();
@@ -157,8 +240,9 @@ async function excluirPostagem(id) {
     const resultado = await resposta.json();
 
     if (resultado.sucesso) {
-        alert("Publicação removida com sucesso!");
-        carregarFeedOsc();
+        // Remove a postagem da tela instantaneamente
+        const cardRemover = document.querySelector(`.card-publicacao-osc[data-id="${id}"]`);
+        if(cardRemover) cardRemover.remove();
     } else {
         alert("Erro ao excluir: " + resultado.erro);
     }
