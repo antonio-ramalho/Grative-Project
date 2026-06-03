@@ -175,4 +175,25 @@ class OscModel {
             die("Erro ao excluir: " . $e->getMessage());
         }
     }
+
+    public function obterMetricasDashboard($id_osc) {
+        $sql = "
+            SELECT 
+                i.trust_score as score,
+                SUM(d.quantia) as total_doacoes
+            FROM instituicao i
+            LEFT JOIN doacao d 
+                ON i.id_instituicao = d.fk_id_instituicao 
+                AND d.status = 'pagamento efetuado' 
+                AND d.data_doacao >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+            WHERE i.id_instituicao = :id_instituicao
+            GROUP BY i.trust_score
+        ";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_instituicao', $id_osc, \PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
 }
