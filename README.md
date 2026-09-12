@@ -12,4 +12,4 @@ O MVP (Produto Mínimo Viável) foi construído sem o uso de frameworks pesados,
 * **Inteligência Artificial:** Integração com a API do Gemini.
 * **Design e Prototipagem:** Figma (com aplicação de System Design).
   
-![Imagem do Sistema](grative.jpeg)
+![Imagem do Sistema](/grative.jpeg)
